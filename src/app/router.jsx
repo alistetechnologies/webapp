@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { LoginRoute } from './routes/auth/login';
 
 const createAppRouter = () =>
   createBrowserRouter([
     {
       path: '/',
-      element: <div>Something!!!</div>,
+      element: <LoginRoute />,
     },
   ]);
 
