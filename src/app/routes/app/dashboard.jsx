@@ -60,6 +60,7 @@ export function Dashboard() {
   }, [selectedHouse?.value]);
 
   console.log('[house]', house);
+  console.log('[devices] ', connectedDevices);
 
   rerender += 1;
   return (

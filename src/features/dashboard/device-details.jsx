@@ -82,10 +82,10 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
     };
 
     fetchData();
-  }, []);
+  }, [room]);
   useEffect(() => {
     calculateAppliances();
-  }, []);
+  }, [room]);
 
   return (
     <div>
