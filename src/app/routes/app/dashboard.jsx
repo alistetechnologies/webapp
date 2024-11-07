@@ -59,8 +59,8 @@ export function Dashboard() {
     getConnectedDevices();
   }, [selectedHouse?.value]);
 
-  console.log('[house]', house);
-  console.log('[devices] ', connectedDevices);
+  // console.log('[house]', house);
+  // console.log('[devices] ', connectedDevices);
 
   rerender += 1;
   return (

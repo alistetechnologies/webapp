@@ -12,7 +12,10 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
   const [appliances, setAppliances] = useState();
   const [onAppliances, setOnAppliances] = useState(0);
 
-  console.log('[APPLIANCES DATA]', appliances);
+  // // console.log('[APPLIANCES DATA]', appliances);
+  // console.log('[Analysis Data]', appliancesAnalysisData);
+  // console.log('[connectedDevices]\n', connectedDevices);
+  // console.log('[connectedAppliances]\n', connectedAppliances);
   function calculateAppliances() {
     let connectedAppliances = 0;
     let totalAppliances = 0;
@@ -27,7 +30,7 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
       }
       // loop in device for switches
       for (const s of device?.switches) {
-        console.log('DEVICETYPE -', s.deviceType, s);
+        // console.log('DEVICETYPE -', s.deviceType, s);
         // If switch type is N/A
         if (Number(s.deviceType) === 7) {
           continue;
@@ -85,7 +88,7 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
   }, [room]);
   useEffect(() => {
     calculateAppliances();
-  }, [room]);
+  }, [room, connectedDevices]);
 
   return (
     <div>
@@ -95,7 +98,7 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
           {String(sno).padStart(2, '0')}
         </div>
 
-        <div className='col-span-2 p-4 flex items-center justify-cente text-left'>
+        <div className='col-span-2 p-4 flex items-center justify-center text-left'>
           {room?.roomName}
         </div>
 

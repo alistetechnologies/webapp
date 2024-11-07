@@ -3,15 +3,20 @@ import React, { useEffect, useState } from 'react';
 export default function Commands({ analysisData }) {
   const [smartCommands, setSmartCommands] = useState(0);
   const [switchCommands, setSwitchCommands] = useState(0);
+  console.log('[commands]', smartCommands, switchCommands);
 
+  console.log('[analysis data]\n', analysisData);
   function calculateCommands() {
     let smartCommands = 0;
     let switchCommands = 0;
-
+    console.log('analysis data in calculate', analysisData);
     for (const device of analysisData) {
+      console.log('[device in analysis]', device);
       for (const s of device) {
-        switchCommands += s?.toggles?.switch;
-        smartCommands += s?.toggles?.aliste;
+        console.log('[switch in analysis]', s);
+
+        switchCommands += s?.toggles?.switch || 0;
+        smartCommands += s?.toggles?.aliste || 0;
       }
     }
 

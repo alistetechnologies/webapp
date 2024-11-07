@@ -45,6 +45,12 @@ export function OtpInput() {
         token: response.data?.token,
       });
 
+      // Create Access Token failed
+      if (!token.success) {
+        toast.error('Failed to generate Token!!');
+        return;
+      }
+
       if (token.success) {
         useAuth.getState().addTokens({
           refreshToken: token.data?.refreshToken,

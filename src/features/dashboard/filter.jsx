@@ -25,17 +25,21 @@ export default function Filter({ house, setSelectedHouse }) {
 
   rerender += 1;
 
+  const houseName = options.find((h) => {
+    return h?.value === house?.value;
+  });
+
   return (
     <div className='w-full bg-white p-4 mb-6 rounded-md'>
       <div className='space-y-4'>
-        <h2 className='font-semibold text-2xl'>House Name {rerender}</h2>
+        <h2 className='font-semibold text-2xl hover:underline'>
+          {houseName?.label}
+        </h2>
 
         <Select
           options={options}
           placeholder='Select a house'
-          value={options.find((h) => {
-            return h?.value === house?.value;
-          })}
+          value={houseName}
           onChange={(value) => setSelectedHouse(value)}
         />
       </div>
