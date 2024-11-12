@@ -8,8 +8,12 @@ export function ApplianceDetails({
   sno,
   connectedDevices,
 }) {
+  console.log('[analysis] ', analysisData);
+
   const onTime = convertMilliseconds(analysisData?.ontime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
+
+  console.log('onTime', onTime, onlineTime);
 
   const appliance = appliances[analysisData?.deviceId].find(
     (appliance) => appliance.switchId === analysisData?.switchId
@@ -22,23 +26,32 @@ export function ApplianceDetails({
   return (
     <TableRow>
       <TableCell>{sno}</TableCell>
-      <TableCell className='text-xl font-semibold hover:underline'>
+      <TableCell className='text-lg text-black/60 hover:underline'>
         {appliance?.switchName}
       </TableCell>
-      <TableCell className='text-lg'>{`${String(onTime?.hours).padStart(
-        2,
-        '0'
-      )} hr ${String(onTime?.minutes).padStart(2, '0')} min`}</TableCell>
-      <TableCell className='text-lg'>
-        {`${String(onlineTime?.hours).padStart(2, '0')} hr ${String(
-          onlineTime?.minutes
-        ).padStart(2, '0')} min`}
+      <TableCell className='text-lg text-center'>
+        {onTime?.hours && onTime?.seconds && onTime?.minutes
+          ? `${String(onTime?.hours).padStart(2, '0')} hr ${String(
+              onTime?.minutes
+            ).padStart(2, '0')} min`
+          : '--'}
       </TableCell>
-      <TableCell className='text-lg'>
-        {analysisData?.toggles?.aliste + analysisData?.toggles?.switch}
+      <TableCell className='text-lg text-center'>
+        {onTime?.hours && onTime?.seconds && onTime?.minutes
+          ? `${String(onlineTime?.hours).padStart(2, '0')} hr ${String(
+              onlineTime?.minutes
+            ).padStart(2, '0')} min`
+          : '--'}
       </TableCell>
-      <TableCell className='text-lg'>{analysisData?.toggles?.aliste}</TableCell>
-      <TableCell className='text-lg'>{analysisData?.toggles?.switch}</TableCell>
+      <TableCell className='text-lg text-center'>
+        {analysisData?.toggles?.aliste + analysisData?.toggles?.switch || '-'}
+      </TableCell>
+      <TableCell className='text-lg text-center'>
+        {analysisData?.toggles?.aliste || '-'}
+      </TableCell>
+      <TableCell className='text-lg text-center'>
+        {analysisData?.toggles?.switch || '-'}
+      </TableCell>
       <TableCell className='cursor-pointer text-lg font-semibold'>
         {appliance?.switchState === '0' ? (
           <div className='p-2 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-24'>
