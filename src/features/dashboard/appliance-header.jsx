@@ -2,16 +2,22 @@ import { TableHead, TableRow } from '@/components/ui/table';
 
 export function ApplianceHeader() {
   return (
-    <TableRow>
-      <TableHead>S.NO</TableHead>
-      <TableHead>Appliance Name</TableHead>
-      <TableHead>Appliance On time</TableHead>
-      <TableHead>Appliance Online time</TableHead>
-      <TableHead>Total Commands</TableHead>
-      <TableHead>Smart Commands</TableHead>
-      <TableHead>Switch Commands</TableHead>
-      <TableHead>State</TableHead>
-      <TableHead>Status</TableHead>
+    <TableRow className='text-[0.85rem]'>
+      <TableHead className='font-semibold text-black'>S.NO</TableHead>
+      <TableHead className='font-semibold text-black'>Appliance Name</TableHead>
+      <TableHead className='font-semibold text-black'>
+        Appliance On time
+      </TableHead>
+      <TableHead className='font-semibold text-black'>
+        Appliance Online time
+      </TableHead>
+      <TableHead className='font-semibold text-black'>Total Commands</TableHead>
+      <TableHead className='font-semibold text-black'>Smart Commands</TableHead>
+      <TableHead className='font-semibold text-black'>
+        Switch Commands
+      </TableHead>
+      <TableHead className='font-semibold text-black'>State</TableHead>
+      <TableHead className='font-semibold text-black'>Status</TableHead>
     </TableRow>
   );
   return (

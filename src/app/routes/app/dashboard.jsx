@@ -73,7 +73,7 @@ export function Dashboard() {
         date={date}
         setDate={setDate}
       />
-      <h2>{rerender}</h2>
+      {/* <h2>{rerender}</h2> */}
       <Table className='w-full bg-white'>
         <TableHeader>
           <MainHeader />
