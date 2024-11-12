@@ -5,6 +5,7 @@ import { createOtp } from '../api/otp';
 import { useAuth } from '../api/authStore';
 import toast from 'react-hot-toast';
 import { getBrowserDetails, getDeviceIdentifier } from '@/utils/browser';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function LoginForm({ setOtpSent }) {
   const [number, setNumber] = useState('');
@@ -61,7 +62,7 @@ export default function LoginForm({ setOtpSent }) {
         step='0.01'
       />
       {error && <p className='text-red-400 transition'>{error}</p>}
-      {loading ? (
+      {/* {loading ? (
         <LoadingButton />
       ) : (
         <Button
@@ -72,7 +73,15 @@ export default function LoginForm({ setOtpSent }) {
         >
           Get OTP
         </Button>
-      )}
+      )} */}
+      <Button
+        className='w-full'
+        type='submit'
+        onClick={requestOtp}
+        disabled={loading}
+      >
+        {loading ? <Spinner /> : 'Get OTP'}
+      </Button>
     </form>
   );
 }

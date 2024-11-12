@@ -9,22 +9,62 @@ import {
 import { Button } from '@/components/ui/button/button';
 
 import LoadingButton from '@/components/ui/common/LoadingButton';
-import { createAccessToken, verifyOtp } from '../api/otp';
+import { createAccessToken, createOtp, verifyOtp } from '../api/otp';
 import { useAuth } from '../api/authStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { fetchUser } from '../api/users';
 import { useUser } from '../api/userStore';
+import { Spinner } from '@/components/ui/spinner';
+import CountdownTimer from '@/components/ui/common/CountdownTimer';
+import { getBrowserDetails, getDeviceIdentifier } from '@/utils/browser';
 
 export function OtpInput() {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [optLoading, setOtpLoading] = useState(false);
+  const [timerFinished, setTimerFinished] = useState(false);
 
   const userNumber = useAuth.getState().auth?.number;
 
   const navigate = useNavigate();
 
-  console.log('USER Number - ', userNumber);
+  // console.log('USER Number - ', userNumber);
+
+  async function requestOtp() {
+    // if (number.length !== 10) {
+    //   toast.error('Number should be of 10 characters');
+    //   return;
+    // }
+    setOtpLoading(true);
+    const uniqueId = getDeviceIdentifier();
+    const { userAgent } = getBrowserDetails();
+
+    // useAuth.getState().addNumber(number);
+
+    if (loading) toast.error('Please wait!!');
+
+    const response = await createOtp({
+      phoneNumber: userNumber,
+      deviceIdentifier: {
+        uniqueId,
+        userAgent,
+      },
+      callingCode: '+91',
+      countryCode: 'IN',
+    });
+
+    console.log('Response - ', response);
+
+    if (!response.success) {
+      toast.error(response?.message || 'Failed to send OTP!!');
+      setOtpLoading(false);
+      return;
+    }
+    setOtpLoading(false);
+    // setOtpSent(true);
+  }
+
   const verifyOtpRequest = async () => {
     if (value.length !== 6) {
       toast.error('Otp must be of 6 characters.');
@@ -98,13 +138,31 @@ export function OtpInput() {
           <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
-      {loading ? (
+      {/* {loading ? (
         <LoadingButton />
       ) : (
         <Button className='w-full' onClick={verifyOtpRequest}>
           Verify Otp
         </Button>
-      )}
+      )} */}
+
+      <Button className='w-full' onClick={verifyOtpRequest} disabled={loading}>
+        {loading ? <Spinner /> : 'Verify'}
+      </Button>
+
+      <p className='text-lg font-medium hover:underline flex justify-center items-center gap-2'>
+        Didn't receive yet?
+        {timerFinished ? (
+          <span
+            className='text-red-500 font-semibold hover:underline cursor-pointer'
+            onClick={requestOtp}
+          >
+            {optLoading ? <Spinner className='text-red-500' /> : 'Resend OTP'}
+          </span>
+        ) : (
+          <CountdownTimer setFinished={setTimerFinished} />
+        )}
+      </p>
     </form>
   );
 }
