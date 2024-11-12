@@ -1,16 +1,18 @@
+import { TableRow } from '@/components/ui/table';
 import { DeviceDetails } from './device-details';
 
-export default function Rooms({ roomsData, connectedDevices }) {
+export default function Rooms({ roomsData, connectedDevices, date }) {
   return (
-    <div>
+    <>
       {roomsData?.map((room, sno) => (
         <DeviceDetails
           room={room}
           sno={sno + 1}
-          connectedDevices={connectedDevices}
           key={sno}
+          date={date}
+          connectedDevices={connectedDevices}
         />
       ))}
-    </div>
+    </>
   );
 }

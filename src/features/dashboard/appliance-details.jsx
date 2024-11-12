@@ -1,3 +1,4 @@
+import { TableCell, TableRow } from '@/components/ui/table';
 import { convertMilliseconds } from '@/utils/format';
 import { Dot } from 'lucide-react';
 
@@ -17,6 +18,52 @@ export function ApplianceDetails({
   console.log('[appliance]', appliance);
 
   if (appliance?.deviceType === 7) return;
+
+  return (
+    <TableRow>
+      <TableCell>{sno}</TableCell>
+      <TableCell className='text-xl font-semibold hover:underline'>
+        {appliance?.switchName}
+      </TableCell>
+      <TableCell className='text-lg'>{`${String(onTime?.hours).padStart(
+        2,
+        '0'
+      )} hr ${String(onTime?.minutes).padStart(2, '0')} min`}</TableCell>
+      <TableCell className='text-lg'>
+        {`${String(onlineTime?.hours).padStart(2, '0')} hr ${String(
+          onlineTime?.minutes
+        ).padStart(2, '0')} min`}
+      </TableCell>
+      <TableCell className='text-lg'>
+        {analysisData?.toggles?.aliste + analysisData?.toggles?.switch}
+      </TableCell>
+      <TableCell className='text-lg'>{analysisData?.toggles?.aliste}</TableCell>
+      <TableCell className='text-lg'>{analysisData?.toggles?.switch}</TableCell>
+      <TableCell className='cursor-pointer text-lg font-semibold'>
+        {appliance?.switchState === '0' ? (
+          <div className='p-2 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-24'>
+            <Dot /> Off
+          </div>
+        ) : (
+          <div className='p-2 bg-green-500/10 flex items-center justify-center rounded-md px-4 text-green-500 w-24'>
+            <Dot /> On
+          </div>
+        )}
+      </TableCell>
+
+      <TableCell className='cursor-pointer text-lg font-semibold'>
+        {connectedDevices.some((d) => d.deviceId === analysisData?.deviceId) ? (
+          <div className=' flex items-center justify-center rounded-md px-4 text-green-500'>
+            Online
+          </div>
+        ) : (
+          <div className='p-2 flex items-center justify-center rounded-md px-4 text-red-500'>
+            Offline
+          </div>
+        )}
+      </TableCell>
+    </TableRow>
+  );
 
   return (
     <div className='grid grid-cols-12 border-b border-gray-600/20 rounded-lg'>

@@ -1,3 +1,4 @@
+import { TableCell } from '@/components/ui/table';
 import React, { useEffect, useState } from 'react';
 
 export default function Commands({ analysisData }) {
@@ -28,6 +29,13 @@ export default function Commands({ analysisData }) {
     if (analysisData?.length === 0) return;
     calculateCommands();
   }, [analysisData]);
+  return (
+    <>
+      <TableCell>{smartCommands + switchCommands}</TableCell>
+      <TableCell>{smartCommands}</TableCell>
+      <TableCell>{switchCommands}</TableCell>
+    </>
+  );
   return (
     <>
       <div className='col-span-2 p-4 flex items-center justify-center'>

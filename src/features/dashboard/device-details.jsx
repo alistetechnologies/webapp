@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Appliances } from './appliances';
 import { fetchDayAnalytics } from './api/device';
 import Commands from './commands';
+import { TableCell, TableRow } from '@/components/ui/table';
 
-export function DeviceDetails({ room, sno, connectedDevices }) {
+export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [showAppliances, setShowAppliances] = useState(false);
   const [totalAppliances, setTotalAppliances] = useState(0);
   const [connectedAppliances, setConnectedAppliances] = useState(0);
@@ -63,7 +64,6 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
   }
 
   const fetchDeviceAnalytics = async (deviceId) => {
-    const date = new Date().setHours(0, 0, 0, 0);
     const response = await fetchDayAnalytics({
       deviceId,
       day: new Date(date).toISOString(),
@@ -85,11 +85,39 @@ export function DeviceDetails({ room, sno, connectedDevices }) {
     };
 
     fetchData();
-  }, [room]);
+  }, [room, date]);
+
   useEffect(() => {
     calculateAppliances();
   }, [room, connectedDevices]);
 
+  return (
+    <>
+      <TableRow>
+        <TableCell>{String(sno).padStart(2, '0')}</TableCell>
+        <TableCell>{room?.roomName}</TableCell>
+        <TableCell>{totalAppliances}</TableCell>
+        <TableCell>{connectedAppliances}</TableCell>
+        <Commands analysisData={appliancesAnalysisData} />
+        <TableCell>
+          <Button
+            onClick={() => {
+              setShowAppliances(!showAppliances);
+            }}
+          >
+            View Details
+          </Button>
+        </TableCell>
+      </TableRow>
+      {showAppliances && (
+        <Appliances
+          appliances={appliances}
+          analysisData={appliancesAnalysisData}
+          connectedDevices={connectedDevices}
+        />
+      )}
+    </>
+  );
   return (
     <div>
       <div className='grid grid-cols-12 border-b border-gray-300 rounded-lg bg-white'>

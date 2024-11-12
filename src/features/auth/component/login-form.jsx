@@ -22,6 +22,8 @@ export default function LoginForm({ setOtpSent }) {
 
     useAuth.getState().addNumber(number);
 
+    if (loading) toast.error('Please wait!!');
+
     const response = await createOtp({
       phoneNumber: number,
       deviceIdentifier: {
@@ -32,9 +34,10 @@ export default function LoginForm({ setOtpSent }) {
       countryCode: 'IN',
     });
 
-    console.log('RESJPONSE - ', response.data.phoneNumber);
+    console.log('Response - ', response);
 
     if (!response.success) {
+      toast.error(response?.message || 'Failed to send OTP!!');
       setError(response?.message);
       setLoading(false);
       return;
@@ -55,12 +58,18 @@ export default function LoginForm({ setOtpSent }) {
         value={number}
         placeholder='Enter your Number...'
         onChange={(e) => setNumber(e.target.value)}
+        step='0.01'
       />
       {error && <p className='text-red-400 transition'>{error}</p>}
       {loading ? (
         <LoadingButton />
       ) : (
-        <Button className='w-full' type='submit' onClick={requestOtp}>
+        <Button
+          className='w-full'
+          type='submit'
+          onClick={requestOtp}
+          disabled={loading}
+        >
           Get OTP
         </Button>
       )}

@@ -1,3 +1,4 @@
+import { Table, TableBody, TableHeader } from '@/components/ui/table';
 import { useUser } from '@/features/auth/api/userStore';
 
 import {
@@ -20,6 +21,7 @@ export function Dashboard() {
     value: user?.selectedHouse || '',
   });
   const [house, setHouse] = useState({});
+  const [date, setDate] = useState(new Date());
   const [connectedDevices, setConnectedDevices] = useState([]);
 
   useEffect(() => {
@@ -65,14 +67,30 @@ export function Dashboard() {
   rerender += 1;
   return (
     <div className='w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll'>
-      <Filter house={selectedHouse} setSelectedHouse={setSelectedHouse} />
+      <Filter
+        house={selectedHouse}
+        setSelectedHouse={setSelectedHouse}
+        date={date}
+        setDate={setDate}
+      />
       <h2>{rerender}</h2>
-      <MainHeader />
-      {house?.rooms ? (
-        <Rooms roomsData={house?.rooms} connectedDevices={connectedDevices} />
-      ) : (
-        <NoRooms />
-      )}
+      <Table className='w-full bg-white'>
+        <TableHeader>
+          <MainHeader />
+        </TableHeader>
+        <TableBody>
+          {house?.rooms ? (
+            <Rooms
+              roomsData={house?.rooms}
+              connectedDevices={connectedDevices}
+              date={date}
+              setDate={setDate}
+            />
+          ) : (
+            <NoRooms />
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
