@@ -3,21 +3,15 @@ import { TableHead, TableRow } from '@/components/ui/table';
 export function ApplianceHeader() {
   return (
     <TableRow className='text-[0.85rem]'>
-      <TableHead className='font-semibold text-black'>S.NO</TableHead>
-      <TableHead className='font-semibold text-black'>Appliance Name</TableHead>
-      <TableHead className='font-semibold text-black'>
-        Appliance On time
-      </TableHead>
-      <TableHead className='font-semibold text-black'>
-        Appliance Online time
-      </TableHead>
-      <TableHead className='font-semibold text-black'>Total Commands</TableHead>
-      <TableHead className='font-semibold text-black'>Smart Commands</TableHead>
-      <TableHead className='font-semibold text-black'>
-        Switch Commands
-      </TableHead>
-      <TableHead className='font-semibold text-black'>State</TableHead>
-      <TableHead className='font-semibold text-black'>Status</TableHead>
+      <TableHead className='text-black'>S.NO</TableHead>
+      <TableHead className='text-black'>Appliance Name</TableHead>
+      <TableHead className='text-black'>Appliance On time</TableHead>
+      <TableHead className='text-black'>Appliance Online time</TableHead>
+      <TableHead className='text-black'>Total Commands</TableHead>
+      <TableHead className='text-black'>Smart Commands</TableHead>
+      <TableHead className='text-black'>Switch Commands</TableHead>
+      <TableHead className='text-black'>State</TableHead>
+      <TableHead className='text-black'>Status</TableHead>
     </TableRow>
   );
   return (

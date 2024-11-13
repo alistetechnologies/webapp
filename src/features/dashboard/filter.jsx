@@ -32,22 +32,26 @@ export default function Filter({ house, setSelectedHouse, date, setDate }) {
   return (
     <div className='w-full bg-white p-4 mb-6 rounded-md'>
       <div className='space-y-4 flex gap-4 items-center'>
-        <h2 className='font-semibold text-2xl hover:underline'>House:</h2>
+        <div className='flex gap-4 items-center flex-1'>
+          <h2 className='text-2xl hover:underline'>House Name:</h2>
 
-        <Select
-          options={options}
-          placeholder='Select a house'
-          value={houseName}
-          onChange={(value) => setSelectedHouse(value)}
-          className='flex-1'
-        />
-
-        <input
-          type='date'
-          className='border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52'
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+          <Select
+            options={options}
+            placeholder='Select a house'
+            value={houseName}
+            onChange={(value) => setSelectedHouse(value)}
+            className='flex-1 mt-0'
+          />
+        </div>
+        <div className='flex gap-4 items-center m-0 flex-1'>
+          <h2 className=' text-2xl'>Date:</h2>
+          <input
+            type='date'
+            className='border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0'
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );

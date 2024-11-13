@@ -24,7 +24,7 @@ export function ApplianceDetails({
   if (appliance?.deviceType === 7) return;
 
   return (
-    <TableRow>
+    <TableRow className='font-semibold'>
       <TableCell>{sno}</TableCell>
       <TableCell className='text-lg text-black/60 hover:underline'>
         {appliance?.switchName}
@@ -49,16 +49,16 @@ export function ApplianceDetails({
       <TableCell className='text-lg text-center'>
         {analysisData?.toggles?.aliste || '-'}
       </TableCell>
-      <TableCell className='text-lg text-center'>
+      <TableCell className='font-bold text-center'>
         {analysisData?.toggles?.switch || '-'}
       </TableCell>
-      <TableCell className='cursor-pointer text-lg font-semibold'>
+      <TableCell className='cursor-pointer text-lg'>
         {appliance?.switchState === '0' ? (
-          <div className='p-2 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-24'>
-            <Dot /> Off
+          <div className='p-1 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-20'>
+            <Dot className='' /> Off
           </div>
         ) : (
-          <div className='p-2 bg-green-500/10 flex items-center justify-center rounded-md px-4 text-green-500 w-24'>
+          <div className='p-1 bg-green-500/10 flex items-center justify-center rounded-md text-green-500 w-20'>
             <Dot /> On
           </div>
         )}

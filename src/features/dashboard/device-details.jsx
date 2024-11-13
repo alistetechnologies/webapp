@@ -93,7 +93,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
 
   return (
     <>
-      <TableRow>
+      <TableRow className='text-lg'>
         <TableCell>{String(sno).padStart(2, '0')}</TableCell>
         <TableCell>{room?.roomName}</TableCell>
         <TableCell>{totalAppliances}</TableCell>

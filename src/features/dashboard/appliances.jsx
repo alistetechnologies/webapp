@@ -12,7 +12,7 @@ export function Appliances({ appliances, analysisData, connectedDevices }) {
   return (
     <TableRow className=' w-full p-0'>
       <TableCell colspan='8' className='p-0'>
-        <Table className='bg-[#e6e4ee] rounded w-full'>
+        <Table className='bg-slate-100/50 rounded w-full'>
           <TableHeader>
             <ApplianceHeader />
           </TableHeader>
