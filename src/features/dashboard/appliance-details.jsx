@@ -24,7 +24,7 @@ export function ApplianceDetails({
   if (appliance?.deviceType === 7 || !appliance) return;
 
   return (
-    <TableRow className='font-semibold'>
+    <TableRow className=''>
       <TableCell>{sno}</TableCell>
       <TableCell className='text-lg text-black hover:underline'>
         {appliance?.switchName}

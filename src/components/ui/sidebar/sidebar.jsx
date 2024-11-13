@@ -36,10 +36,10 @@ export default function Sidebar() {
 
   return (
     <div className='h-full'>
-      <div className='space-y-4 h-full flex flex-col py-4'>
+      <div className='space-y-4 h-full flex flex-col py-2'>
         <div className='px-3 py-2 flex-1'>
           <Link to='/app' className='cursor-pointer'>
-            <div className='w-32 h-auto mb-14'>
+            <div className='w-32 h-auto mb-6'>
               <img
                 src='/aliste-logo.png'
                 style={{ width: '100%', height: 'auto' }}
@@ -91,7 +91,10 @@ export default function Sidebar() {
       <div className='h-full flex flex-col justify-between'>
         <div className='h-full'>
           <div className='h-full flex flex-col space-y-6'>
-            <div className='w-full px-3 py-2 mb-10'>
+            <div
+              className='w-full px-3
+             py-2 mb-10'
+            >
               <Link to='/app' className='flex items-center cursor-pointer'>
                 <img
                   src='/aliste-logo.png'
