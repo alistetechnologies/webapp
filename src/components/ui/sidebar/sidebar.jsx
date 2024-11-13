@@ -14,24 +14,24 @@ export default function Sidebar() {
       href: '/app',
       color: '#292929',
     },
-    {
-      label: 'Share Access',
-      icon: Users,
-      href: '/app/share',
-      color: '#292929',
-    },
-    {
-      label: 'Share Access',
-      icon: Users,
-      href: '/app/share',
-      color: '#292929',
-    },
-    {
-      label: 'Share Access',
-      icon: Users,
-      href: '/app/share',
-      color: '#292929',
-    },
+    // {
+    //   label: 'Share Access',
+    //   icon: Users,
+    //   href: '/app/share',
+    //   color: '#292929',
+    // },
+    // {
+    //   label: 'Share Access',
+    //   icon: Users,
+    //   href: '/app/share',
+    //   color: '#292929',
+    // },
+    // {
+    //   label: 'Share Access',
+    //   icon: Users,
+    //   href: '/app/share',
+    //   color: '#292929',
+    // },
   ];
 
   return (
@@ -39,7 +39,7 @@ export default function Sidebar() {
       <div className='space-y-4 h-full flex flex-col py-4'>
         <div className='px-3 py-2 flex-1'>
           <Link to='/app' className='cursor-pointer'>
-            <div className='w-full h-auto mb-14'>
+            <div className='w-32 h-auto mb-14'>
               <img
                 src='/aliste-logo.png'
                 style={{ width: '100%', height: 'auto' }}

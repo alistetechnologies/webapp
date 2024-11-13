@@ -33,7 +33,7 @@ export function LoginRoute() {
           <b>increasing life</b> of your appliances and machines.
         </p>
       </div>
-      <div className='flex flex-col items-center justify-center space-y-6 text-center p-5 h-full'>
+      <div className='flex flex-col items-center justify-center space-y-6 text-center p-5 h-full flex-1'>
         <div className='mb-6'>
           <h2 className='text-2xl md:text-3xl font-medium'>
             Welcome to Aliste Technologies

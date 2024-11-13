@@ -26,6 +26,23 @@ export default function Commands({ analysisData }) {
   }
 
   useEffect(() => {
+    function calculateCommands() {
+      let smartCommands = 0;
+      let switchCommands = 0;
+      console.log('analysis data in calculate', analysisData);
+      for (const device of analysisData) {
+        console.log('[device in analysis]', device);
+        for (const s of device) {
+          console.log('[switch in analysis]', s);
+
+          switchCommands += s?.toggles?.switch || 0;
+          smartCommands += s?.toggles?.aliste || 0;
+        }
+      }
+
+      setSmartCommands(smartCommands);
+      setSwitchCommands(switchCommands);
+    }
     if (analysisData?.length === 0) return;
     calculateCommands();
   }, [analysisData]);
