@@ -12,9 +12,9 @@ export function LoginRoute() {
 
   return (
     <div className='flex flex-col md:flex-row h-full'>
-      <div className='w-full p-5 flex flex-col bg-sky-800/20 flex-1'>
+      <div className='w-full p-5 flex flex-col bg-sky-800/20 flex-1 items-center ustify-center'>
         {/* <div className=''> */}
-        <div className='w-36 mb-14'>
+        <div className='w-36 mb-14 self-start'>
           <img
             src='/aliste-logo.png'
             style={{ height: 'auto', width: '100%' }}
