@@ -11,7 +11,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <div className='flex items-center p-6 py-8'>
+    <div className='flex items-center p-6 py-4'>
       <MobileSidebar />
       <div className='flex w-full items-center justify-end md:justify-between'>
         <p className='text-lg md:text-2xl font-bold hidden md:flex'>
@@ -29,9 +29,9 @@ export default function Navbar() {
             />
           </div>
           <div className='flex items-center gap-x-4'>
-            <MessageSquareMore className='h-8 w-8' />
+            <MessageSquareMore className='size-6' />
             <p>|</p>
-            <Bell className='h-8 w-8' />
+            <Bell className='size-6' />
           </div>
           <div className='flex items-center gap-x-4'>
             <Popover>

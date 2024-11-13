@@ -13,7 +13,7 @@ export function ApplianceDetails({
   const onTime = convertMilliseconds(analysisData?.ontime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
 
-  console.log('onTime', onTime, onlineTime);
+  // console.log('onTime', onTime, onlineTime);
 
   const appliance = appliances[analysisData?.deviceId].find(
     (appliance) => appliance.switchId === analysisData?.switchId
@@ -21,12 +21,12 @@ export function ApplianceDetails({
 
   console.log('[appliance]', appliance);
 
-  if (appliance?.deviceType === 7) return;
+  if (appliance?.deviceType === 7 || !appliance) return;
 
   return (
     <TableRow className='font-semibold'>
       <TableCell>{sno}</TableCell>
-      <TableCell className='text-lg text-black/60 hover:underline'>
+      <TableCell className='text-lg text-black hover:underline'>
         {appliance?.switchName}
       </TableCell>
       <TableCell className='text-lg text-center'>

@@ -43,7 +43,10 @@ export default function Filter({ house, setSelectedHouse, date, setDate }) {
             className='flex-1 mt-0'
           />
         </div>
-        <div className='flex gap-4 items-center m-0 flex-1'>
+        <div
+          className='flex gap-4 items-center m-0 mt-0 flex-1'
+          style={{ marginTop: 0 }}
+        >
           <h2 className=' text-2xl'>Date:</h2>
           <input
             type='date'
