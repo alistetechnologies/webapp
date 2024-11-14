@@ -26,7 +26,7 @@ export default function Commands({ analysisData }) {
   }
 
   useEffect(() => {
-    if (analysisData?.length === 0 || analysisData) return;
+    if (analysisData?.length === 0 || !analysisData) return;
 
     function calculateCommands() {
       let smartCommands = 0;
