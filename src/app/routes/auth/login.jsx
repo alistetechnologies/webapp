@@ -20,18 +20,21 @@ export function LoginRoute() {
             style={{ height: 'auto', width: '100%' }}
           />
         </div>
-        <div className='h-auto max-w-[500px]'>
-          <img
-            src='/login-screen.png'
-            alt='Welcome to Aliste Technologies'
-            style={{ width: '100%', height: 'auto' }}
-          />
+
+        <div className='flex flex-col flex-1 justify-center items-center'>
+          <div className='h-auto max-w-[500px] flex- '>
+            <img
+              src='/login-screen.png'
+              alt='Welcome to Aliste Technologies'
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+          {/* </div> */}
+          <p className='text-md md:text-lg lg:text-xl text-muted-foreground text-center mt-4 align-bottom'>
+            Saving <span className='font-bold'>energy</span> and{' '}
+            <b>increasing life</b> of your appliances and machines.
+          </p>
         </div>
-        {/* </div> */}
-        <p className='text-md md:text-lg lg:text-xl text-muted-foreground text-center mt-4 align-bottom'>
-          Saving <span className='font-bold'>energy</span> and{' '}
-          <b>increasing life</b> of your appliances and machines.
-        </p>
       </div>
       <div className='flex flex-col items-center justify-center space-y-6 text-center p-5 h-full flex-1'>
         <div className='mb-6'>
