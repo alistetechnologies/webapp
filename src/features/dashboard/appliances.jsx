@@ -20,7 +20,16 @@ export function Appliances({ appliances, analysisData, connectedDevices }) {
             {analysisData &&
               analysisData
                 ?.flat()
-                ?.map((device, sno) => (
+                ?.filter((device) => {
+                  const appliance = appliances[device?.deviceId].find(
+                    (appliance) => appliance.switchId === device?.switchId
+                  );
+
+                  if (appliance?.deviceType === 7 || !appliance) return false;
+
+                  return true;
+                })
+                .map((device, sno) => (
                   <ApplianceDetails
                     appliances={appliances}
                     analysisData={device}
