@@ -1,3 +1,4 @@
+import { Spinner } from '@/components/ui/spinner';
 import { Table, TableBody, TableHeader } from '@/components/ui/table';
 import { useUser } from '@/features/auth/api/userStore';
 
@@ -21,19 +22,23 @@ export function Dashboard() {
     value: user?.selectedHouse || '',
   });
   const [house, setHouse] = useState({});
+  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [connectedDevices, setConnectedDevices] = useState([]);
 
   useEffect(() => {
     const getUserHouse = async () => {
+      setLoading(true);
       const houseDetails = await fetchHouse(selectedHouse?.value);
 
       if (!houseDetails.success) {
         toast.error('Failed to fetch House!!');
+        setLoading(false);
         return;
       }
 
       setHouse(houseDetails?.data);
+      setLoading(false);
       useHouseStore.getState().updateHouse(houseDetails?.data);
     };
 
@@ -65,6 +70,14 @@ export function Dashboard() {
   // console.log('[devices] ', connectedDevices);
 
   rerender += 1;
+
+  // if (loading) {
+  //   return (
+  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
+  //       <Spinner size='lg' />
+  //     </div>
+  //   );
+  // }
   return (
     <div className='w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll'>
       <Filter
@@ -74,23 +87,31 @@ export function Dashboard() {
         setDate={setDate}
       />
       {/* <h2>{rerender}</h2> */}
-      <Table className='w-full bg-white'>
-        <TableHeader>
-          <MainHeader />
-        </TableHeader>
-        <TableBody>
-          {house?.rooms ? (
-            <Rooms
-              roomsData={house?.rooms}
-              connectedDevices={connectedDevices}
-              date={date}
-              setDate={setDate}
-            />
-          ) : (
-            <NoRooms />
-          )}
-        </TableBody>
-      </Table>
+
+      {loading && (
+        <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
+          <Spinner size='lg' />
+        </div>
+      )}
+      {!loading && (
+        <Table className='w-full bg-white'>
+          <TableHeader>
+            <MainHeader />
+          </TableHeader>
+          <TableBody>
+            {house?.rooms ? (
+              <Rooms
+                roomsData={house?.rooms}
+                connectedDevices={connectedDevices}
+                date={date}
+                setDate={setDate}
+              />
+            ) : (
+              <NoRooms />
+            )}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

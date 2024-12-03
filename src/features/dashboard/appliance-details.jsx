@@ -8,7 +8,7 @@ export function ApplianceDetails({
   sno,
   connectedDevices,
 }) {
-  console.log('[analysis] ', analysisData);
+  // console.log('[analysis] ', analysisData);
 
   const onTime = convertMilliseconds(analysisData?.ontime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
