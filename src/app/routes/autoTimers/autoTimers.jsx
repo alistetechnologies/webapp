@@ -93,6 +93,8 @@ export function AutoTimers() {
           <Spinner size='lg' />
         </div>
       )}
+
+      {!loading && <></>}
     </div>
   );
 }
