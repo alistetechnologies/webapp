@@ -23,6 +23,22 @@ const createAppRouter = () =>
         },
       ],
     },
+    {
+      path: '/autoTimers',
+      element: <AppRoot />,
+      children: [
+        {
+          path: '',
+          lazy: async () => {
+            const { AutoTimers } = await import(
+              './routes/autoTimers/autoTimers'
+            );
+
+            return { Component: AutoTimers };
+          },
+        },
+      ],
+    },
   ]);
 
 export const AppRouter = () => {

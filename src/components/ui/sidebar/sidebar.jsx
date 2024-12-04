@@ -14,12 +14,12 @@ export default function Sidebar() {
       href: '/app',
       color: '#292929',
     },
-    // {
-    //   label: 'Share Access',
-    //   icon: Users,
-    //   href: '/app/share',
-    //   color: '#292929',
-    // },
+    {
+      label: 'Auto Timers',
+      icon: Users,
+      href: '/autoTimers',
+      color: '#292929',
+    },
     // {
     //   label: 'Share Access',
     //   icon: Users,
