@@ -54,7 +54,6 @@ export const createAccessToken = async (data) => {
 
 export const loginUserWithPasswordApi = async (data) => {
   try {
-    console.log('[here]');
     const { phoneNumber, password, device } = data;
     // Make request
     const response = await api.post(

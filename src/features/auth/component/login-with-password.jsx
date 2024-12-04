@@ -25,7 +25,7 @@ export function LoginWithPassword({ setPasswordLogin }) {
       return;
     }
 
-    // setLoading(true);
+    setLoading(true);
 
     const uniqueId = getDeviceIdentifier();
     const { userAgent } = getBrowserDetails();
@@ -34,7 +34,6 @@ export function LoginWithPassword({ setPasswordLogin }) {
 
     if (loading) toast.error('Please wait!!');
 
-    console.log('Reached to request');
     const response = await loginUserWithPasswordApi({
       phoneNumber: number,
       password,
@@ -45,7 +44,6 @@ export function LoginWithPassword({ setPasswordLogin }) {
       callingCode: '+91',
       countryCode: 'IN',
     });
-    console.log('[response]', response);
     if (!response.success) {
       toast.error(response?.message || 'Failed to send OTP!!');
       setError(response?.message);
