@@ -32,13 +32,16 @@ export default function Commands({ analysisData }) {
       let smartCommands = 0;
       let switchCommands = 0;
       console.log('analysis data in calculate', analysisData);
+
       for (const device of analysisData) {
         // console.log('[device in analysis]', device);
-        for (const s of device) {
-          console.log('[switch in analysis]', s);
+        if (device) {
+          for (const s of device) {
+            console.log('[switch in analysis]', s);
 
-          switchCommands += s?.toggles?.switch || 0;
-          smartCommands += s?.toggles?.aliste || 0;
+            switchCommands += s?.toggles?.switch || 0;
+            smartCommands += s?.toggles?.aliste || 0;
+          }
         }
       }
 
