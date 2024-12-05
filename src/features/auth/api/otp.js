@@ -51,3 +51,41 @@ export const createAccessToken = async (data) => {
     return error?.response?.data;
   }
 };
+
+export const loginUserWithPasswordApi = async (data) => {
+  try {
+    const { phoneNumber, password, device } = data;
+    // Make request
+    const response = await api.post(
+      `${serverUrl.auth}/token/generateAuthorizeToken`,
+      {
+        phoneNumber: phoneNumber,
+        password,
+        client: 'automation', //"automation"
+        type: 'password', //"otp"
+        device: device,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    let res = {
+      success: false,
+    };
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+
+      res.message = error.response.data?.message;
+    } else if (error.request) {
+      // The request was made but no response was received
+      res.message = 'Something Went Wrong';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+
+      res.message = 'Something Went Wrong';
+    }
+
+    return res;
+  }
+};

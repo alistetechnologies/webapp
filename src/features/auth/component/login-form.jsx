@@ -6,11 +6,13 @@ import { useAuth } from '../api/authStore';
 import toast from 'react-hot-toast';
 import { getBrowserDetails, getDeviceIdentifier } from '@/utils/browser';
 import { Spinner } from '@/components/ui/spinner';
+import { LoginWithPassword } from './login-with-password';
 
 export default function LoginForm({ setOtpSent }) {
   const [number, setNumber] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordLogin, setPasswordLogin] = useState(false);
 
   async function requestOtp() {
     if (number.length !== 10) {
@@ -51,6 +53,9 @@ export default function LoginForm({ setOtpSent }) {
     e.preventDefault();
   }
 
+  if (passwordLogin) {
+    return <LoginWithPassword setPasswordLogin={setPasswordLogin} />;
+  }
   return (
     <form className='w-[20rem] space-y-4' onSubmit={onSubmit}>
       <input
@@ -82,6 +87,13 @@ export default function LoginForm({ setOtpSent }) {
       >
         {loading ? <Spinner /> : 'Get OTP'}
       </Button>
+
+      <p
+        className='text-sm hover:underline mt-0 cursor-pointer'
+        onClick={() => setPasswordLogin(true)}
+      >
+        Use Password
+      </p>
     </form>
   );
 }
