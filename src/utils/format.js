@@ -13,3 +13,20 @@ export function convertMilliseconds(totalMilliseconds) {
 
   return { hours, minutes, seconds };
 }
+
+export function convertTimeStringTo12Hour(timeString) {
+  const date = new Date(timeString);
+
+  let hours = date.getHours();
+
+  const minutes = '0' + date.getMinutes();
+
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  // Convert hours to 12-hour format
+  hours = hours % 12;
+
+  hours = hours ? hours : 12; // Midnight (0 hours)
+  // return `${hours}:${minutes.slice(-2)} ${ampm}`
+  return `${hours}:${minutes.slice(-2)}${ampm}`;
+}

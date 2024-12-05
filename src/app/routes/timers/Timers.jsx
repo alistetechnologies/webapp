@@ -12,11 +12,12 @@ import useHouseStore from '@/features/dashboard/houseStore';
 import { MainHeader } from '@/features/dashboard/MainHeader';
 import NoRooms from '@/features/dashboard/no-rooms';
 import Rooms from '@/features/dashboard/Rooms';
+import { AutoTimers } from '@/features/timers/AutoTimers';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 let rerender = 0;
-export function AutoTimers() {
+export function Timers() {
   const user = useUser.getState().user;
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || '',
@@ -45,27 +46,6 @@ export function AutoTimers() {
     getUserHouse();
   }, [selectedHouse?.value]);
 
-  useEffect(() => {
-    const getConnectedDevices = async () => {
-      if (!selectedHouse?.value) {
-        toast.error('No Selected House!!');
-      }
-
-      const connectedDevicesResponse = await fetchConnectedDevices({
-        houseId: selectedHouse?.value,
-      });
-
-      if (!connectedDevicesResponse.success) {
-        toast.error('Failed to fetch Connected devices!!');
-        return;
-      }
-
-      setConnectedDevices(connectedDevicesResponse?.data?.devices);
-    };
-
-    getConnectedDevices();
-  }, [selectedHouse?.value]);
-
   console.log('[house]', house);
   // console.log('[devices] ', connectedDevices);
 
@@ -86,7 +66,6 @@ export function AutoTimers() {
         date={date}
         setDate={setDate}
       />
-      {/* <h2>{rerender}</h2> */}
 
       {loading && (
         <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
@@ -94,7 +73,7 @@ export function AutoTimers() {
         </div>
       )}
 
-      {!loading && <></>}
+      {!loading && <AutoTimers houseData={house} />}
     </div>
   );
 }

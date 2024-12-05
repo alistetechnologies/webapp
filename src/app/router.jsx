@@ -30,11 +30,9 @@ const createAppRouter = () =>
         {
           path: '',
           lazy: async () => {
-            const { AutoTimers } = await import(
-              './routes/autoTimers/autoTimers'
-            );
+            const { Timers } = await import('./routes/timers/Timers');
 
-            return { Component: AutoTimers };
+            return { Component: Timers };
           },
         },
       ],
