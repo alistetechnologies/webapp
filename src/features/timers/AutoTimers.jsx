@@ -1,11 +1,11 @@
 import React from 'react';
 import { AutoTimeBox } from './components/AutoTimeBox';
-import { CircleArrowOutDownRightIcon } from 'lucide-react';
 import { DeviceTypeMap } from '@/constants/config';
 import { AddAutoTImer } from './components/AddAutoTImer';
+import useHouseStore from '../dashboard/houseStore';
 
-export function AutoTimers({ houseData }) {
-  console.log('[houseData]', houseData);
+export function AutoTimers() {
+  const houseData = useHouseStore((state) => state.house);
   const timerCounter = (room) => {
     let count = 0;
     for (let d of room.devices) {
@@ -33,7 +33,7 @@ export function AutoTimers({ houseData }) {
               <h4 className='text-xl text-muted-foreground font-semibold mb-2'>
                 {room.roomName} ({autoTimersCount})
               </h4>
-              <div className='grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+              <div className='flex flex-wrap space-x-4 space-y-4 items-center'>
                 {room?.devices?.map((device) => {
                   return device.switches.map((s) => {
                     let startTime = s?.autoTimers?.startTime;

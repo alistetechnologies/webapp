@@ -10,16 +10,18 @@ import {
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DeviceTypeMap } from '@/constants/config';
+import useHouseStore from '@/features/dashboard/houseStore';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import Select from 'react-select';
 
-export function AddAutoTImer({ houseData }) {
+export function AddAutoTImer() {
+  const houseData = useHouseStore.getState().house;
+
   const [appliancesData, setAppliancesData] = useState([]);
 
   useEffect(() => {
-    console.log('here');
     const applianceData = () => {
       const appliances = [];
 

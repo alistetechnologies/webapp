@@ -22,16 +22,16 @@ export function AutoTimeBox({ data = {}, deviceId }) {
   }, [data]);
 
   async function onToggle(event) {
-    let data = {
+    let payload = {
       deviceId: deviceId,
       switchId: data.switchId,
       enabled: event,
     };
-    const resp = await toggleAutoTimers(data);
+    const resp = await toggleAutoTimers(payload);
   }
 
-  async function onDelete() {
-    const response = await setAutoTimers([
+  function onDelete() {
+    setAutoTimers([
       {
         deviceId,
         switchId: data.switchId,
@@ -59,8 +59,10 @@ export function AutoTimeBox({ data = {}, deviceId }) {
         <div className='flex justify-between'>
           <div>
             <p className='text-muted-foreground'>On Time</p>
-            {formatTime(data?.autoTimers?.turnOffAfter)}
-            <p className='font-semibold'></p>
+
+            <p className='font-semibold'>
+              {formatTime(data?.autoTimers?.turnOffAfter)}
+            </p>
           </div>
 
           <div>

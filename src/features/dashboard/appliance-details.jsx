@@ -19,8 +19,6 @@ export function ApplianceDetails({
     (appliance) => appliance.switchId === analysisData?.switchId
   );
 
-  console.log('[appliance]', appliance);
-
   if (appliance?.deviceType === 7 || !appliance) return;
 
   return (

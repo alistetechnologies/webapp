@@ -2,10 +2,10 @@ import { serverUrl } from '@/constants/config';
 import { useAuth } from '@/features/auth/api/authStore';
 
 import { api } from '@/lib/apiClient';
+import useHouseStore from '../houseStore';
 
 export const fetchHouse = async (houseId) => {
   const userNumber = useAuth.getState().auth.number;
-  console.log('HOUSE ID _ ', houseId);
   try {
     const response = await api.get(
       `${serverUrl.sub}/api/fetch/house2/${houseId}/+91${userNumber}`
@@ -17,6 +17,8 @@ export const fetchHouse = async (houseId) => {
         data: {},
       };
     }
+
+    useHouseStore.getState().updateHouse(response.data);
 
     return {
       success: 'success',
@@ -51,7 +53,6 @@ export const fetchUserHouses = async (email) => {
       `${serverUrl.sub}/api/fetch/keys/${email}?user=${email}`
     );
 
-    console.log('[fetchUserHouses]', response.data);
     return response.data;
   } catch (error) {
     return {
