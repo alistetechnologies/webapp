@@ -41,7 +41,6 @@ export function AddAutoTImer() {
             }
           }
         }
-        console.log('[Appliance Data] ', appliances);
       }
 
       setAppliancesData(appliances);

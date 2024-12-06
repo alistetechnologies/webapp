@@ -10,8 +10,7 @@ export const toggleAutoTimers = async (data) => {
       data
     );
 
-    const house = useHouseStore((state) => state.house);
-
+    const house = useHouseStore.getState().house;
     if (response.data.success) {
       fetchHouse(house._id);
     }
