@@ -1,6 +1,8 @@
+import { Switch } from '@/components/ui/switch';
 import { convertTimeStringTo12Hour } from '@/utils/format';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { setAutoTimers, toggleAutoTimers } from '../api/AutoTimers';
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -13,6 +15,35 @@ function formatTime(seconds) {
 }
 
 export function AutoTimeBox({ data = {}, deviceId }) {
+  const [active, setActive] = useState(data?.autoTImers?.enabled);
+
+  useEffect(() => {
+    setActive(data?.autoTimers?.enabled);
+  }, [data]);
+
+  async function onToggle(event) {
+    let data = {
+      deviceId: deviceId,
+      switchId: data.switchId,
+      enabled: event,
+    };
+    const resp = await toggleAutoTimers(data);
+  }
+
+  async function onDelete() {
+    const response = await setAutoTimers([
+      {
+        deviceId,
+        switchId: data.switchId,
+        mode: 'Always',
+        turnOffAfter: 0,
+        turnOnAfter: 0,
+        startTime: '',
+        stopTime: '',
+      },
+    ]);
+  }
+
   return (
     <div className='p-4 h-52 w-72 rounded-lg shadow-lg'>
       <div className='flex flex-col justify-between w-full h-full'>
@@ -21,7 +52,7 @@ export function AutoTimeBox({ data = {}, deviceId }) {
           <p className='font-bold' title={deviceId}>
             {data.switchName}
           </p>
-          <input type='checkbox' />
+          <Switch checked={active} onCheckedChange={onToggle} />
         </div>
 
         {/* OnTime & OffTime */}
