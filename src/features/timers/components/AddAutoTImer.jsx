@@ -15,9 +15,17 @@ import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import Select from 'react-select';
+import { DurationInput } from './DurationInput';
 
 export function AddAutoTImer() {
   const houseData = useHouseStore.getState().house;
+  const [startTime, setStartTime] = useState('');
+  const [stopTime, setStopTime] = useState('');
+  const [onTime, setOnTime] = useState(0);
+  const [offTime, setOffTime] = useState(0);
+
+  const [selectedAppliances, setSelectedAppliances] = useState([]);
+  const [active, setActive] = useState('Always');
 
   const [appliancesData, setAppliancesData] = useState([]);
 
@@ -47,6 +55,10 @@ export function AddAutoTImer() {
     };
     applianceData();
   }, [houseData]);
+
+  const createAutoTimers = () => {
+    const data = {};
+  };
   return (
     <Dialog>
       <DialogTrigger>
@@ -67,45 +79,51 @@ export function AddAutoTImer() {
         </DialogHeader>
         <div className='space-y-4'>
           <h4 className='text-lg font-bold'>Run Time</h4>
-          <Tabs defaultValue='Always'>
+          <Tabs
+            defaultValue='Always'
+            onValueChange={(value) => setActive(value)}
+          >
             <TabsList className='grid w-full grid-cols-2'>
               <TabsTrigger value='Always'>Always</TabsTrigger>
               <TabsTrigger value='Particular'>Particular Time</TabsTrigger>
             </TabsList>
-            <TabsContent value='Always'>
-              <div className='flex justify-between mt-4'>
-                <div className='flex flex-col gap-4'>
-                  <p>Start Time</p>
-                  <Input type='time' />
-                </div>
+            <TabsContent value='Always' className='space-y-4'>
+              <DurationInput setOn={setOnTime} setOff={setOffTime} />
+              <p className='text-sm text-muted-foreground'>
+                The Ac will be turned off for the selected frequency in every
+                selected interval
+              </p>
 
-                <div className='flex flex-col gap-4'>
-                  <p>Stop Time</p>
-                  <Input type='time' />
-                </div>
-              </div>
-              <div className='flex justify-between mt-4'>
-                <div className='flex flex-col gap-4'>
-                  <p>On Time</p>
-                </div>
+              <Select
+                options={appliancesData}
+                isMulti={true}
+                placeholder='Select Appliances'
+                closeMenuOnSelect={false}
+                value={selectedAppliances}
+                onChange={(selected) => setSelectedAppliances(selected)}
+              />
 
-                <div className='flex flex-col gap-4'>
-                  <p>Off Time</p>
-                  <Input type='time' />
-                </div>
-              </div>
+              <Button className='w-full'>Create</Button>
             </TabsContent>
 
             <TabsContent value='Particular' className='space-y-4'>
               <div className='flex justify-between mt-4'>
                 <div className='flex flex-col gap-4'>
                   <p>Start Time</p>
-                  <Input type='time' />
+                  <Input
+                    type='time'
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
                 </div>
 
                 <div className='flex flex-col gap-4'>
                   <p>Stop Time</p>
-                  <Input type='time' />
+                  <Input
+                    type='time'
+                    value={stopTime}
+                    onChange={(e) => setStopTime(e.target.value)}
+                  />
                 </div>
               </div>
               <p className='text-sm text-muted-foreground'>
@@ -113,17 +131,7 @@ export function AddAutoTImer() {
                 of time.
               </p>
 
-              <div className='flex justify-between mt-4'>
-                <div className='flex flex-col gap-4'>
-                  <p>On Time</p>
-                  <Input type='time' />
-                </div>
-
-                <div className='flex flex-col gap-4'>
-                  <p>Off Time</p>
-                  <Input type='time' />
-                </div>
-              </div>
+              <DurationInput setOn={setOnTime} setOff={setOffTime} />
 
               <p className='text-sm text-muted-foreground'>
                 The AC will be turned off for the selected frequency in every
@@ -134,6 +142,7 @@ export function AddAutoTImer() {
                 options={appliancesData}
                 isMulti={true}
                 placeholder='Select Appliances'
+                closeMenuOnSelect={false}
               />
 
               <Button className='w-full'>Create</Button>
