@@ -29,7 +29,7 @@ export function AutoTimers() {
           const autoTimersCount = timerCounter(room);
           if (autoTimersCount === 0) return;
           return (
-            <div className='mb-8'>
+            <div className='mb-8' key={room.roomName}>
               <h4 className='text-xl text-muted-foreground font-semibold mb-2'>
                 {room.roomName} ({autoTimersCount})
               </h4>

@@ -16,9 +16,14 @@ import { useEffect, useState } from 'react';
 
 import Select from 'react-select';
 import { DurationInput } from './DurationInput';
+import toast from 'react-hot-toast';
+import { setAutoTimers } from '../api/AutoTimers';
+import { Spinner } from '@/components/ui/spinner';
 
 export function AddAutoTImer() {
-  const houseData = useHouseStore.getState().house;
+  const houseData = useHouseStore((state) => state.house);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [stopTime, setStopTime] = useState('');
   const [onTime, setOnTime] = useState(0);
@@ -56,13 +61,54 @@ export function AddAutoTImer() {
     applianceData();
   }, [houseData]);
 
-  const createAutoTimers = () => {
-    const data = {};
+  const createAutoTimers = async () => {
+    let payload = [];
+    for (const appliance of selectedAppliances) {
+      let startTimeDateObject = '';
+
+      if (startTime) {
+        startTimeDateObject = new Date();
+        startTimeDateObject.setHours(startTime.split(':')[0]);
+        startTimeDateObject.setMinutes(startTime.split(':')[1]);
+        startTimeDateObject.setMinutes(0);
+      }
+
+      let stopTimeDateObject = '';
+      if (stopTime) {
+        stopTimeDateObject = new Date();
+
+        stopTimeDateObject.setHours(stopTime.split(':')[0]);
+        stopTimeDateObject.setMinutes(stopTime.split(':')[1]);
+        stopTimeDateObject.setSeconds(0);
+      }
+
+      payload.push({
+        deviceId: appliance.value.deviceId,
+        switchId: appliance.value.switchId,
+        mode: active,
+        startTime: startTimeDateObject,
+        stopTime: stopTimeDateObject,
+        turnOnAfter: offTime,
+        turnOffAfter: onTime,
+      });
+    }
+
+    if (onTime === 0 && offTime === 0) {
+      toast.error('Invalid OnTime and OffTime');
+      return;
+    }
+
+    const resp = await setAutoTimers(payload);
+
+    if (resp.success) {
+      toast.success('Successfully created AutoTimer.');
+      setOpen(false);
+    }
   };
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger>
-        <Button className='mb-4'>
+        <Button className='mb-4' onClick={() => setOpen(true)}>
           <Plus />
           Add Auto Timers
         </Button>
@@ -81,7 +127,11 @@ export function AddAutoTImer() {
           <h4 className='text-lg font-bold'>Run Time</h4>
           <Tabs
             defaultValue='Always'
-            onValueChange={(value) => setActive(value)}
+            onValueChange={(value) => {
+              setActive(value);
+              setStartTime('');
+              setStopTime('');
+            }}
           >
             <TabsList className='grid w-full grid-cols-2'>
               <TabsTrigger value='Always'>Always</TabsTrigger>
@@ -103,7 +153,13 @@ export function AddAutoTImer() {
                 onChange={(selected) => setSelectedAppliances(selected)}
               />
 
-              <Button className='w-full'>Create</Button>
+              <Button
+                className='w-full'
+                onClick={() => createAutoTimers()}
+                disabled={loading}
+              >
+                {loading ? <Spinner /> : 'Create'}
+              </Button>
             </TabsContent>
 
             <TabsContent value='Particular' className='space-y-4'>
@@ -143,9 +199,17 @@ export function AddAutoTImer() {
                 isMulti={true}
                 placeholder='Select Appliances'
                 closeMenuOnSelect={false}
+                value={selectedAppliances}
+                onChange={(selected) => setSelectedAppliances(selected)}
               />
 
-              <Button className='w-full'>Create</Button>
+              <Button
+                className='w-full'
+                onClick={() => createAutoTimers()}
+                disabled={loading}
+              >
+                {loading ? <Spinner /> : 'Create'}
+              </Button>
             </TabsContent>
           </Tabs>
         </div>

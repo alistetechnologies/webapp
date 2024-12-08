@@ -21,14 +21,14 @@ export function DurationInput({ setOn, setOff }) {
       return;
     }
 
-    setOn(onTime.hours * 60 * 60 + onTime.minutes * 60);
+    setOn(Number(onTime.hours) * 60 * 60 + Number(onTime.minutes) * 60);
 
     if (offTime.hours === '' || offTime.minutes === '') {
       toast.error('Invalid Off Time');
       return;
     }
 
-    setOff(offTime.hours * 60 * 60 + onTime.minutes * 60);
+    setOff(Number(offTime.hours) * 60 * 60 + Number(offTime.minutes) * 60);
   }, [onTime, offTime]);
 
   const handleOnTimeChange = (e) => {
