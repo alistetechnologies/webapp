@@ -3,6 +3,7 @@ import { convertTimeStringTo12Hour } from '@/utils/format';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { setAutoTimers, toggleAutoTimers } from '../api/AutoTimers';
+import { UpdateAutoTimer } from './UpdateAutoTimer';
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -73,17 +74,7 @@ export function AutoTimeBox({ data = {}, deviceId }) {
           </div>
         </div>
 
-        <div className='flex justify-between text-sm text-blue-700 font-semibold cursor-pointer hover:underline'>
-          <p className='text-sm text-blue-700 font-semibold'>
-            Run Time:{' '}
-            {data?.autoTimers?.mode === 'Always'
-              ? 'Always'
-              : `${convertTimeStringTo12Hour(
-                  data?.autoTimers?.startTime
-                )} to ${convertTimeStringTo12Hour(data?.autoTimers?.stopTime)}`}
-          </p>
-          <ChevronRight />
-        </div>
+        <UpdateAutoTimer data={data} deviceId={deviceId} />
       </div>
     </div>
   );
