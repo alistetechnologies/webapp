@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { setAutoTimers, toggleAutoTimers } from '../api/AutoTimers';
 import { UpdateAutoTimer } from './UpdateAutoTimer';
+import toast from 'react-hot-toast';
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -31,8 +32,8 @@ export function AutoTimeBox({ data = {}, deviceId }) {
     const resp = await toggleAutoTimers(payload);
   }
 
-  function onDelete() {
-    setAutoTimers([
+  async function onDelete() {
+    const resp = await setAutoTimers([
       {
         deviceId,
         switchId: data.switchId,
@@ -43,38 +44,50 @@ export function AutoTimeBox({ data = {}, deviceId }) {
         stopTime: '',
       },
     ]);
+
+    if (resp.success) {
+      toast.success('Successfully deleted the timer.');
+    }
   }
 
   return (
-    <div className='p-4 h-52 w-72 rounded-lg shadow-lg'>
-      <div className='flex flex-col justify-between w-full h-full'>
-        {/* Device Name and Toggle */}
-        <div className='flex justify-between'>
-          <p className='font-bold' title={deviceId}>
-            {data.switchName}
-          </p>
-          <Switch checked={active} onCheckedChange={onToggle} />
-        </div>
-
-        {/* OnTime & OffTime */}
-        <div className='flex justify-between'>
-          <div>
-            <p className='text-muted-foreground'>On Time</p>
-
-            <p className='font-semibold'>
-              {formatTime(data?.autoTimers?.turnOffAfter)}
+    <div className='group relative'>
+      <div className='p-4 h-52 w-72 rounded-lg shadow-lg'>
+        <div className='flex flex-col justify-between w-full h-full'>
+          {/* Device Name and Toggle */}
+          <div className='flex justify-between'>
+            <p className='font-bold' title={deviceId}>
+              {data.switchName}
             </p>
+            <Switch checked={active} onCheckedChange={onToggle} />
           </div>
 
-          <div>
-            <p className='text-muted-foreground'>Off Time</p>
-            <p className='font-semibold'>
-              {formatTime(data?.autoTimers?.turnOnAfter)}
-            </p>
-          </div>
-        </div>
+          {/* OnTime & OffTime */}
+          <div className='flex justify-between'>
+            <div>
+              <p className='text-muted-foreground'>On Time</p>
 
-        <UpdateAutoTimer data={data} deviceId={deviceId} />
+              <p className='font-semibold'>
+                {formatTime(data?.autoTimers?.turnOffAfter)}
+              </p>
+            </div>
+
+            <div>
+              <p className='text-muted-foreground'>Off Time</p>
+              <p className='font-semibold'>
+                {formatTime(data?.autoTimers?.turnOnAfter)}
+              </p>
+            </div>
+          </div>
+
+          <UpdateAutoTimer data={data} deviceId={deviceId} />
+        </div>
+      </div>
+      <div
+        className='absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 w-72 text-center text-white rounded cursor-pointer  bg-red-400'
+        onClick={onDelete}
+      >
+        Delete
       </div>
     </div>
   );

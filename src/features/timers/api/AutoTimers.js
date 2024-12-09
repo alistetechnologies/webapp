@@ -31,7 +31,6 @@ export const setAutoTimers = async (payload) => {
     if (resp.data.success) {
       fetchHouse(house._id);
     }
-    console.log('[Set AutoTimer]', resp);
     return resp.data;
   } catch (error) {
     return error?.response?.data;
