@@ -17,6 +17,8 @@ import Select from 'react-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DeviceTypeMap } from '@/constants/config';
+import { setAutoTimers } from '../api/AutoTimers';
+import toast from 'react-hot-toast';
 
 export function UpdateAutoTimer({ data, deviceId }) {
   const houseData = useHouseStore((state) => state.house);
@@ -24,26 +26,19 @@ export function UpdateAutoTimer({ data, deviceId }) {
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [stopTime, setStopTime] = useState('');
-  const [onTime, setOnTime] = useState(0);
-  const [offTime, setOffTime] = useState(0);
+  const [onTime, setOnTime] = useState({
+    hours: 0,
+    minutes: 0,
+  });
+  const [offTime, setOffTime] = useState({
+    hours: 0,
+    minutes: 0,
+  });
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [active, setActive] = useState('Always');
 
   const [appliancesData, setAppliancesData] = useState([]);
-
-  console.log('[data in Update]', data);
-  // console.log('[Data]', );
-  // console.log(
-  //   'startTime || stopTime',
-  //   startTime,
-  //   stopTime,
-  //   active,
-  //   onTime,
-  //   offTime,
-  //   data.autoTimers.turnOffAfter,
-  //   data.autoTimers.turnOnAfter
-  // );
 
   useEffect(() => {
     const applianceData = () => {
@@ -78,8 +73,15 @@ export function UpdateAutoTimer({ data, deviceId }) {
     setActive(data.autoTimers.mode);
 
     // set On Time & Off Time
-    setOnTime(data.autoTimers.turnOffAfter);
-    setOffTime(data.autoTimers.turnOnAfter);
+    setOnTime({
+      hours: Math.floor(Number(data.autoTimers.turnOffAfter) / 3600),
+      minutes: Math.floor((Number(data.autoTimers.turnOffAfter) % 3600) / 60),
+    });
+
+    setOffTime({
+      hours: Math.floor(Number(data.autoTimers.turnOnAfter) / 3600),
+      minutes: Math.floor((Number(data.autoTimers.turnOnAfter) % 3600) / 60),
+    });
 
     // Set startTime & stopTime
     if (data.autoTimers.mode === 'Particular') {
@@ -111,9 +113,56 @@ export function UpdateAutoTimer({ data, deviceId }) {
       }
     }
 
-    setSelectedAppliances(selected);
+    setSelectedAppliances([selected]);
   }, [data, open]);
 
+  const createAutoTimers = async () => {
+    let payload = [];
+    for (const appliance of selectedAppliances) {
+      let startTimeDateObject = '';
+
+      if (startTime) {
+        startTimeDateObject = new Date();
+        startTimeDateObject.setHours(startTime.split(':')[0]);
+        startTimeDateObject.setMinutes(startTime.split(':')[1]);
+        startTimeDateObject.setMinutes(0);
+      }
+
+      let stopTimeDateObject = '';
+      if (stopTime) {
+        stopTimeDateObject = new Date();
+
+        stopTimeDateObject.setHours(stopTime.split(':')[0]);
+        stopTimeDateObject.setMinutes(stopTime.split(':')[1]);
+        stopTimeDateObject.setSeconds(0);
+      }
+
+      payload.push({
+        deviceId: appliance.value.deviceId,
+        switchId: appliance.value.switchId,
+        mode: active,
+        startTime: startTimeDateObject,
+        stopTime: stopTimeDateObject,
+        turnOnAfter: offTime.hours * 60 * 60 + offTime.minutes * 60,
+        turnOffAfter: onTime.hours * 60 * 60 + offTime.minutes * 60,
+      });
+    }
+
+    if (onTime === 0 && offTime === 0) {
+      toast.error('Invalid OnTime and OffTime');
+      return;
+    }
+    setLoading(true);
+
+    const resp = await setAutoTimers(payload);
+    console.log('RESP - ', resp);
+    setLoading(false);
+    console.log('HERE');
+    if (resp.success) {
+      toast.success('Successfully updated AutoTimer.');
+      setOpen(false);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -158,10 +207,10 @@ export function UpdateAutoTimer({ data, deviceId }) {
             </TabsList>
             <TabsContent value='Always' className='space-y-4'>
               <DurationInput
-                on={onTime}
-                setOn={setOnTime}
-                setOff={setOffTime}
-                off={offTime}
+                setOnTime={setOnTime}
+                setOffTime={setOffTime}
+                onTime={onTime}
+                offTime={offTime}
               />
               <p className='text-sm text-muted-foreground'>
                 The Ac will be turned off for the selected frequency in every
@@ -211,7 +260,12 @@ export function UpdateAutoTimer({ data, deviceId }) {
                 of time.
               </p>
 
-              <DurationInput setOn={setOnTime} setOff={setOffTime} />
+              <DurationInput
+                setOnTime={setOnTime}
+                setOffTime={setOffTime}
+                onTime={onTime}
+                offTime={offTime}
+              />
 
               <p className='text-sm text-muted-foreground'>
                 The AC will be turned off for the selected frequency in every
@@ -232,7 +286,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
                 onClick={() => createAutoTimers()}
                 disabled={loading}
               >
-                {loading ? <Spinner /> : 'Create'}
+                {loading ? <Spinner /> : 'Update'}
               </Button>
             </TabsContent>
           </Tabs>

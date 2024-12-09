@@ -1,49 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function DurationInput({ on, off, setOn, setOff }) {
-  const [onTime, setOnTime] = useState({
-    hours: 0,
-    minutes: 0,
-  });
-
-  const [offTime, setOffTime] = useState({
-    hours: 0,
-    minutes: 0,
-  });
-
-  useEffect(() => {
-    if (on) {
-      setOnTime({
-        hours: Math.floor(on / 3600),
-        minutes: Math.floor((on % 3600) / 60),
-      });
-    }
-
-    if (off) {
-      setOffTime({
-        hours: Math.floor(off / 3600),
-        minutes: Math.floor((off % 3600) / 60),
-      });
-    }
-  }, [on, off]);
-
-  useEffect(() => {
-    if (onTime.hours === '' || onTime.minutes === '') {
-      toast.error('Invalid On Time');
-      return;
-    }
-
-    setOn(Number(onTime.hours) * 60 * 60 + Number(onTime.minutes) * 60);
-
-    if (offTime.hours === '' || offTime.minutes === '') {
-      toast.error('Invalid Off Time');
-      return;
-    }
-
-    setOff(Number(offTime.hours) * 60 * 60 + Number(offTime.minutes) * 60);
-  }, [onTime, offTime, setOn, setOff]);
-
+export function DurationInput({ onTime, offTime, setOnTime, setOffTime }) {
   const handleOnTimeChange = (e) => {
     const { name, value } = e.target;
 
