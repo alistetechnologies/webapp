@@ -26,8 +26,14 @@ export function AddAutoTImer() {
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [stopTime, setStopTime] = useState('');
-  const [onTime, setOnTime] = useState(0);
-  const [offTime, setOffTime] = useState(0);
+  const [onTime, setOnTime] = useState({
+    hours: 0,
+    minutes: 0,
+  });
+  const [offTime, setOffTime] = useState({
+    hours: 0,
+    minutes: 0,
+  });
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [active, setActive] = useState('Always');
@@ -88,12 +94,15 @@ export function AddAutoTImer() {
         mode: active,
         startTime: startTimeDateObject,
         stopTime: stopTimeDateObject,
-        turnOnAfter: offTime,
-        turnOffAfter: onTime,
+        turnOnAfter: offTime.hours * 60 * 60 + offTime.minutes * 60,
+        turnOffAfter: onTime.hours * 60 * 60 + onTime.minutes * 60,
       });
     }
 
-    if (onTime === 0 && offTime === 0) {
+    if (
+      (onTime.hours === 0 || onTime.minutes == 0) &&
+      (offTime.hours === 0 || offTime.minutes === 0)
+    ) {
       toast.error('Invalid OnTime and OffTime');
       return;
     }
@@ -140,7 +149,12 @@ export function AddAutoTImer() {
               <TabsTrigger value='Particular'>Particular Time</TabsTrigger>
             </TabsList>
             <TabsContent value='Always' className='space-y-4'>
-              <DurationInput setOn={setOnTime} setOff={setOffTime} />
+              <DurationInput
+                onTime={onTime}
+                setOnTime={setOnTime}
+                offTime={offTime}
+                setOffTime={setOffTime}
+              />
               <p className='text-sm text-muted-foreground'>
                 The Ac will be turned off for the selected frequency in every
                 selected interval
@@ -191,7 +205,12 @@ export function AddAutoTImer() {
                 of time.
               </p>
 
-              <DurationInput setOn={setOnTime} setOff={setOffTime} />
+              <DurationInput
+                onTime={onTime}
+                setOnTime={setOnTime}
+                offTime={offTime}
+                setOffTime={setOffTime}
+              />
 
               <p className='text-sm text-muted-foreground'>
                 The AC will be turned off for the selected frequency in every
