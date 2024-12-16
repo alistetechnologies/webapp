@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Home, Users } from 'lucide-react';
+import { CalendarCheck, Home, Timer, Users } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
@@ -16,8 +16,14 @@ export default function Sidebar() {
     },
     {
       label: 'Auto Timers',
-      icon: Users,
+      icon: Timer,
       href: '/autoTimers',
+      color: '#292929',
+    },
+    {
+      label: 'Schedules',
+      icon: CalendarCheck,
+      href: '/schedules',
       color: '#292929',
     },
     // {

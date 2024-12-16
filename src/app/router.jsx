@@ -37,6 +37,20 @@ const createAppRouter = () =>
         },
       ],
     },
+    {
+      path: '/schedules',
+      element: <AppRoot />,
+      children: [
+        {
+          path: '',
+          lazy: async () => {
+            const { Schedules } = await import('./routes/schedules/Schedules');
+
+            return { Component: Schedules };
+          },
+        },
+      ],
+    },
   ]);
 
 export const AppRouter = () => {

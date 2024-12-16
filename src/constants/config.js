@@ -6,6 +6,7 @@ export const serverUrl = {
   connection: 'https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default',
   deviceHandler:
     'https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default',
+  web: 'https://web.alistetechnologies.com',
 };
 
 export const DeviceTypeMap = {
