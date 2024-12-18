@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAllSchedulesForHouse } from './api/schedules';
 import toast from 'react-hot-toast';
+import { Table, TableHeader } from '@/components/ui/table';
+import { SchedulesTableHeaders } from './components/SchedulesTableHeaders';
+import { AddSchedule } from './components/AddSchedule';
 
 export default function Schedule() {
   const [data, setData] = useState([]);
@@ -17,5 +20,14 @@ export default function Schedule() {
 
     fetchData();
   }, []);
-  return <div className='w-full h-full bg-white p-4 overflow-scroll'></div>;
+  return (
+    <div className='w-full h-full bg-white p-4 overflow-scroll'>
+      <AddSchedule />
+      <Table className='w-full bg-white'>
+        <TableHeader>
+          <SchedulesTableHeaders />
+        </TableHeader>
+      </Table>
+    </div>
+  );
 }
