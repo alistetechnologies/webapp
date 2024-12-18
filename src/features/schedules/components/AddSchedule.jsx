@@ -215,7 +215,7 @@ export function AddSchedule() {
           </div>
 
           {/* Appliances Data */}
-          <div>
+          <div className='max-h-64 overflow-y-scroll'>
             <p>Select Devices</p>
             <Table className='w-full bg-white'>
               <TableHeader>
@@ -225,30 +225,25 @@ export function AddSchedule() {
                   <TableHead className='text-black'>Select</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className='block max-h-64 overflow-y-scroll'>
+              <TableBody className='max-h-64 overflow-y-scroll'>
+              
                 {house &&
                   house.rooms.map((room) => {
-                    return (
-                      <>
-                        {/* <div className='text-muted-foreground my-2'>
-                          {room?.roomName}
-                        </div> */}
-                        {room.devices.map((d) => {
-                          return d.switches.map((s) => {
-                            if (s.deviceType === DeviceTypeMap.NA) {
-                              return <></>;
-                            }
-                            return (
-                              <SelectAppliance
-                                data={{ ...s, deviceId: d.deviceId }}
-                                state={selectedDevicesData}
-                                updateState={setSelectedDevicesData}
-                              />
-                            );
-                          });
-                        })}
-                      </>
-                    );
+                    return room.devices.map(device=>{
+                      return device.switches.map(swit=>{
+                        if(swit.deviceType!==DeviceTypeMap.NA){
+                        
+                          return  <>
+                          <div>{room.roomName}</div>
+                          <SelectAppliance
+                          data={{ ...swit, deviceId: device.deviceId }}
+                          state={selectedDevicesData}
+                          updateState={setSelectedDevicesData}
+                        />
+                        </>
+                        }
+                      })
+                    })
                   })}
               </TableBody>
             </Table>
