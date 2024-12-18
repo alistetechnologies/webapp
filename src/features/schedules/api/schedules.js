@@ -19,35 +19,41 @@ export const fetchAllSchedulesForHouse = async () => {
     return error?.response?.data;
   }
 };
-export const toggleAutoTimers = async () => {
+
+export const createSchedule = async (data) => {
   try {
     const response = await api.post(
-      `${serverUrl.deviceHandler}/device/enableTimer`,
+      `${serverUrl.web}/v3/centralschedules/create`,
       data
     );
 
-    const house = useHouseStore.getState().house;
-    if (response.data.success) {
-      fetchHouse(house._id);
-    }
     return response.data;
   } catch (error) {
     return error?.response?.data;
   }
 };
 
-export const setAutoTimers = async (payload) => {
+export const removeSchedule = async (data) => {
   try {
-    const resp = await api.post(
-      `${serverUrl.deviceHandler}/devices/setTimer`,
-      payload
+    const response = await api.post(
+      `${serverUrl.web}/v3/centralschedules/remove`,
+      data
     );
 
-    const house = useHouseStore.getState().house;
-    if (resp.data.success) {
-      fetchHouse(house._id);
-    }
-    return resp.data;
+    return response.data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
+
+export const toggleSchedule = async (data) => {
+  try {
+    const response = await api.post(
+      `${serverUrl.web}/v3/centralschedules/update`,
+      data
+    );
+
+    return response.data;
   } catch (error) {
     return error?.response?.data;
   }

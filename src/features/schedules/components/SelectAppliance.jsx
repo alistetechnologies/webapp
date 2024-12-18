@@ -53,6 +53,11 @@ export function SelectAppliance({ data, state, updateState }) {
       return newIsOn;
     });
   };
+
+  const isDataInState = state.find(
+    (item) => item.payload.deviceId === data.deviceId
+  );
+  const initialIsOn = isDataInState ? isDataInState.state : isOn;
   return (
     <TableRow>
       <TableCell className='w-auto'>{data.switchName}</TableCell>
@@ -68,11 +73,18 @@ export function SelectAppliance({ data, state, updateState }) {
       {/* Checkbox */}
       <TableCell className='w-auto'>
         <div className='flex items-center space-x-2'>
-          <Checkbox
-            onCheckedChange={handleCheckboxChange}
-            // id={`checkbox-${data}`}
+          <input
+            type='checkbox'
+            checked={isDataInState !== undefined}
+            onChange={handleCheckboxChange}
+            className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500'
           />
-          <label>Add to state</label>
+          {/* <label
+            htmlFor='terms'
+            className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+          >
+            Accept terms and conditions
+          </label> */}
         </div>
       </TableCell>
     </TableRow>

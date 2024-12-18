@@ -118,8 +118,6 @@ export function AddSchedule() {
         }
       });
 
-      console.log('[day]', day);
-
       if (day.length === 0) {
         toast('Please select at least one day.');
         return;
@@ -129,11 +127,8 @@ export function AddSchedule() {
     } else {
       expression = `${date}T${time}:00`;
     }
-
-    console.log('[cron expression]', expression);
   }
-  // console.log('[appliances]', appliances);
-  console.log('[states]', name, time, date, frequency, days);
+  console.log('[Selected]', selectedDevicesData);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -226,24 +221,34 @@ export function AddSchedule() {
                 </TableRow>
               </TableHeader>
               <TableBody className='max-h-64 overflow-y-scroll'>
-              
                 {house &&
                   house.rooms.map((room) => {
-                    return room.devices.map(device=>{
-                      return device.switches.map(swit=>{
-                        if(swit.deviceType!==DeviceTypeMap.NA){
-                        
-                          return  <>
-                          <div>{room.roomName}</div>
-                          <SelectAppliance
-                          data={{ ...swit, deviceId: device.deviceId }}
-                          state={selectedDevicesData}
-                          updateState={setSelectedDevicesData}
-                        />
-                        </>
-                        }
-                      })
-                    })
+                    return (
+                      <>
+                        <div className='text-muted-foreground my-2'>
+                          {room.roomName}
+                        </div>
+
+                        {room.devices.map((device) => {
+                          return device.switches.map((swit) => {
+                            if (swit.deviceType !== DeviceTypeMap.NA) {
+                              return (
+                                <>
+                                  <SelectAppliance
+                                    data={{
+                                      ...swit,
+                                      deviceId: device.deviceId,
+                                    }}
+                                    state={selectedDevicesData}
+                                    updateState={setSelectedDevicesData}
+                                  />
+                                </>
+                              );
+                            }
+                          });
+                        })}
+                      </>
+                    );
                   })}
               </TableBody>
             </Table>
