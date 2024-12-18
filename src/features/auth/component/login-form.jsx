@@ -37,8 +37,6 @@ export default function LoginForm({ setOtpSent }) {
       countryCode: 'IN',
     });
 
-    console.log('Response - ', response);
-
     if (!response.success) {
       toast.error(response?.message || 'Failed to send OTP!!');
       setError(response?.message);

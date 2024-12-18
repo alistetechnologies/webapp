@@ -13,10 +13,6 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [appliances, setAppliances] = useState();
   const [onAppliances, setOnAppliances] = useState(0);
 
-  // // console.log('[APPLIANCES DATA]', appliances);
-  // console.log('[Analysis Data]', appliancesAnalysisData);
-  // console.log('[connectedDevices]\n', connectedDevices);
-  // console.log('[connectedAppliances]\n', connectedAppliances);
   function calculateAppliances() {
     let connectedAppliances = 0;
     let totalAppliances = 0;
@@ -31,7 +27,6 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
       }
       // loop in device for switches
       for (const s of device?.switches) {
-        // console.log('DEVICETYPE -', s.deviceType, s);
         // If switch type is N/A
         if (Number(s.deviceType) === 7) {
           continue;
@@ -46,7 +41,6 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
         if (connectedDevices.some((d) => d?.deviceId === device?.deviceId)) {
           connectedAppliances += 1;
         }
-        // console.log('device?.deviceId', device?.deviceId);
         appliancesData[device?.deviceId].push({
           deviceId: device?.deviceId,
           switchName: s?.switchName,

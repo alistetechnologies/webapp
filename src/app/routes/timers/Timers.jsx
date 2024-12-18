@@ -46,9 +46,6 @@ export function Timers() {
     getUserHouse();
   }, [selectedHouse?.value]);
 
-  console.log('[house]', house);
-  // console.log('[devices] ', connectedDevices);
-
   rerender += 1;
 
   // if (loading) {

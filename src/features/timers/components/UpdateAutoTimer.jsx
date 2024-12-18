@@ -155,9 +155,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
     setLoading(true);
 
     const resp = await setAutoTimers(payload);
-    console.log('RESP - ', resp);
     setLoading(false);
-    console.log('HERE');
     if (resp.success) {
       toast.success('Successfully updated AutoTimer.');
       setOpen(false);

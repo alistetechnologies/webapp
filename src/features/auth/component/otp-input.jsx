@@ -29,8 +29,6 @@ export function OtpInput() {
 
   const navigate = useNavigate();
 
-  // console.log('USER Number - ', userNumber);
-
   async function requestOtp() {
     // if (number.length !== 10) {
     //   toast.error('Number should be of 10 characters');
@@ -53,8 +51,6 @@ export function OtpInput() {
       callingCode: '+91',
       countryCode: 'IN',
     });
-
-    console.log('Response - ', response);
 
     if (!response.success) {
       toast.error(response?.message || 'Failed to send OTP!!');
@@ -79,7 +75,6 @@ export function OtpInput() {
       device: {},
     });
 
-    console.log('VerifyOtp - ', response);
     if (response.success) {
       const token = await createAccessToken({
         token: response.data?.token,
@@ -98,7 +93,6 @@ export function OtpInput() {
         });
 
         const user = await fetchUser();
-        console.log('[user] ', user);
         if (Object.keys(user).length > 0) {
           useUser.getState().updateUser(user);
 
@@ -114,7 +108,6 @@ export function OtpInput() {
   function onSubmit() {
     e.preventDefault();
   }
-  console.log(value);
   return (
     <form className='space-y-4' onSubmit={onSubmit}>
       <InputOTP

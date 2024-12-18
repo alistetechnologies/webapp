@@ -69,7 +69,6 @@ export function LoginWithPassword({ setPasswordLogin }) {
         });
 
         const user = await fetchUser();
-        console.log('[user] ', user);
         if (Object.keys(user).length > 0) {
           useUser.getState().updateUser(user);
 

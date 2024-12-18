@@ -30,7 +30,6 @@ import { SheetPortal } from '@/components/ui/sheet';
 
 export function AddSchedule() {
   const house = useHouseStore((state) => state.house);
-  console.log('house', house);
 
   const [appliances, setAppliances] = useState([]);
 
@@ -149,7 +148,6 @@ export function AddSchedule() {
 
     const response = await createSchedule(payload);
 
-    console.log('[response]', response);
     if (!response.success) {
       toast.error(response.message);
       return;
@@ -158,7 +156,6 @@ export function AddSchedule() {
     toast.success('Successfully created Schedule.');
     setOpen(false);
   }
-  console.log('[Selected]', selectedDevicesData);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>

@@ -8,8 +8,6 @@ import { useState } from 'react';
 export function LoginRoute() {
   const [otpSent, setOtpSent] = useState(false);
 
-  console.log('[otpSent]', otpSent);
-
   return (
     <div className='flex flex-col md:flex-row h-full'>
       <div className='w-full p-5 flex flex-col bg-sky-800/20 flex-1 items-center ustify-center'>

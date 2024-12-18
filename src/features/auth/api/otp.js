@@ -3,12 +3,9 @@ import { api } from '@/lib/apiClient';
 
 export const createOtp = async (data) => {
   try {
-    console.log('data - ', data);
     const response = await api.post(`${serverUrl.user}/users/v1/otp`, data);
-    console.log(response);
     return response.data;
   } catch (error) {
-    console.log(error);
     const message =
       error instanceof Error && error?.response?.data?.message
         ? error.response.data.message

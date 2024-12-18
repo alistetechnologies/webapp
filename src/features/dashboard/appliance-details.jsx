@@ -8,12 +8,8 @@ export function ApplianceDetails({
   sno,
   connectedDevices,
 }) {
-  // console.log('[analysis] ', analysisData);
-
   const onTime = convertMilliseconds(analysisData?.ontime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
-
-  // console.log('onTime', onTime, onlineTime);
 
   const appliance = appliances[analysisData?.deviceId].find(
     (appliance) => appliance.switchId === analysisData?.switchId
