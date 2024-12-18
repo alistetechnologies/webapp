@@ -2,6 +2,7 @@ import { serverUrl } from '@/constants/config';
 import { fetchHouse } from '@/features/dashboard/api/house';
 import useHouseStore from '@/features/dashboard/houseStore';
 import { api } from '@/lib/apiClient';
+import useScheduleStore from '../scheduleStore';
 
 export const fetchAllSchedulesForHouse = async () => {
   try {
@@ -13,6 +14,8 @@ export const fetchAllSchedulesForHouse = async () => {
         houseId: house._id,
       }
     );
+
+    useScheduleStore.getState().updateSchedules(response.data.data.schedules);
 
     return response.data;
   } catch (error) {

@@ -36,9 +36,6 @@ export function Schedules() {
     getUserHouse();
   }, [selectedHouse?.value]);
 
-  console.log('[house]', house);
-  // console.log('[devices] ', connectedDevices);
-
   // if (loading) {
   //   return (
   //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>

@@ -25,9 +25,12 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { SelectAppliance } from './SelectAppliance';
 import toast from 'react-hot-toast';
+import { createSchedule } from '../api/schedules';
+import { SheetPortal } from '@/components/ui/sheet';
 
 export function AddSchedule() {
   const house = useHouseStore((state) => state.house);
+  console.log('house', house);
 
   const [appliances, setAppliances] = useState([]);
 
@@ -103,10 +106,16 @@ export function AddSchedule() {
     'Sunday',
   ];
 
-  function handleSubmit() {
-    if (name === '') toast.error('Enter Schedule Name!!');
+  async function handleSubmit() {
+    if (name === '') {
+      toast.error('Enter Schedule Name!!');
+      return;
+    }
 
-    if (time === '' || !time) toast.error('Select Valid TIme');
+    if (time === '' || !time) {
+      toast.error('Select Valid TIme');
+      return;
+    }
 
     let expression = '';
 
@@ -127,6 +136,27 @@ export function AddSchedule() {
     } else {
       expression = `${date}T${time}:00`;
     }
+
+    const payload = {
+      name,
+      house: house._id,
+      type: frequency,
+      expression,
+      enabled: true,
+      actions: selectedDevicesData,
+      tags: [new Date().getTime()],
+    };
+
+    const response = await createSchedule(payload);
+
+    console.log('[response]', response);
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    toast.success('Successfully created Schedule.');
+    setOpen(false);
   }
   console.log('[Selected]', selectedDevicesData);
   return (
