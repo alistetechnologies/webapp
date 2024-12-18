@@ -1,19 +1,24 @@
 import { serverUrl } from '@/constants/config';
-import { fetchHouse } from '@/features/dashboard/api/house';
-import useHouseStore from '@/features/dashboard/houseStore';
+
 import { api } from '@/lib/apiClient';
 import useScheduleStore from '../scheduleStore';
+import useHouseStore from '@/features/dashboard/houseStore';
 
-export const fetchAllSchedulesForHouse = async () => {
+export const fetchAllSchedulesForHouse = async (houseId) => {
   try {
-    const house = useHouseStore.getState().house;
-
     const response = await api.post(
       `${serverUrl.web}/v3/centralschedules/listByHouse`,
       {
-        houseId: house._id,
+        houseId: houseId,
       }
     );
+
+    if (response.status !== 200) {
+      return {
+        success: false,
+        data: {},
+      };
+    }
 
     useScheduleStore.getState().updateSchedules(response.data.data.schedules);
 
@@ -30,6 +35,11 @@ export const createSchedule = async (data) => {
       data
     );
 
+    if (response.data.success) {
+      const house = useHouseStore.getState().house;
+
+      fetchAllSchedulesForHouse(house._id);
+    }
     return response.data;
   } catch (error) {
     return error?.response?.data;
@@ -43,6 +53,11 @@ export const removeSchedule = async (data) => {
       data
     );
 
+    if (response.data.success) {
+      const house = useHouseStore.getState().house;
+
+      fetchAllSchedulesForHouse(house._id);
+    }
     return response.data;
   } catch (error) {
     return error?.response?.data;
@@ -56,6 +71,11 @@ export const toggleSchedule = async (data) => {
       data
     );
 
+    if (response.data.success) {
+      const house = useHouseStore.getState().house;
+
+      fetchAllSchedulesForHouse(house._id);
+    }
     return response.data;
   } catch (error) {
     return error?.response?.data;

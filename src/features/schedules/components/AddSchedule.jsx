@@ -26,13 +26,13 @@ import React, { useEffect, useState } from 'react';
 import { SelectAppliance } from './SelectAppliance';
 import toast from 'react-hot-toast';
 import { createSchedule } from '../api/schedules';
-import { SheetPortal } from '@/components/ui/sheet';
+import { Spinner } from '@/components/ui/spinner';
 
 export function AddSchedule() {
   const house = useHouseStore((state) => state.house);
 
   const [appliances, setAppliances] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [time, setTime] = useState('');
@@ -146,13 +146,16 @@ export function AddSchedule() {
       tags: [new Date().getTime()],
     };
 
+    setLoading(true);
     const response = await createSchedule(payload);
 
     if (!response.success) {
       toast.error(response.message);
+      setLoading(false);
       return;
     }
 
+    setLoading(false);
     toast.success('Successfully created Schedule.');
     setOpen(false);
   }
@@ -281,7 +284,9 @@ export function AddSchedule() {
             </Table>
           </div>
 
-          <Button onClick={handleSubmit}>Create</Button>
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? <Spinner /> : 'Create'}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

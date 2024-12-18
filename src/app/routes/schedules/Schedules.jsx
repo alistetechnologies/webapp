@@ -4,6 +4,7 @@ import { useUser } from '@/features/auth/api/userStore';
 import { fetchHouse } from '@/features/dashboard/api/house';
 import Filter from '@/features/dashboard/filter';
 import useHouseStore from '@/features/dashboard/houseStore';
+import { fetchAllSchedulesForHouse } from '@/features/schedules/api/schedules';
 import Schedule from '@/features/schedules/schedule';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -16,7 +17,7 @@ export function Schedules() {
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
-
+  console.log('Selected house', selectedHouse.value);
   useEffect(() => {
     const getUserHouse = async () => {
       setLoading(true);
@@ -34,6 +35,17 @@ export function Schedules() {
     };
 
     getUserHouse();
+  }, [selectedHouse?.value]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetchAllSchedulesForHouse(selectedHouse?.value);
+      if (!response.success) {
+        toast.error(response.message);
+      }
+    }
+
+    fetchData();
   }, [selectedHouse?.value]);
 
   // if (loading) {

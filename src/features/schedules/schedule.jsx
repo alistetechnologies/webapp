@@ -15,22 +15,12 @@ import {
 import { SchedulesTableHeaders } from './components/SchedulesTableHeaders';
 import { AddSchedule } from './components/AddSchedule';
 import moment from 'moment';
-import { Delete } from 'lucide-react';
+import { Delete, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useScheduleStore from './scheduleStore';
 
 export default function Schedule() {
   const schedules = useScheduleStore((state) => state.schedules);
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetchAllSchedulesForHouse();
-      if (!response.success) {
-        toast.error(response.message);
-      }
-    }
-
-    fetchData();
-  }, []);
 
   async function handleDelete(schId) {
     const response = await removeSchedule({ scheduleId: schId });
@@ -49,7 +39,41 @@ export default function Schedule() {
       toast.error(response.message);
       return;
     }
-    toast.success('Successfully deleted Schedule.');
+    toast.success('Successfully Updated Schedule.');
+  }
+  console.log('[schedules]', schedules);
+
+  function convertCronTo12HourFormat(cronExpression) {
+    // Split the cron expression by spaces
+    const cronParts = cronExpression.split(' ');
+
+    // Extract relevant components
+    const minute = cronParts[0]; // Minute
+    const hour24 = parseInt(cronParts[1]); // 24-hour format hour
+    const weekdayNumbers = cronParts[4].split(','); // Weekdays (1-7)
+
+    // Convert hour to 12-hour format
+    const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12; // Convert to 12-hour format
+    const ampm = hour24 >= 12 ? 'PM' : 'AM'; // AM/PM
+    const formattedTime = `${hour12}:${minute} ${ampm}`;
+
+    // Map weekdays to abbreviated names (Mon, Tue, etc.)
+    const weekdayMap = {
+      1: 'Mon',
+      2: 'Tue',
+      3: 'Wed',
+      4: 'Thu',
+      5: 'Fri',
+      6: 'Sat',
+      7: 'Sun',
+    };
+
+    const weekdays = weekdayNumbers.map((num) => weekdayMap[num]);
+
+    return {
+      time: formattedTime,
+      weekdays: weekdays,
+    };
   }
   return (
     <div className='w-full h-full bg-white p-4 overflow-scroll'>
@@ -66,10 +90,26 @@ export default function Schedule() {
                 <TableCell>{sch.name}</TableCell>
                 <TableCell>
                   {sch.type === 'at'
-                    ? moment(sch.expression).format('HH:mm')
-                    : ''}
+                    ? moment(sch.expression).format('hh:mm A')
+                    : convertCronTo12HourFormat(sch.expression).time}
                 </TableCell>
-                <TableCell>{sch.type === 'at' ? 'Once' : 'Every'}</TableCell>
+                <TableCell>
+                  {sch.type === 'at' ? (
+                    moment(sch.expression).format('DD/MM/YYYY')
+                  ) : (
+                    <div>
+                      <div>
+                        {convertCronTo12HourFormat(sch.expression).time}
+                      </div>
+                      <div>
+                        {convertCronTo12HourFormat(
+                          sch.expression
+                        ).weekdays.join(', ')}
+                      </div>
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell>{sch?.actions?.length || '-'}</TableCell>
                 <TableCell
                   className='cursor-pointer'
                   onClick={() => toggleScheduleStatus(sch._id, !sch.enabled)}
@@ -81,8 +121,11 @@ export default function Schedule() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => handleDelete(sch._id)}>
-                    <Delete /> Delete
+                  <Button
+                    onClick={() => handleDelete(sch._id)}
+                    variant='destructive'
+                  >
+                    <Trash2 />
                   </Button>
                 </TableCell>
               </TableRow>

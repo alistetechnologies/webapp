@@ -6,7 +6,8 @@ const useScheduleStore = create(
   persist(
     (set) => ({
       schedules: [], // Initial state for schedules (empty array)
-      updateSchedules: (schedules) => set(schedules),
+      updateSchedules: (schedules) => set({ schedules: schedules }),
+
       // addSchedule: (schedule) => set((state) => ({
       //   schedules: [...state.schedules, schedule], // Add a new schedule to the list
       // })),
