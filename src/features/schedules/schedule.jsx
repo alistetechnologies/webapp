@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import {
-  fetchAllSchedulesForHouse,
-  removeSchedule,
-  toggleSchedule,
-} from './api/schedules';
-import toast from 'react-hot-toast';
+import { removeSchedule, toggleSchedule } from "./api/schedules";
+import toast from "react-hot-toast";
 import {
   Table,
   TableBody,
   TableCell,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { SchedulesTableHeaders } from './components/SchedulesTableHeaders';
-import { AddSchedule } from './components/AddSchedule';
-import moment from 'moment';
-import { Delete, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import useScheduleStore from './scheduleStore';
+} from "@/components/ui/table";
+import { SchedulesTableHeaders } from "./components/SchedulesTableHeaders";
+import { AddSchedule } from "./components/AddSchedule";
+import moment from "moment";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import useScheduleStore from "./scheduleStore";
 
 export default function Schedule() {
   const schedules = useScheduleStore((state) => state.schedules);
@@ -29,7 +24,7 @@ export default function Schedule() {
       toast.error(response.message);
       return;
     }
-    toast.success('Successfully deleted Schedule.');
+    toast.success("Successfully deleted Schedule.");
   }
 
   async function toggleScheduleStatus(schId, enabled) {
@@ -39,33 +34,32 @@ export default function Schedule() {
       toast.error(response.message);
       return;
     }
-    toast.success('Successfully Updated Schedule.');
+    toast.success("Successfully Updated Schedule.");
   }
-  console.log('[schedules]', schedules);
 
   function convertCronTo12HourFormat(cronExpression) {
     // Split the cron expression by spaces
-    const cronParts = cronExpression.split(' ');
+    const cronParts = cronExpression.split(" ");
 
     // Extract relevant components
     const minute = cronParts[0]; // Minute
     const hour24 = parseInt(cronParts[1]); // 24-hour format hour
-    const weekdayNumbers = cronParts[4].split(','); // Weekdays (1-7)
+    const weekdayNumbers = cronParts[4].split(","); // Weekdays (1-7)
 
     // Convert hour to 12-hour format
     const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12; // Convert to 12-hour format
-    const ampm = hour24 >= 12 ? 'PM' : 'AM'; // AM/PM
+    const ampm = hour24 >= 12 ? "PM" : "AM"; // AM/PM
     const formattedTime = `${hour12}:${minute} ${ampm}`;
 
     // Map weekdays to abbreviated names (Mon, Tue, etc.)
     const weekdayMap = {
-      1: 'Mon',
-      2: 'Tue',
-      3: 'Wed',
-      4: 'Thu',
-      5: 'Fri',
-      6: 'Sat',
-      7: 'Sun',
+      1: "Mon",
+      2: "Tue",
+      3: "Wed",
+      4: "Thu",
+      5: "Fri",
+      6: "Sat",
+      7: "Sun",
     };
 
     const weekdays = weekdayNumbers.map((num) => weekdayMap[num]);
@@ -76,9 +70,9 @@ export default function Schedule() {
     };
   }
   return (
-    <div className='w-full h-full bg-white p-4 overflow-scroll'>
+    <div className="w-full h-full bg-white p-4 overflow-scroll">
       <AddSchedule />
-      <Table className='w-full bg-white'>
+      <Table className="w-full bg-white">
         <TableHeader>
           <SchedulesTableHeaders />
         </TableHeader>
@@ -89,13 +83,13 @@ export default function Schedule() {
                 <TableCell>{i + 1}</TableCell>
                 <TableCell>{sch.name}</TableCell>
                 <TableCell>
-                  {sch.type === 'at'
-                    ? moment(sch.expression).format('hh:mm A')
+                  {sch.type === "at"
+                    ? moment(sch.expression).format("hh:mm A")
                     : convertCronTo12HourFormat(sch.expression).time}
                 </TableCell>
                 <TableCell>
-                  {sch.type === 'at' ? (
-                    moment(sch.expression).format('DD/MM/YYYY')
+                  {sch.type === "at" ? (
+                    moment(sch.expression).format("DD/MM/YYYY")
                   ) : (
                     <div>
                       <div>
@@ -104,26 +98,26 @@ export default function Schedule() {
                       <div>
                         {convertCronTo12HourFormat(
                           sch.expression
-                        ).weekdays.join(', ')}
+                        ).weekdays.join(", ")}
                       </div>
                     </div>
                   )}
                 </TableCell>
-                <TableCell>{sch?.actions?.length || '-'}</TableCell>
+                <TableCell>{sch?.actions?.length || "-"}</TableCell>
                 <TableCell
-                  className='cursor-pointer'
+                  className="cursor-pointer"
                   onClick={() => toggleScheduleStatus(sch._id, !sch.enabled)}
                 >
                   {sch.enabled ? (
-                    <span className='text-green-600 font-bold'>Enabled</span>
+                    <span className="text-green-600 font-bold">Enabled</span>
                   ) : (
-                    <span className='text-red-400'>Disabled</span>
+                    <span className="text-red-400">Disabled</span>
                   )}
                 </TableCell>
                 <TableCell>
                   <Button
                     onClick={() => handleDelete(sch._id)}
-                    variant='destructive'
+                    variant="destructive"
                   >
                     <Trash2 />
                   </Button>

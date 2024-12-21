@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { InputWithLabel } from '@/components/ui/common/InputWithLabel';
+import { Button } from "@/components/ui/button";
+import { InputWithLabel } from "@/components/ui/common/InputWithLabel";
 import {
   Dialog,
   DialogContent,
@@ -7,26 +7,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { DeviceTypeMap } from '@/constants/config';
-import useHouseStore from '@/features/dashboard/houseStore';
-import { Plus } from 'lucide-react';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { SelectAppliance } from './SelectAppliance';
-import toast from 'react-hot-toast';
-import { createSchedule } from '../api/schedules';
-import { Spinner } from '@/components/ui/spinner';
+} from "@/components/ui/table";
+import { DeviceTypeMap } from "@/constants/config";
+import useHouseStore from "@/features/dashboard/houseStore";
+import { Plus } from "lucide-react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { SelectAppliance } from "./SelectAppliance";
+import toast from "react-hot-toast";
+import { createSchedule } from "../api/schedules";
+import { Spinner } from "@/components/ui/spinner";
 
 export function AddSchedule() {
   const house = useHouseStore((state) => state.house);
@@ -34,10 +34,10 @@ export function AddSchedule() {
   const [appliances, setAppliances] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [time, setTime] = useState('');
-  const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
-  const [frequency, setFrequency] = useState('cron');
+  const [name, setName] = useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
+  const [frequency, setFrequency] = useState("cron");
 
   const [days, setDays] = useState({
     1: true,
@@ -50,14 +50,15 @@ export function AddSchedule() {
   });
 
   const [selectedDevicesData, setSelectedDevicesData] = useState([]);
+  console.log("[selected Devices Data]", selectedDevicesData);
 
   // Initializing State
   useEffect(() => {
     if (!open) {
-      setName('');
-      setTime('');
-      setDate(moment(new Date()).format('YYYY-MM-DD'));
-      setFrequency('cron');
+      setName("");
+      setTime("");
+      setDate(moment(new Date()).format("YYYY-MM-DD"));
+      setFrequency("cron");
       setDays({
         1: true,
         2: true,
@@ -87,38 +88,38 @@ export function AddSchedule() {
     setAppliances(appliances);
   }, [house]);
   function createCronExpression(timeStr, weekdays) {
-    const [hour, minute] = timeStr.split(':').map(Number);
+    const [hour, minute] = timeStr.split(":").map(Number);
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-      throw new Error('Invalid time format');
+      throw new Error("Invalid time format");
     }
-    const cronWeekdays = weekdays.join(',');
+    const cronWeekdays = weekdays.join(",");
     return `${minute} ${hour} ? * ${cronWeekdays} *`;
   }
 
   const daysOfWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
   ];
 
   async function handleSubmit() {
-    if (name === '') {
-      toast.error('Enter Schedule Name!!');
+    if (name === "") {
+      toast.error("Enter Schedule Name!!");
       return;
     }
 
-    if (time === '' || !time) {
-      toast.error('Select Valid TIme');
+    if (time === "" || !time) {
+      toast.error("Select Valid TIme");
       return;
     }
 
-    let expression = '';
+    let expression = "";
 
-    if (frequency === 'cron') {
+    if (frequency === "cron") {
       let day = [];
       Object.keys(days).forEach((d) => {
         if (days[d] === true) {
@@ -127,7 +128,7 @@ export function AddSchedule() {
       });
 
       if (day.length === 0) {
-        toast('Please select at least one day.');
+        toast("Please select at least one day.");
         return;
       }
 
@@ -156,13 +157,13 @@ export function AddSchedule() {
     }
 
     setLoading(false);
-    toast.success('Successfully created Schedule.');
+    toast.success("Successfully created Schedule.");
     setOpen(false);
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className='mb-4' onClick={() => setOpen(true)}>
+        <Button className="mb-4" onClick={() => setOpen(true)}>
           <Plus />
           Add Schedule
         </Button>
@@ -178,52 +179,52 @@ export function AddSchedule() {
           </DialogDescription> */}
         </DialogHeader>
 
-        <div className='space-y-4'>
+        <div className="space-y-4">
           <InputWithLabel
-            name='name'
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             // label='Schedule Name'
-            placeholder='Schedule Name'
+            placeholder="Schedule Name"
           />
 
           <InputWithLabel
-            label='Select Time'
-            name='time'
-            type='time'
+            label="Select Time"
+            name="time"
+            type="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
           />
 
           <RadioGroup
-            defaultValue='option-one'
+            defaultValue="option-one"
             value={frequency}
             onValueChange={setFrequency}
           >
-            <div className='flex gap-8 items-center'>
-              <div className='flex items-center space-x-2'>
-                <RadioGroupItem value='cron' id='cron' />
-                <Label htmlFor='cron'>Repeat Every</Label>
+            <div className="flex gap-8 items-center">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="cron" id="cron" />
+                <Label htmlFor="cron">Repeat Every</Label>
               </div>
-              <div className='flex items-center space-x-2'>
-                <RadioGroupItem value='at' id='at' />
-                <Label htmlFor='at'>Repeat Once</Label>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="at" id="at" />
+                <Label htmlFor="at">Repeat Once</Label>
               </div>
             </div>
           </RadioGroup>
 
           {/* Date */}
-          {frequency === 'at' && (
+          {frequency === "at" && (
             <Input
-              type='date'
+              type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           )}
 
           {/* Day selector */}
-          <div className='flex justify-between'>
-            {frequency === 'cron' &&
+          <div className="flex justify-between">
+            {frequency === "cron" &&
               daysOfWeek.map((day, index) => {
                 return (
                   <Button
@@ -231,7 +232,7 @@ export function AddSchedule() {
                     onClick={() =>
                       setDays({ ...days, [index + 1]: !days[index + 1] })
                     }
-                    variant={days[index + 1] === false ? 'outlined' : ''}
+                    variant={days[index + 1] === false ? "outlined" : ""}
                   >
                     {day.slice(0, 3)}
                   </Button>
@@ -240,22 +241,22 @@ export function AddSchedule() {
           </div>
 
           {/* Appliances Data */}
-          <div className='max-h-64 overflow-y-scroll'>
+          <div className="max-h-64 overflow-y-scroll">
             <p>Select Devices</p>
-            <Table className='w-full bg-white'>
+            <Table className="w-full bg-white">
               <TableHeader>
                 <TableRow>
-                  <TableHead className='text-black'>Appliance</TableHead>
-                  <TableHead className='text-black'>On/Off State</TableHead>
-                  <TableHead className='text-black'>Select</TableHead>
+                  <TableHead className="text-black">Appliance</TableHead>
+                  <TableHead className="text-black">On/Off State</TableHead>
+                  <TableHead className="text-black">Select</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className='max-h-64 overflow-y-scroll'>
+              <TableBody className="max-h-64 overflow-y-scroll">
                 {house &&
                   house.rooms.map((room) => {
                     return (
                       <>
-                        <div className='text-muted-foreground my-2'>
+                        <div className="text-muted-foreground my-2">
                           {room.roomName}
                         </div>
 
@@ -285,7 +286,7 @@ export function AddSchedule() {
           </div>
 
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spinner /> : 'Create'}
+            {loading ? <Spinner /> : "Create"}
           </Button>
         </div>
       </DialogContent>
