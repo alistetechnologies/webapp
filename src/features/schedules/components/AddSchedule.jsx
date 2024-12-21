@@ -50,7 +50,6 @@ export function AddSchedule() {
   });
 
   const [selectedDevicesData, setSelectedDevicesData] = useState([]);
-  console.log("[selected Devices Data]", selectedDevicesData);
 
   // Initializing State
   useEffect(() => {

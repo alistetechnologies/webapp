@@ -66,7 +66,6 @@ export function SelectAppliance({ data, state, updateState }) {
           : item
       );
       updateState(newState);
-      console.log("REAXCHED HERE", newIsOn, prev);
       return newIsOn;
     });
   };
