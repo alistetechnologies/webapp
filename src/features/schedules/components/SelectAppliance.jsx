@@ -1,7 +1,7 @@
-import { Switch } from '@/components/ui/switch';
-import { TableCell, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@radix-ui/react-checkbox';
-import React, { useState } from 'react';
+import { Switch } from "@/components/ui/switch";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@radix-ui/react-checkbox";
+import React, { useState } from "react";
 
 export function SelectAppliance({ data, state, updateState }) {
   const [isOn, setIsOn] = useState(false);
@@ -12,12 +12,12 @@ export function SelectAppliance({ data, state, updateState }) {
       updateState([
         ...state,
         {
-          action: 'Sync/SetSwitchPins',
+          action: "Sync/SetSwitchPins",
           payload: {
             deviceId: data.deviceId,
-            state: isOn ? 100 : 0,
-            controllerType: 'centralSchedule',
-            controllerId: 'centralSchedule',
+            command: isOn ? 100 : 0,
+            controllerType: "centralSchedule",
+            controllerId: "centralSchedule",
             control: true,
           },
         },
@@ -41,9 +41,9 @@ export function SelectAppliance({ data, state, updateState }) {
               ...item,
               payload: {
                 deviceId: data.deviceId,
-                state: newIsOn ? 100 : 0,
-                controllerType: 'centralSchedule',
-                controllerId: 'centralSchedule',
+                command: newIsOn ? 100 : 0,
+                controllerType: "centralSchedule",
+                controllerId: "centralSchedule",
                 control: true,
               },
             }
@@ -60,24 +60,24 @@ export function SelectAppliance({ data, state, updateState }) {
   const initialIsOn = isDataInState ? isDataInState.state : isOn;
   return (
     <TableRow>
-      <TableCell className='w-auto'>{data.switchName}</TableCell>
+      <TableCell className="w-auto">{data.switchName}</TableCell>
 
       {/* Switch */}
-      <TableCell className='w-auto'>
-        <div className='flex items-center space-x-2'>
-          <label className='text-sm'> {isOn ? 'On' : 'Off'}</label>
+      <TableCell className="w-auto">
+        <div className="flex items-center space-x-2">
+          <label className="text-sm"> {isOn ? "On" : "Off"}</label>
           <Switch checked={isOn} onCheckedChange={handleSwitchToggle} />
         </div>
       </TableCell>
 
       {/* Checkbox */}
-      <TableCell className='w-auto'>
-        <div className='flex items-center space-x-2'>
+      <TableCell className="w-auto">
+        <div className="flex items-center space-x-2">
           <input
-            type='checkbox'
+            type="checkbox"
             checked={isDataInState !== undefined}
             onChange={handleCheckboxChange}
-            className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500'
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
           />
           {/* <label
             htmlFor='terms'
