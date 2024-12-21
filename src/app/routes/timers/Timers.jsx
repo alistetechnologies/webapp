@@ -1,31 +1,23 @@
-import { Spinner } from '@/components/ui/spinner';
-import { Table, TableBody, TableHeader } from '@/components/ui/table';
-import { useUser } from '@/features/auth/api/userStore';
+import { Spinner } from "@/components/ui/spinner";
+import { Table, TableBody, TableHeader } from "@/components/ui/table";
+import { useUser } from "@/features/auth/api/userStore";
 
-import {
-  fetchHouse,
-  fetchConnectedDevices,
-} from '@/features/dashboard/api/house';
-import Filter from '@/features/dashboard/filter';
-import useHouseStore from '@/features/dashboard/houseStore';
+import { fetchHouse } from "@/features/dashboard/api/house";
+import Filter from "@/features/dashboard/filter";
+import useHouseStore from "@/features/dashboard/houseStore";
 
-import { MainHeader } from '@/features/dashboard/MainHeader';
-import NoRooms from '@/features/dashboard/no-rooms';
-import Rooms from '@/features/dashboard/Rooms';
-import { AutoTimers } from '@/features/timers/AutoTimers';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import { AutoTimers } from "@/features/timers/AutoTimers";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-let rerender = 0;
 export function Timers() {
   const user = useUser.getState().user;
   const [selectedHouse, setSelectedHouse] = useState({
-    value: user?.selectedHouse || '',
+    value: user?.selectedHouse || "",
   });
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [connectedDevices, setConnectedDevices] = useState([]);
 
   useEffect(() => {
     const getUserHouse = async () => {
@@ -33,7 +25,7 @@ export function Timers() {
       const houseDetails = await fetchHouse(selectedHouse?.value);
 
       if (!houseDetails.success) {
-        toast.error('Failed to fetch House!!');
+        toast.error("Failed to fetch House!!");
         setLoading(false);
         return;
       }
@@ -46,17 +38,8 @@ export function Timers() {
     getUserHouse();
   }, [selectedHouse?.value]);
 
-  rerender += 1;
-
-  // if (loading) {
-  //   return (
-  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   );
-  // }
   return (
-    <div className='w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll'>
+    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
       <Filter
         house={selectedHouse}
         setSelectedHouse={setSelectedHouse}
@@ -65,12 +48,12 @@ export function Timers() {
       />
 
       {loading && (
-        <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-          <Spinner size='lg' />
+        <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
+          <Spinner size="lg" />
         </div>
       )}
 
-      {!loading && <AutoTimers houseData={house} />}
+      {!loading && <AutoTimers />}
     </div>
   );
 }

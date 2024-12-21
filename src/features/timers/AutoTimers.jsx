@@ -1,8 +1,7 @@
-import React from 'react';
-import { AutoTimeBox } from './components/AutoTimeBox';
-import { DeviceTypeMap } from '@/constants/config';
-import { AddAutoTImer } from './components/AddAutoTImer';
-import useHouseStore from '../dashboard/houseStore';
+import { AutoTimeBox } from "./components/AutoTimeBox";
+import { DeviceTypeMap } from "@/constants/config";
+import { AddAutoTImer } from "./components/AddAutoTImer";
+import useHouseStore from "../dashboard/houseStore";
 
 export function AutoTimers() {
   const houseData = useHouseStore((state) => state.house);
@@ -22,18 +21,18 @@ export function AutoTimers() {
     return count;
   };
   return (
-    <div className='w-full h-full bg-white p-4 overflow-scroll'>
+    <div className="w-full h-full bg-white p-4 overflow-scroll">
       <AddAutoTImer houseData={houseData} />
       {houseData &&
         houseData?.rooms?.map((room) => {
           const autoTimersCount = timerCounter(room);
           if (autoTimersCount === 0) return;
           return (
-            <div className='mb-8' key={room.roomName}>
-              <h4 className='text-xl text-muted-foreground font-semibold mb-2'>
+            <div className="mb-8" key={room.roomName}>
+              <h4 className="text-xl text-muted-foreground font-semibold mb-2">
                 {room.roomName} ({autoTimersCount})
               </h4>
-              <div className='flex flex-wrap space-x-4 space-y-4 items-center'>
+              <div className="flex flex-wrap gap-4 items-center">
                 {room?.devices?.map((device) => {
                   return device.switches.map((s) => {
                     let startTime = s?.autoTimers?.startTime;
