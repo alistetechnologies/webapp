@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import { useUser } from "@/features/auth/api/userStore";
+import { AutoCuts } from "@/features/AutoCut/AutoCuts";
 
 import { fetchHouse } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
@@ -60,7 +61,7 @@ export function AutoCut() {
         </div>
       )}
 
-      {!loading && <AutoTimers houseData={house} />}
+      {!loading && <AutoCuts />}
     </div>
   );
 }

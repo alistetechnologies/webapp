@@ -1,8 +1,8 @@
 import { Switch } from "@/components/ui/switch";
 
 import React, { useEffect, useState } from "react";
-import { setAutoTimers, toggleAutoTimers } from "../api/AutoTimers";
-import { UpdateAutoTimer } from "./UpdateAutoTimer";
+// import { setAutoTimers, toggleAutoTimers } from "../api/AutoTimers";
+// import { UpdateAutoTimer } from "./UpdateAutoTimer";
 import toast from "react-hot-toast";
 
 function formatTime(seconds) {
@@ -15,7 +15,7 @@ function formatTime(seconds) {
   }`;
 }
 
-export function AutoTimeBox({ data = {}, deviceId }) {
+export function AutoCutBox({ data = {}, deviceId }) {
   const [active, setActive] = useState(data?.autoTImers?.enabled);
 
   useEffect(() => {
@@ -23,30 +23,29 @@ export function AutoTimeBox({ data = {}, deviceId }) {
   }, [data]);
 
   async function onToggle(event) {
-    let payload = {
-      deviceId: deviceId,
-      switchId: data.switchId,
-      enabled: event,
-    };
-    const resp = await toggleAutoTimers(payload);
+    // let payload = {
+    //   deviceId: deviceId,
+    //   switchId: data.switchId,
+    //   enabled: event,
+    // };
+    // const resp = await toggleAutoTimers(payload);
   }
 
   async function onDelete() {
-    const resp = await setAutoTimers([
-      {
-        deviceId,
-        switchId: data.switchId,
-        mode: "Always",
-        turnOffAfter: 0,
-        turnOnAfter: 0,
-        startTime: "",
-        stopTime: "",
-      },
-    ]);
-
-    if (resp.success) {
-      toast.success("Successfully deleted the timer.");
-    }
+    // const resp = await setAutoTimers([
+    //   {
+    //     deviceId,
+    //     switchId: data.switchId,
+    //     mode: "Always",
+    //     turnOffAfter: 0,
+    //     turnOnAfter: 0,
+    //     startTime: "",
+    //     stopTime: "",
+    //   },
+    // ]);
+    // if (resp.success) {
+    //   toast.success("Successfully deleted the timer.");
+    // }
   }
 
   return (
@@ -66,25 +65,21 @@ export function AutoTimeBox({ data = {}, deviceId }) {
             <div>
               <p className="text-muted-foreground">On Time</p>
 
-              <p className="font-semibold">
-                {formatTime(data?.autoTimers?.turnOffAfter)}
-              </p>
+              <p className="font-semibold">{formatTime(data?.autoTurnOff)}</p>
             </div>
 
             <div>
               <p className="text-muted-foreground">Off Time</p>
-              <p className="font-semibold">
-                {formatTime(data?.autoTimers?.turnOnAfter)}
-              </p>
+              <p className="font-semibold">{formatTime(data?.autoTurnOff)}</p>
             </div>
           </div>
 
-          <UpdateAutoTimer data={data} deviceId={deviceId} />
+          {/* <UpdateAutoTimer data={data} deviceId={deviceId} /> */}
         </div>
       </div>
       <div
         className="absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 w-72 text-center text-white rounded cursor-pointer  bg-red-400"
-        onClick={onDelete}
+        // onClick={onDelete}
       >
         Delete
       </div>
