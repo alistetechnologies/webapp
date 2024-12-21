@@ -25,7 +25,7 @@ export function SelectAppliance({ data, state, updateState }) {
           payload: {
             deviceId: data.deviceId,
             switchId: data.switchId,
-            state: isOn ? 100 : 0,
+            command: isOn ? 100 : 0,
             controllerType: "centralSchedule",
             controllerId: "centralSchedule",
             control: true,
@@ -57,7 +57,7 @@ export function SelectAppliance({ data, state, updateState }) {
               payload: {
                 deviceId: data.deviceId,
                 switchId: data.switchId,
-                state: newIsOn ? 100 : 0,
+                command: newIsOn ? 100 : 0,
                 controllerType: "centralSchedule",
                 controllerId: "centralSchedule",
                 control: true,
