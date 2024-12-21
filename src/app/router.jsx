@@ -1,22 +1,22 @@
-import { useMemo } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { LoginRoute } from './routes/auth/login';
-import AppRoot from './routes/app/root';
+import { useMemo } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { LoginRoute } from "./routes/auth/login";
+import AppRoot from "./routes/app/root";
 
 const createAppRouter = () =>
   createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <LoginRoute />,
     },
     {
-      path: '/app',
+      path: "/app",
       element: <AppRoot />,
       children: [
         {
-          path: '',
+          path: "",
           lazy: async () => {
-            const { Dashboard } = await import('./routes/app/dashboard');
+            const { Dashboard } = await import("./routes/app/dashboard");
 
             return { Component: Dashboard };
           },
@@ -24,13 +24,13 @@ const createAppRouter = () =>
       ],
     },
     {
-      path: '/autoTimers',
+      path: "/autoTimers",
       element: <AppRoot />,
       children: [
         {
-          path: '',
+          path: "",
           lazy: async () => {
-            const { Timers } = await import('./routes/timers/Timers');
+            const { Timers } = await import("./routes/timers/Timers");
 
             return { Component: Timers };
           },
@@ -38,15 +38,29 @@ const createAppRouter = () =>
       ],
     },
     {
-      path: '/schedules',
+      path: "/schedules",
       element: <AppRoot />,
       children: [
         {
-          path: '',
+          path: "",
           lazy: async () => {
-            const { Schedules } = await import('./routes/schedules/Schedules');
+            const { Schedules } = await import("./routes/schedules/Schedules");
 
             return { Component: Schedules };
+          },
+        },
+      ],
+    },
+    {
+      path: "/autocut",
+      element: <AppRoot />,
+      children: [
+        {
+          path: "",
+          lazy: async () => {
+            const { AutoCut } = await import("./routes/autocut/AutoCut");
+
+            return { Component: AutoCut };
           },
         },
       ],
