@@ -20,15 +20,15 @@ import {
 } from "@/components/ui/table";
 import { DeviceTypeMap } from "@/constants/config";
 import useHouseStore from "@/features/dashboard/houseStore";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { SelectAppliance } from "./SelectAppliance";
 import toast from "react-hot-toast";
-import { createSchedule } from "../api/schedules";
+import { createSchedule, updateSchedule } from "../api/schedules";
 import { Spinner } from "@/components/ui/spinner";
 
-export function AddSchedule() {
+export function AddSchedule({ update = false, data }) {
   const house = useHouseStore((state) => state.house);
 
   const [appliances, setAppliances] = useState([]);
@@ -53,7 +53,45 @@ export function AddSchedule() {
 
   // Initializing State
   useEffect(() => {
-    if (!open) {
+    if (update) {
+      //
+
+      console.log("[data]", data);
+      setName(data.name);
+      setFrequency(data.type);
+      setSelectedDevicesData(data.actions);
+
+      if (data.type === "cron") {
+        const cronDestructuredExpression = data.expression.split(" ");
+        //
+        setTime(
+          `${cronDestructuredExpression[1]}:${cronDestructuredExpression[0]}`
+        );
+
+        const days = {
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+          5: false,
+          6: false,
+          7: false,
+        };
+        cronDestructuredExpression[4]
+          .split(",")
+          .map((day) => (days[day] = true));
+
+        console.log("[days]", days);
+        setDays(days);
+      } else {
+        const expressionDate = new Date(data.expression);
+        setDate(moment(expressionDate).format("YYYY-MM-DD"));
+        setTime(moment(expressionDate).format("HH:mm"));
+        // setTime(
+        //   `${cronDestructuredExpression[1]}:${cronDestructuredExpression[0]}`
+        // );
+      }
+    } else if (!open) {
       setName("");
       setTime("");
       setDate(moment(new Date()).format("YYYY-MM-DD"));
@@ -146,8 +184,16 @@ export function AddSchedule() {
       tags: [new Date().getTime()],
     };
 
+    console.log("[payload]", payload);
+
     setLoading(true);
-    const response = await createSchedule(payload);
+
+    let response;
+    if (update) {
+      response = await updateSchedule({ ...payload, scheduleId: data._id });
+    } else {
+      response = await createSchedule(payload);
+    }
 
     if (!response.success) {
       toast.error(response.message);
@@ -156,16 +202,27 @@ export function AddSchedule() {
     }
 
     setLoading(false);
-    toast.success("Successfully created Schedule.");
+    toast.success(`Successfully ${update ? "updated " : "created "} Schedule.`);
     setOpen(false);
   }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="mb-4" onClick={() => setOpen(true)}>
-          <Plus />
-          Add Schedule
-        </Button>
+        {update ? (
+          <Button
+            className="mb-4"
+            variant="outline"
+            onClick={() => setOpen(true)}
+          >
+            <Pencil />
+          </Button>
+        ) : (
+          <Button className="mb-4" onClick={() => setOpen(true)}>
+            <Plus />
+            Add Schedule
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -285,7 +342,7 @@ export function AddSchedule() {
           </div>
 
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spinner /> : "Create"}
+            {loading ? <Spinner /> : update ? "Update" : "Create"}
           </Button>
         </div>
       </DialogContent>

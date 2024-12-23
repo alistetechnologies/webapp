@@ -1,8 +1,8 @@
-import { serverUrl } from '@/constants/config';
+import { serverUrl } from "@/constants/config";
 
-import { api } from '@/lib/apiClient';
-import useScheduleStore from '../scheduleStore';
-import useHouseStore from '@/features/dashboard/houseStore';
+import { api } from "@/lib/apiClient";
+import useScheduleStore from "../scheduleStore";
+import useHouseStore from "@/features/dashboard/houseStore";
 
 export const fetchAllSchedulesForHouse = async (houseId) => {
   try {
@@ -66,6 +66,25 @@ export const removeSchedule = async (data) => {
 
 export const toggleSchedule = async (data) => {
   try {
+    const response = await api.post(
+      `${serverUrl.web}/v3/centralschedules/update`,
+      data
+    );
+
+    if (response.data.success) {
+      const house = useHouseStore.getState().house;
+
+      fetchAllSchedulesForHouse(house._id);
+    }
+    return response.data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
+
+export const updateSchedule = async (data) => {
+  try {
+    console.log("[data]", data);
     const response = await api.post(
       `${serverUrl.web}/v3/centralschedules/update`,
       data

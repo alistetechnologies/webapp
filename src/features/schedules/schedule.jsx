@@ -115,6 +115,7 @@ export default function Schedule() {
                   )}
                 </TableCell>
                 <TableCell>
+                  <AddSchedule update={true} data={sch} />
                   <Button
                     onClick={() => handleDelete(sch._id)}
                     variant="destructive"
