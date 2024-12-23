@@ -12,7 +12,7 @@ export function SelectAppliance({ data, state, updateState }) {
         item.payload.deviceId === data.deviceId &&
         item.payload.switchId === data.switchId
     );
-    setIsOn(isDeviceInState ? isDeviceInState.payload.state === 100 : false);
+    setIsOn(isDeviceInState ? isDeviceInState.payload.command === 100 : false);
   }, [data.deviceId, data.switchId, state]);
 
   // Handle checkbox change (add or remove data from state)
