@@ -1,9 +1,11 @@
 import { Switch } from "@/components/ui/switch";
+import { convertSecondsToTime } from "@/utils/format";
 
 import React, { useEffect, useState } from "react";
 // import { setAutoTimers, toggleAutoTimers } from "../api/AutoTimers";
 // import { UpdateAutoTimer } from "./UpdateAutoTimer";
 import toast from "react-hot-toast";
+import { setAutoCut, toggleAutoCut } from "../api/autocut";
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -17,36 +19,71 @@ function formatTime(seconds) {
 
 export function AutoCutBox({ data = {}, deviceId }) {
   const [active, setActive] = useState(data?.autoTImers?.enabled);
-
+  console.log("[data]", data);
   useEffect(() => {
-    setActive(data?.autoTimers?.enabled);
+    setActive(data?.autoTurnOffEnabled);
   }, [data]);
 
   async function onToggle(event) {
-    // let payload = {
-    //   deviceId: deviceId,
-    //   switchId: data.switchId,
-    //   enabled: event,
-    // };
-    // const resp = await toggleAutoTimers(payload);
+    let payload = {
+      deviceId: deviceId,
+      switchId: data.switchId,
+      enabled: event,
+    };
+    const resp = await toggleAutoCut(payload);
+
+    if (!resp.success) {
+      toast.error(resp.message);
+      return;
+    }
+
+    toast.success("Updated Autocut.");
   }
 
   async function onDelete() {
-    // const resp = await setAutoTimers([
-    //   {
-    //     deviceId,
-    //     switchId: data.switchId,
-    //     mode: "Always",
-    //     turnOffAfter: 0,
-    //     turnOnAfter: 0,
-    //     startTime: "",
-    //     stopTime: "",
-    //   },
-    // ]);
-    // if (resp.success) {
-    //   toast.success("Successfully deleted the timer.");
-    // }
+    const resp = await setAutoCut([
+      {
+        deviceId,
+        switchId: data.switchId,
+        turnOffAfter: 0,
+      },
+    ]);
+
+    if (!resp.success) {
+      toast.error(resp.message);
+      return;
+    }
+
+    toast.success("Successfully deleted the timer.");
   }
+
+  // const timeData = convertSecondsToTime(data?.autoTurnOff);
+  return (
+    <div className="group relative">
+      <div className="max-w-sm mx-auto p-4 border border-gray-300 rounded-lg shadow-md">
+        <div className="flex items-center space-x-4">
+          {/* <div className="text-xl font-semibold">
+            {timeData.hours ? `${timeData.hours} hr` : ""}{" "}
+            {timeData.minutes ? `${timeData.minutes} mins` : ""}{" "}
+            {timeData.seconds ? `${timeData.seconds} sec` : ""}
+          </div> */}
+          <div>{formatTime(data?.autoTurnOff)}</div>
+
+          <div className="flex-1 text-lg font-medium text-gray-700">
+            {data.switchName}
+          </div>
+
+          <Switch checked={active} onCheckedChange={onToggle} />
+        </div>
+      </div>
+      <div
+        className="absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 max-w-sm text-center text-white rounded cursor-pointer  bg-red-400"
+        onClick={onDelete}
+      >
+        Delete
+      </div>
+    </div>
+  );
 
   return (
     <div className="group relative">
