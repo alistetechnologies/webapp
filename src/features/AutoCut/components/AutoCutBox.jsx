@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 // import { UpdateAutoTimer } from "./UpdateAutoTimer";
 import toast from "react-hot-toast";
 import { setAutoCut, toggleAutoCut } from "../api/autocut";
+import { Button } from "@/components/ui/button";
+import { AddAutoCut } from "./AddAutoCut";
 
 function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -79,10 +81,13 @@ export function AutoCutBox({ data = {}, deviceId }) {
         </div>
       </div>
       <div
-        className="absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 max-w-sm text-center text-white rounded cursor-pointer  bg-red-400"
-        onClick={onDelete}
+        className="flex justify-around absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 max-w-sm text-center text- rounded cursor-pointer  w-full bg-slate-400/40 py-1"
+        // onClick={onDelete}
       >
-        Delete
+        <span className="text-red-400" onClick={onDelete}>
+          Delete
+        </span>
+        <AddAutoCut update={true} data={{ ...data, deviceId }} />
       </div>
     </div>
   );

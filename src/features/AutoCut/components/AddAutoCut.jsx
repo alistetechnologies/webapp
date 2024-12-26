@@ -29,7 +29,19 @@ import {
 } from "@/components/ui/table";
 import { setAutoCut } from "../api/autocut";
 
-export function AddAutoCut() {
+function convertToHMS(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  return {
+    hours,
+    minutes,
+    seconds: remainingSeconds,
+  };
+}
+export function AddAutoCut({ update = false, data }) {
+  console.log("update", data);
   const house = useHouseStore((state) => state.house);
   const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState({
@@ -45,6 +57,19 @@ export function AddAutoCut() {
 
   console.log("{state}", selectedAppliances);
 
+  useEffect(() => {
+    if (update) {
+      setSelectedAppliances([
+        {
+          deviceId: data.deviceId,
+          switchId: data.switchId,
+          turnOffAfter: data.autoTurnOff,
+        },
+      ]);
+
+      setDuration(convertToHMS(data.autoTurnOff));
+    }
+  }, [update, data]);
   useEffect(() => {
     const applianceData = () => {
       const appliances = [];
@@ -106,10 +131,14 @@ export function AddAutoCut() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="mb-4" onClick={() => setOpen(true)}>
-          <Plus />
-          Add Auto Cut
-        </Button>
+        {update ? (
+          <span className="text-blue-500">Update</span>
+        ) : (
+          <Button className="mb-4" onClick={() => setOpen(true)}>
+            <Plus />
+            Add Auto Cut
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -168,7 +197,7 @@ export function AddAutoCut() {
             </Table>
           </div>
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spinner /> : "Create"}
+            {loading ? <Spinner /> : update ? "Update" : "Create"}
           </Button>
         </div>
       </DialogContent>

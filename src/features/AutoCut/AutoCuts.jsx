@@ -31,7 +31,7 @@ export function AutoCuts() {
               <h4 className="text-xl text-muted-foreground font-semibold mb-2">
                 {room.roomName} ({autoCutCount})
               </h4>
-              <div className="flex flex-wrap space-x-4 space-y-4 items-center">
+              <div className="flex flex-wrap gap-4 items-center">
                 {room?.devices?.map((device) => {
                   return device.switches.map((s) => {
                     console.log("S", s);
