@@ -111,8 +111,8 @@ export function AddAutoTImer() {
     }
 
     if (
-      (onTime.hours === 0 || onTime.minutes == 0) &&
-      (offTime.hours === 0 || offTime.minutes === 0)
+      (onTime.hours === 0 && onTime.minutes == 0) ||
+      (offTime.hours === 0 && offTime.minutes === 0)
     ) {
       toast.error("Invalid OnTime and OffTime");
       return;
