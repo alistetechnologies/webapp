@@ -73,16 +73,6 @@ export function SelectAppliance({ data, state, updateState }) {
 
   return (
     <TableRow>
-      <TableCell className="w-auto">{data.switchName}</TableCell>
-
-      {/* Switch */}
-      <TableCell className="w-auto">
-        <div className="flex items-center space-x-2">
-          <label className="text-sm"> {isOn ? "On" : "Off"}</label>
-          <Switch checked={isOn} onCheckedChange={handleSwitchToggle} />
-        </div>
-      </TableCell>
-
       {/* Checkbox */}
       <TableCell className="w-auto">
         <div className="flex items-center space-x-2">
