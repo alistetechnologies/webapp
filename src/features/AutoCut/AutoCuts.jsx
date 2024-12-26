@@ -2,6 +2,7 @@ import { DeviceTypeMap } from "@/constants/config";
 
 import useHouseStore from "../dashboard/houseStore";
 import { AutoCutBox } from "./components/AutoCutBox";
+import { AddAutoCut } from "./components/AddAutoCut";
 
 export function AutoCuts() {
   const houseData = useHouseStore((state) => state.house);
@@ -20,6 +21,7 @@ export function AutoCuts() {
   return (
     <div className="w-full h-full bg-white p-4 overflow-scroll">
       {/* <AddAutoTImer houseData={houseData} /> */}
+      <AddAutoCut />
       {houseData &&
         houseData?.rooms?.map((room) => {
           const autoCutCount = countAutoCut(room);

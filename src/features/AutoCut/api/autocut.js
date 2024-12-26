@@ -40,7 +40,6 @@ export const toggleAutoCut = async (data) => {
 
 export const setAutoCut = async (data) => {
   try {
-    console.log("[payload]", data);
     const response = await api.post(
       `${serverUrl.deviceHandler}/devices/setAutoTurnOff`,
       data

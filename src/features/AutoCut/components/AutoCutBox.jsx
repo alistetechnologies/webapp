@@ -41,13 +41,15 @@ export function AutoCutBox({ data = {}, deviceId }) {
   }
 
   async function onDelete() {
-    const resp = await setAutoCut([
-      {
-        deviceId,
-        switchId: data.switchId,
-        turnOffAfter: 0,
-      },
-    ]);
+    const resp = await setAutoCut({
+      payload: [
+        {
+          deviceId,
+          switchId: data.switchId,
+          turnOffAfter: 0,
+        },
+      ],
+    });
 
     if (!resp.success) {
       toast.error(resp.message);
