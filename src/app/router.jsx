@@ -30,7 +30,7 @@ const createAppRouter = () =>
         {
           path: "",
           lazy: async () => {
-            const { Timers } = await import("./routes/timers/Timers");
+            const { Timers } = await import("./routes/lock/Lock");
 
             return { Component: Timers };
           },
@@ -72,9 +72,23 @@ const createAppRouter = () =>
         {
           path: '',
           lazy: async () => {
-            const { Timers } = await import('./routes/timers/Timers');
+            const {Lock} = await import('./routes/lock/Lock');
 
-            return { Component: Timers };
+            return { Component: Lock };
+          },
+        },
+      ],
+    },
+    {
+      path: '/lock/room/:id',
+      element: <AppRoot />,
+      children: [
+        {
+          path: '',
+          lazy: async () => {
+            const {LockDetails} = await import('../features/lock/LockDetails');
+
+            return { Component: LockDetails };
           },
         },
       ],

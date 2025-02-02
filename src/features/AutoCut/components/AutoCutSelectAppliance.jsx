@@ -1,6 +1,5 @@
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import React, { useState } from "react";
 
 export function AutoCutSelectAppliance({ data, state, updateState }) {
