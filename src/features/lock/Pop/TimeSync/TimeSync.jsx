@@ -20,6 +20,8 @@ function TimeSync({ lock, open, setOpen }) {
  
 
   const getUnblokingRecord = async(date)=>{
+    const toastId = toast.loading('Waiting...');
+
     await axios.post(`${serverUrl.lockservice}/lockUpdateLogs`,{
         "lockId":lock.lockId,
         "startDate":date,
@@ -29,21 +31,30 @@ function TimeSync({ lock, open, setOpen }) {
             Authorization:token
         }
     }).then((res=>{
-        if(res.data.success){
+        if(res.data.success && res?.data?.data?.logs?.length>0){
           setRecord(res.data.data.logs || [])
         }else{
             toast.error("Data Not Found")
             setRecord([])
         }
     })).catch(err=>{
+      if(err?.response?.data?.success===false && err?.response?.data?.data?.logs?.length===0){
+        toast.error("Data Not Found")
+      }else{
         toast.error("Something went wrong")
-        setRecord([])
+      }
+      setRecord([])
+    }).finally(()=>{
+      toast.dismiss(toastId)
     })
   }
   return (
     <Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(e)=>{
+        setRecord([])
+        setOpen(false)
+       }}
     
     >
       <DialogContent

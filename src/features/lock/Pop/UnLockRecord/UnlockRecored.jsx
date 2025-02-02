@@ -22,6 +22,7 @@ function UnlockRecored({ lock, open, setOpen }) {
  
 
   const getUnblokingRecord = async(date)=>{
+    const toastId = toast.loading('Waiting...');
     await axios.post(`${serverUrl.lockservice}/unlockRecord`,{
         "lockId":lock.lockId,
         "startDate":date,
@@ -31,21 +32,30 @@ function UnlockRecored({ lock, open, setOpen }) {
             Authorization:token
         }
     }).then((res=>{
-        if(res.data.success){
+        if(res.data.success && res?.data?.data?.list?.length>0){
           setRecord(res.data.data.list || [])
         }else{
             toast.error("Data Not Found")
             setRecord([])
         }
     })).catch(err=>{
-        toast.error("Something went wrong")
+        if(err?.response?.data?.success===false && err?.response?.data?.data?.list?.length===0){
+            toast.error("Data Not Found")
+        }else{
+            toast.error("Something went wrong")
+        }
         setRecord([])
+    }).finally(()=>{
+        toast.dismiss(toastId)
     })
   }
   return (
     <Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(e)=>{
+       setRecord([])
+       setOpen(false)
+      }}
     
     >
       <DialogContent
