@@ -39,6 +39,12 @@ export default function Sidebar() {
       href: '/lock',
       color: '#292929',
     },
+    {
+      label: 'Lock',
+      icon: Users,
+      href: '/lock',
+      color: '#292929',
+    },
     // {
     //   label: 'Share Access',
     //   icon: Users,
