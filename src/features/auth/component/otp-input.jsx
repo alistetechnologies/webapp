@@ -79,10 +79,16 @@ export function OtpInput() {
       const token = await createAccessToken({
         token: response.data?.token,
       });
-
+console.log(token);
       // Create Access Token failed
+      if(token===undefined){
+        toast.error('Failed to generate Token!!');
+        setLoading(false);
+        return;
+      }
       if (!token.success) {
         toast.error('Failed to generate Token!!');
+        setLoading(false);
         return;
       }
 

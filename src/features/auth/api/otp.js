@@ -31,6 +31,7 @@ export const verifyOtp = async (data) => {
 };
 
 export const createAccessToken = async (data) => {
+  console.log(data.token,"Dfg");
   try {
     const response = await api.get(
       `${serverUrl.auth}/token/generateAccessToken`,
@@ -45,6 +46,7 @@ export const createAccessToken = async (data) => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     return error?.response?.data;
   }
 };
