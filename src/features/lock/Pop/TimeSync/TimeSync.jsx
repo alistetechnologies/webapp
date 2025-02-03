@@ -99,7 +99,7 @@ function TimeSync({ lock, open, setOpen }) {
           </TableHeader>
           <TableBody>
             {
-              record.map((rec,index)=>{
+              record.sort((a,b)=>new Date(a.timestamp).getTime()-new Date(b.timestamp).getTime()).map((rec,index)=>{
                 return (
                     <Row
                      data={rec}

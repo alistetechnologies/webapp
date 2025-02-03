@@ -109,7 +109,7 @@ function UnlockRecored({ lock, open, setOpen }) {
           </TableHeader>
           <TableBody>
             {
-              record.map((rec,index)=>{
+              record.sort((a,b)=>new Date(a.lockDate).getTime()-new Date(b.lockDate).getTime()).map((rec,index)=>{
                 return (
                     <Row
                      data={rec}

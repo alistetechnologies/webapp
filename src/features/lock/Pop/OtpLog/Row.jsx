@@ -9,7 +9,7 @@ function Row({data,index}) {
     <TableCell>{index+1}</TableCell>
     <TableCell>{moment(data?.timestamp).format('LT')}</TableCell>
     <TableCell>{data?.otp}</TableCell>
-    <TableCell>{otpType[String(data?.otpType)]}</TableCell>
+    <TableCell>{otpType[String(data?.otpType)]} - {data?.otpType}</TableCell>
    </TableRow>
   )
 }
