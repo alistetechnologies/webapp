@@ -14,6 +14,7 @@ import axios from "axios";
 import { serverUrl, token } from "@/constants/config";
 import Header from "./LockHub/Header";
 import Row from "./LockHub/Row";
+import Filter from "../dashboard/filter";
 
 export function LockDetails() {
   const params = useParams();
@@ -26,11 +27,13 @@ export function LockDetails() {
   let [hubConneted, setHubConcted] = useState([]);
   let [lockRoomName, setLockRoomName] = useState({});
   let [lockHubId, setLockHubId] = useState({});
-
+  const [selectedHouse, setSelectedHouse] = useState({
+    value: params?.id || "",
+  });
   useEffect(() => {
     const getUserHouse = async () => {
       setLoading(true);
-      const houseDetails = await fetchHouse(params?.id);
+      const houseDetails = await fetchHouse(selectedHouse?.value || params?.id);
 
       if (!houseDetails.success) {
         toast.error("Failed to fetch House!!");
@@ -43,7 +46,7 @@ export function LockDetails() {
     };
 
     getUserHouse();
-  }, [params?.id]);
+  }, [selectedHouse]);
   useEffect(() => {
     if (Object.keys(house).length > 0) {
       let ttlockhub = house?.rooms?.reduce((p, c) => {
@@ -122,6 +125,13 @@ export function LockDetails() {
         lock={lockDetails}
         open={timeSyncHistory}
         setOpen={setTimeSyncHistory}
+      />
+        <Filter
+        house={selectedHouse}
+        setSelectedHouse={setSelectedHouse}
+        dateShow={false}
+        backBtn={true}
+        link={'/lock'}
       />
       {loading && (
         <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">

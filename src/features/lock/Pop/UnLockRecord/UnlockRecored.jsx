@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@radix-ui/react-dialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import axios from "axios";
 import { serverUrl, token } from "@/constants/config";
@@ -49,15 +49,21 @@ function UnlockRecored({ lock, open, setOpen }) {
         toast.dismiss(toastId)
     })
   }
+  useEffect(()=>{
+    if(open){
+      getUnblokingRecord(moment(new Date()).format('YYYY-MM-DD'))
+    }
+  },[open])
   return (
     <Dialog
       open={open}
-      onOpenChange={(e)=>{
-       setRecord([])
-       setOpen(false)
-      }}
+      // onOpenChange={(e)=>{
+      //  setRecord([])
+      //  setOpen(false)
+      // }}
     
     >
+        
       <DialogContent
       
         style={{
@@ -75,7 +81,13 @@ function UnlockRecored({ lock, open, setOpen }) {
         className=" bg-white"
       >
         <DialogHeader>
-          <DialogTitle>Unblocking History</DialogTitle>
+          
+
+          <DialogTitle className=" flex justify-between"><div>Unblocking History</div><div className="shadow-2xs justify-center items-start flex cursor-pointer border-2 leading-none rounded-[50%] w-6 h-6" onClick={()=>{
+            setRecord([])
+             setOpen(false)
+          }}>x</div></DialogTitle>
+         
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div
@@ -85,6 +97,7 @@ function UnlockRecored({ lock, open, setOpen }) {
           <h2 className=' text-2xl'>Date:</h2>
           <input
             type='date'
+            defaultValue={moment(new Date()).format('YYYY-MM-DD')}
             className='border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0'
             max={moment(new Date()).format('YYYY-MM-DD')}
             onChange={(e) => getUnblokingRecord(e.target.value)}

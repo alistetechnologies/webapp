@@ -2,14 +2,16 @@ import Select from 'react-select';
 import { fetchUserHouses } from './api/house';
 import { useUser } from '../auth/api/userStore';
 import { useEffect, useState } from 'react';
+import { ArrowBigLeft, CircleChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 let rerender = 0;
 
-export default function Filter({ house, setSelectedHouse, date, setDate }) {
+export default function Filter({ house, setSelectedHouse, date, setDate,dateShow=true, backBtn=false,link='/' }) {
   const [options, setOptions] = useState([]);
 
   const user = useUser.getState().user;
-
+  const navigate = useNavigate()
   useEffect(() => {
     const getUserHouses = async () => {
       const response = await fetchUserHouses(user?.email);
@@ -33,6 +35,10 @@ export default function Filter({ house, setSelectedHouse, date, setDate }) {
     <div className='w-full bg-white p-4 mb-6 rounded-md'>
       <div className='space-y-4 flex gap-4 items-center'>
         <div className='flex gap-4 items-center flex-1'>
+        {backBtn &&  <CircleChevronLeft
+            onClick={()=>navigate('/lock')}
+          />
+        }
           <h2 className='text-2xl hover:underline'>House Name:</h2>
 
           <Select
@@ -43,18 +49,20 @@ export default function Filter({ house, setSelectedHouse, date, setDate }) {
             className='flex-1 mt-0'
           />
         </div>
-        <div
-          className='flex gap-4 items-center m-0 mt-0 flex-1'
-          style={{ marginTop: 0 }}
-        >
-          <h2 className=' text-2xl'>Date:</h2>
-          <input
-            type='date'
-            className='border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0'
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
+      {
+        dateShow &&  <div
+        className='flex gap-4 items-center m-0 mt-0 flex-1'
+        style={{ marginTop: 0 }}
+      >
+        <h2 className=' text-2xl'>Date:</h2>
+        <input
+          type='date'
+          className='border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0'
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </div>
+      } 
       </div>
     </div>
   );

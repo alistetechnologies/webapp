@@ -14,7 +14,7 @@ import House from "@/features/lock/House";
 export function Lock() {
   const user = useUser.getState().user;
   const [houses, setHouses] = useState([]);
-
+  const [search,setSearch] = useState('')
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -31,7 +31,20 @@ export function Lock() {
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
- 
+        <div className='w-full bg-white p-4 mb-6 rounded-md'>
+      <div className='space-y-4 flex gap-4 items-center'>
+        <div className='flex gap-4 items-center flex-1'>
+          <h2 className='text-2xl hover:underline'>House Name:</h2>
+
+         <input
+          type="text"
+          className='border p-2 rounded-lg'
+          value={search}
+          onChange={(e)=>setSearch(e.target.value)}
+         />
+        </div>
+        </div>
+        </div>
 
       {loading && (
         <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
@@ -45,7 +58,7 @@ export function Lock() {
           </TableHeader>
           <TableBody>
              {
-              houses?.length>0 && houses?.map((house,index)=>{
+              houses?.length>0 && houses?.filter((e)=>e.label.includes(search)).map((house,index)=>{
                 return(
                   <House
                     house={house}

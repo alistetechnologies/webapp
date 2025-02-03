@@ -2,13 +2,10 @@ import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useNavigation } from 'react-router-dom'
-import useRoomStore from './roomSore'
-import { fetchHouse } from '../dashboard/api/house'
-import toast from 'react-hot-toast'
+
 
 export default function House({house,index}) {
    const navigate=useNavigate()
-   const [loading, setLoading] = useState(false);
   
   return (
     <TableRow className='text-lg'>
@@ -18,7 +15,7 @@ export default function House({house,index}) {
           <Button
             onClick={() => {
             //   useRoomStore.getState().updateRoom(room);
-               navigate(`/lock/room/${house?.value}`)
+               navigate(`/lock/house/${house?.value}`)
             }}
           >
             View Details

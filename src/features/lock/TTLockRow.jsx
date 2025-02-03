@@ -21,6 +21,7 @@ function TTLockRow({
   hubConneted,
   lockHubId,
 }) {
+  let battery = hubConneted.find((e) => e.lockId === lock.lockId)?.electricQuantity || null
   return (
     <TableRow className="text-lg" key={lock?.lockId}>
       <TableCell className=" text-center">{index + 1}</TableCell>
@@ -34,8 +35,8 @@ function TTLockRow({
               {" "}
               {hubConneted.length > 0
                 ? hubConneted.some((e) => e.lockId === lock.lockId)
-                  ? "Yes"
-                  : "NO"
+                  ? <span className=" text-green-600">Yes</span>
+                  : <span className=" text-red-600">NO</span>
                 : "---"}
             </TooltipTrigger>
             <TooltipContent>
@@ -46,11 +47,11 @@ function TTLockRow({
       </TableCell>
       <TableCell className=" text-center">
         {hubConneted.length > 0
-          ? hubConneted.find((e) => e.lockId === lock.lockId)?.electricQuantity
+          ? battery!==null && <span className={`${battery<20?"text-red-600":battery<40?" text-orange-300":""}`}>{battery}</span>
           : "---"}
       </TableCell>
       <TableCell className=" text-center" style={{ whiteSpace: "nowrap" }}>
-        {moment(lock.lastUpdatedTime).format("DD-MM-YYYY,LT")}
+        {moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
       </TableCell>
       <TableCell>
         <div style={{ display: "flex", gap: "5px" }}>
