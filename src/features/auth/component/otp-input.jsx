@@ -100,7 +100,7 @@ console.log(token);
 
         const user = await fetchUser();
         if (Object.keys(user).length > 0) {
-          useUser.getState().updateUser(user);
+          useUser.getState().updateUser(user)
 
           toast.success('Successfully logged In');
           navigate('/app');

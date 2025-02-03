@@ -80,7 +80,7 @@ const createAppRouter = () =>
       ],
     },
     {
-      path: '/lock/house/:id',
+      path: '/lock/house',
       element: <AppRoot />,
       children: [
         {

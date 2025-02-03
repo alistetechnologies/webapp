@@ -45,7 +45,10 @@ export default function Filter({ house, setSelectedHouse, date, setDate,dateShow
             options={options}
             placeholder='Select a house'
             value={houseName}
-            onChange={(value) => setSelectedHouse(value)}
+            onChange={(value) => {
+              setSelectedHouse(value)
+              useUser.getState().updateUser({...user,selectedHouse:value.value});
+            }}
             className='flex-1 mt-0'
           />
         </div>

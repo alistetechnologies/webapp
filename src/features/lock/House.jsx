@@ -1,11 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useNavigate, useNavigation } from 'react-router-dom'
+import { useUser } from '../auth/api/userStore'
 
 
 export default function House({house,index}) {
    const navigate=useNavigate()
+   const user = useUser.getState().user
   
   return (
     <TableRow className='text-lg'>
@@ -14,8 +16,8 @@ export default function House({house,index}) {
         <TableCell>
           <Button
             onClick={() => {
-            //   useRoomStore.getState().updateRoom(room);
-               navigate(`/lock/house/${house?.value}`)
+            useUser.getState().updateUser({...user,selectedHouse:house?.value});
+               navigate(`/lock/house`)
             }}
           >
             View Details

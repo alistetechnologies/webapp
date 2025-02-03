@@ -58,7 +58,7 @@ export function Lock() {
           </TableHeader>
           <TableBody>
              {
-              houses?.length>0 && houses?.filter((e)=>e.label.includes(search)).map((house,index)=>{
+              houses?.length>0 && houses?.filter((e)=>e.label.toLowerCase().includes(search.toLowerCase())).map((house,index)=>{
                 return(
                   <House
                     house={house}

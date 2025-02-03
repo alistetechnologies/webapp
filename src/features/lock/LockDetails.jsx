@@ -15,9 +15,12 @@ import { serverUrl, token } from "@/constants/config";
 import Header from "./LockHub/Header";
 import Row from "./LockHub/Row";
 import Filter from "../dashboard/filter";
+import { useUser } from "../auth/api/userStore";
+import toast from "react-hot-toast";
 
 export function LockDetails() {
   const params = useParams();
+  const user = useUser.getState().user 
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   let [unlockingHistory, setUnlockingHistory] = useState(false);
@@ -28,12 +31,17 @@ export function LockDetails() {
   let [lockRoomName, setLockRoomName] = useState({});
   let [lockHubId, setLockHubId] = useState({});
   const [selectedHouse, setSelectedHouse] = useState({
-    value: params?.id || "",
+    value: user?.selectedHouse || "",
   });
   useEffect(() => {
     const getUserHouse = async () => {
       setLoading(true);
-      const houseDetails = await fetchHouse(selectedHouse?.value || params?.id);
+
+
+      console.log('====================================');
+      console.log(selectedHouse,"d");
+      console.log('====================================');
+      const houseDetails = await fetchHouse(selectedHouse?.value);
 
       if (!houseDetails.success) {
         toast.error("Failed to fetch House!!");
