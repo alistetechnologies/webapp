@@ -10,6 +10,7 @@ function Row({data,index}) {
     <TableCell>{moment(data?.lockDate).format('LT')}</TableCell>
     <TableCell>{data?.recordType===32?"Inside":"OutSide"}</TableCell>
     <TableCell>{unlockType[String(data?.recordType)]}</TableCell>
+    <TableCell>{data?.success===1?"Yes":"NO"}</TableCell>
    </TableRow>
   )
 }

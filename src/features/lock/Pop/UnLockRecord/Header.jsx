@@ -8,6 +8,7 @@ function Header() {
         <TableHead>Time Stamp</TableHead>
         <TableHead>Area</TableHead>
         <TableHead>Method</TableHead>
+        <TableHead>Lock Un-Lock</TableHead>
     </TableRow>
   )
 }
