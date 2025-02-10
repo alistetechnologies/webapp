@@ -69,7 +69,7 @@ export default function Sidebar() {
           <Separator />
           {/* Routes */}
           <div className="space-y-3 mt-8">
-            {routes.map((route) => (
+            {routes?.map((route) => (
               <Link
                 to={route.href}
                 key={route.href}
@@ -125,7 +125,7 @@ export default function Sidebar() {
             {/* Separator */}
             <Separator />
             <div className="space-y-2">
-              {routes.map((route) => (
+              {routes?.map((route) => (
                 <Link
                   to={route.href}
                   key={route.href}
