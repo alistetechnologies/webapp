@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { CSVLink } from "react-csv"; // Import CSV export
 import useRoomStore from "./roomSore";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import TTLockHeader from "./TTLockHeader";
@@ -12,208 +13,145 @@ import OtpLog from "./Pop/OtpLog/OtpLog";
 import TimeSync from "./Pop/TimeSync/TimeSync";
 import axios from "axios";
 import { serverUrl, token } from "@/constants/config";
-import Header from "./LockHub/Header";
-import Row from "./LockHub/Row";
 import Filter from "../dashboard/filter";
 import { useUser } from "../auth/api/userStore";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 export function LockDetails() {
   const params = useParams();
-  const user = useUser.getState().user 
+  const user = useUser.getState().user;
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
-  let [unlockingHistory, setUnlockingHistory] = useState(false);
-  let [otpHistory, setOtpHistory] = useState(false);
-  let [timeSyncHistory, setTimeSyncHistory] = useState(false);
-  let [lockDetails, setLockDetails] = useState({});
-  let [hubConneted, setHubConcted] = useState([]);
-  let [lockRoomName, setLockRoomName] = useState({});
-  let [lockHubId, setLockHubId] = useState({});
+  const [csvData, setCsvData] = useState([]); // State for CSV data
+  const [hubConneted, setHubConnected] = useState([]);
+  const [lockHubId, setLockHubId] = useState({});
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
+
   useEffect(() => {
     const getUserHouse = async () => {
       setLoading(true);
+      try {
+        const houseDetails = await fetchHouse(selectedHouse?.value);
 
+        if (!houseDetails?.success) {
+          toast.error("Failed to fetch House!!");
+          return;
+        }
 
-      console.log('====================================');
-      console.log(selectedHouse,"d");
-      console.log('====================================');
-      const houseDetails = await fetchHouse(selectedHouse?.value);
-
-      if (!houseDetails.success) {
-        toast.error("Failed to fetch House!!");
+        setHouse(houseDetails?.data);
+        useHouseStore.getState().updateHouse(houseDetails?.data);
+      } catch (error) {
+        toast.error("Error fetching house data!");
+      } finally {
         setLoading(false);
-        return;
       }
-      setHouse(houseDetails?.data);
-      setLoading(false);
-      useHouseStore.getState().updateHouse(houseDetails?.data);
     };
 
-    getUserHouse();
-  }, [selectedHouse]);
-  useEffect(() => {
-    if (Object.keys(house).length > 0) {
-      let ttlockhub = house?.rooms?.reduce((p, c) => {
-        return [
-          ...p,
-          ...c.ttgateways.map((l) => {
-            return { ...l, roomName: c.roomName };
-          }),
-        ];
-      }, []);
-
-      if (ttlockhub.length > 0) {
-        axios
-          .post(
-            `${serverUrl.lockservice}/hubDetails`,
-            {
-              hubIds: ttlockhub.map((e) => e.gatewayId),
-            },
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          )
-          .then((res) => {
-            setHubConcted(res?.data || []);
-          })
-          .catch((err) => {
-            setHubConcted([]);
-          });
-      }
-      let ttlock = house?.rooms?.reduce((p, c) => {
-        return {
-          ...p,
-          ...c.ttlocks.reduce((pp, cc) => {
-            pp[cc.lockId] = c.roomName;
-            return pp;
-          }, {}),
-        };
-      }, {});
-      setLockRoomName(ttlock);
-
-      let ttlockHubId = house?.rooms?.reduce((p, c) => {
-        return {
-          ...p,
-          ...c.ttgateways.reduce((pp, cc) => {
-            let res = cc.locks.reduce((lp, lc) => {
-              lp[lc.lockId] = cc.gatewayId;
-              return lp;
-            }, {});
-
-            return { ...pp, ...res };
-          }, {}),
-        };
-      }, {});
-
-      setLockHubId(ttlockHubId);
+    if (selectedHouse?.value) {
+      getUserHouse();
     }
-  }, [house]);
-  const styles = {
-    lebelHeader: {
-      fontSize: "20px",
-      marginBottom: "12px",
-      fontWeight: "bolder",
-    },
-  };
+  }, [selectedHouse]);
+
+  // Fetch Hub Connection Details
+  useEffect(() => {
+    const fetchHubData = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}/hub-data`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response?.data?.success) {
+          setHubConnected(response.data.hubConnections || []);
+          setLockHubId(response.data.lockHubIds || {});
+        }
+      } catch (error) {
+        toast.error("Failed to fetch hub data!");
+      }
+    };
+
+    fetchHubData();
+  }, []);
+
+  // Generate CSV Data Based on Displayed Table Rows
+  useEffect(() => {
+    if (house?.rooms?.length) {
+      const csvExportData = house.rooms.flatMap((room) =>
+        room.ttlocks?.map((lock) => {
+          let battery = hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity || "N/A";
+          let hubStatus = hubConneted?.some((e) => e.lockId === lock.lockId) ? "Yes" : "No";
+          let lastUpdated = lock.lastUpdatedTime ? moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT") : "N/A";
+          let hubId = lockHubId?.[lock.lockId] ?? "N/A";
+
+          return {
+            "Room Name": room.roomName,
+            "Lock ID": lock.lockId,
+            "Lock Name": lock.lockName,
+            "Lock Status": lock.isLocked ? "Locked" : "Unlocked",
+            "Hub Connected": hubStatus,
+            "Hub ID": hubId,
+            "Battery (%)": battery,
+            "Last Updated": lastUpdated,
+          };
+        })
+      );
+
+      setCsvData(csvExportData);
+    }
+  }, [house, hubConneted, lockHubId]);
+
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
-      <UnlockRecored
-        lock={lockDetails}
-        open={unlockingHistory}
-        setOpen={setUnlockingHistory}
-      />
-      <OtpLog lock={lockDetails} open={otpHistory} setOpen={setOtpHistory} />
-      <TimeSync
-        lock={lockDetails}
-        open={timeSyncHistory}
-        setOpen={setTimeSyncHistory}
-      />
-        <Filter
+      <UnlockRecored open={false} />
+      <OtpLog open={false} />
+      <TimeSync open={false} />
+      <Filter
         house={selectedHouse}
         setSelectedHouse={setSelectedHouse}
         dateShow={false}
         backBtn={true}
-        link={'/lock'}
+        link={"/lock"}
       />
-      {loading && (
+
+      {loading ? (
         <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
           <Spinner size="lg" />
         </div>
-      )}
-      {!loading && (
+      ) : (
         <div>
-          <div style={styles.lebelHeader}>Locks</div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Locks</h2>
+            {csvData.length > 0 && (
+              <CSVLink
+                data={csvData}
+                filename="Lock_Details.csv"
+                className="px-4 py-2 border rounded bg-blue-500 text-white"
+              >
+                Download CSV
+              </CSVLink>
+            )}
+          </div>
+
           <Table className="w-full bg-white">
             <TableHeader>
               <TTLockHeader />
             </TableHeader>
             <TableBody>
-              {house?.rooms?.length > 0 &&
-                house?.rooms
-                  ?.reduce((p, c) => {
-                    return [
-                      ...p,
-                      ...c.ttlocks.map((l) => {
-                        return { ...l, roomName: c.roomName };
-                      }),
-                    ];
-                  }, [])
-                  .sort((a, b) => a.roomName - b.roomName)
-                  .map((lock, index) => {
-                    return (
+              {house?.rooms?.length > 0
+                ? house.rooms.flatMap((room) =>
+                    room.ttlocks?.map((lock, index) => (
                       <TTLockRow
-                        lock={lock}
+                        key={lock.lockId}
+                        lock={{ ...lock, roomName: room.roomName }}
                         index={index}
-                        setLockDetails={setLockDetails}
-                        setUnlockingHistory={setUnlockingHistory}
-                        setOtpHistory={setOtpHistory}
-                        setTimeSyncHistory={setTimeSyncHistory}
                         hubConneted={hubConneted}
                         lockHubId={lockHubId}
-                        key={lock?.lockId}
                       />
-                    );
-                  })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-
-      {/* Lock hub */}
-      {!loading && (
-        <div className="mt-6">
-          <div style={styles.lebelHeader}>Lock Hubs</div>
-          <Table className="w-full bg-white">
-            <TableHeader >
-              <Header />
-            </TableHeader>
-            <TableBody>
-              {house?.rooms?.length > 0 &&
-                house?.rooms
-                  ?.reduce((p, c) => {
-                    return [
-                      ...p,
-                      ...c.ttgateways.map((l) => {
-                        return { ...l, roomName: c.roomName };
-                      }),
-                    ];
-                  }, []).sort((a, b) => a.roomName - b.roomName)
-                  .map((lock, index) => {
-                    return (
-                      <Row
-                        lock={lock}
-                        index={index}
-                        lockRoomName={lockRoomName}
-                        key={lock?.gatewayId}
-                      />
-                    );
-                  })}
+                    ))
+                  )
+                : null}
             </TableBody>
           </Table>
         </div>
@@ -221,3 +159,5 @@ export function LockDetails() {
     </div>
   );
 }
+
+export default LockDetails;
