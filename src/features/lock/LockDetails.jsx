@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CSVLink } from "react-csv"; // Import CSV export
+import { CSVLink } from "react-csv";
 import useRoomStore from "./roomSore";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import TTLockHeader from "./TTLockHeader";
@@ -13,27 +13,19 @@ import OtpLog from "./Pop/OtpLog/OtpLog";
 import TimeSync from "./Pop/TimeSync/TimeSync";
 import axios from "axios";
 import { serverUrl, token } from "@/constants/config";
+import Header from "./LockHub/Header";
+import Row from "./LockHub/Row";
 import Filter from "../dashboard/filter";
 import { useUser } from "../auth/api/userStore";
 import toast from "react-hot-toast";
-<<<<<<< Updated upstream
-import moment from "moment";
-=======
-import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
 import moment from 'moment';
->>>>>>> Stashed changes
 
 export function LockDetails() {
   const params = useParams();
   const user = useUser.getState().user;
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
-<<<<<<< Updated upstream
-  const [csvData, setCsvData] = useState([]); // State for CSV data
-  const [hubConneted, setHubConnected] = useState([]);
-  const [lockHubId, setLockHubId] = useState({});
-=======
   let [unlockingHistory, setUnlockingHistory] = useState(false);
   let [otpHistory, setOtpHistory] = useState(false);
   let [timeSyncHistory, setTimeSyncHistory] = useState(false);
@@ -42,99 +34,25 @@ export function LockDetails() {
   let [lockRoomName, setLockRoomName] = useState({});
   let [lockHubId, setLockHubId] = useState({});
   const [csvData, setCsvData] = useState([]);
->>>>>>> Stashed changes
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
 
   useEffect(() => {
     const getUserHouse = async () => {
-      setLoading(true);
-      try {
-        const houseDetails = await fetchHouse(selectedHouse?.value);
+      setLoading(true);''
+      const houseDetails = await fetchHouse(selectedHouse?.value);
 
-        if (!houseDetails?.success) {
-          toast.error("Failed to fetch House!!");
-          return;
-        }
-
-        setHouse(houseDetails?.data);
-        useHouseStore.getState().updateHouse(houseDetails?.data);
-      } catch (error) {
-        toast.error("Error fetching house data!");
-      } finally {
+      if (!houseDetails.success) {
+        toast.error("Failed to fetch House!!");
         setLoading(false);
+        return;
       }
+      setHouse(houseDetails?.data);
+      setLoading(false);
+      useHouseStore.getState().updateHouse(houseDetails?.data);
     };
 
-<<<<<<< Updated upstream
-    if (selectedHouse?.value) {
-      getUserHouse();
-    }
-  }, [selectedHouse]);
-
-  // Fetch Hub Connection Details
-  useEffect(() => {
-    const fetchHubData = async () => {
-      try {
-        const response = await axios.get(`${serverUrl}/hub-data`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response?.data?.success) {
-          setHubConnected(response.data.hubConnections || []);
-          setLockHubId(response.data.lockHubIds || {});
-        }
-      } catch (error) {
-        toast.error("Failed to fetch hub data!");
-      }
-    };
-
-    fetchHubData();
-  }, []);
-
-  // Generate CSV Data Based on Displayed Table Rows
-  useEffect(() => {
-    if (house?.rooms?.length) {
-      const csvExportData = house.rooms.flatMap((room) =>
-        room.ttlocks?.map((lock) => {
-          let battery = hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity || "N/A";
-          let hubStatus = hubConneted?.some((e) => e.lockId === lock.lockId) ? "Yes" : "No";
-          let lastUpdated = lock.lastUpdatedTime ? moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT") : "N/A";
-          let hubId = lockHubId?.[lock.lockId] ?? "N/A";
-
-          return {
-            "Room Name": room.roomName,
-            "Lock ID": lock.lockId,
-            "Lock Name": lock.lockName,
-            "Lock Status": lock.isLocked ? "Locked" : "Unlocked",
-            "Hub Connected": hubStatus,
-            "Hub ID": hubId,
-            "Battery (%)": battery,
-            "Last Updated": lastUpdated,
-          };
-        })
-      );
-
-      setCsvData(csvExportData);
-    }
-  }, [house, hubConneted, lockHubId]);
-
-  return (
-    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
-      <UnlockRecored open={false} />
-      <OtpLog open={false} />
-      <TimeSync open={false} />
-      <Filter
-        house={selectedHouse}
-        setSelectedHouse={setSelectedHouse}
-        dateShow={false}
-        backBtn={true}
-        link={"/lock"}
-      />
-
-      {loading ? (
-=======
     getUserHouse();
   }, [selectedHouse]);
 
@@ -196,7 +114,7 @@ export function LockDetails() {
 
       setLockHubId(ttlockHubId);
 
-      // Prepare CSV data
+ 
       if (house?.rooms?.length > 0) {
         const locks = house.rooms.reduce((p, c) => {
           return [
@@ -224,7 +142,6 @@ export function LockDetails() {
       fontSize: "20px",
       marginBottom: "12px",
       fontWeight: "bolder",
-      marginTop: "10px", // Added this line to push it down
     },
   };
 
@@ -251,27 +168,13 @@ export function LockDetails() {
         />
       </div>
       {loading && (
->>>>>>> Stashed changes
         <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
           <Spinner size="lg" />
         </div>
-      ) : (
+      )}
+      {!loading && (
         <div>
           <div className="flex justify-between items-center mb-4">
-<<<<<<< Updated upstream
-            <h2 className="text-xl font-bold">Locks</h2>
-            {csvData.length > 0 && (
-              <CSVLink
-                data={csvData}
-                filename="Lock_Details.csv"
-                className="px-4 py-2 border rounded bg-blue-500 text-white"
-              >
-                Download CSV
-              </CSVLink>
-            )}
-          </div>
-
-=======
             <div style={styles.lebelHeader}>Locks</div>
             {csvData.length > 0 && (
               <CSVLink
@@ -284,27 +187,35 @@ export function LockDetails() {
               </CSVLink>
             )}
           </div>
->>>>>>> Stashed changes
           <Table className="w-full bg-white">
             <TableHeader>
               <TTLockHeader />
             </TableHeader>
             <TableBody>
-              {house?.rooms?.length > 0
-                ? house.rooms.flatMap((room) =>
-                    room.ttlocks?.map((lock, index) => (
+              {house?.rooms?.length > 0 &&
+                house?.rooms
+                  ?.reduce((p, c) => {
+                    return [
+                      ...p,
+                      ...c.ttlocks.map((l) => {
+                        return { ...l, roomName: c.roomName };
+                      }),
+                    ];
+                  }, [])
+                  .sort((a, b) => a.roomName - b.roomName)
+                  .map((lock, index) => {
+                    return (
                       <TTLockRow
-                        key={lock.lockId}
-                        lock={{ ...lock, roomName: room.roomName }}
+                        lock={lock}
                         index={index}
+                        setLockDetails={setLockDetails}
+                        setUnlockingHistory={setUnlockingHistory}
+                        setOtpHistory={setOtpHistory}
+                        setTimeSyncHistory={setTimeSyncHistory}
                         hubConneted={hubConneted}
                         lockHubId={lockHubId}
+                        key={lock?.lockId}
                       />
-<<<<<<< Updated upstream
-                    ))
-                  )
-                : null}
-=======
                     );
                   })}
             </TableBody>
@@ -341,7 +252,6 @@ export function LockDetails() {
                       />
                     );
                   })}
->>>>>>> Stashed changes
             </TableBody>
           </Table>
         </div>
@@ -350,8 +260,4 @@ export function LockDetails() {
   );
 }
 
-<<<<<<< Updated upstream
-export default LockDetails;
-=======
 export default LockDetails
->>>>>>> Stashed changes
