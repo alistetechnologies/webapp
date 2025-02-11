@@ -58,6 +58,7 @@ export function LockDetails() {
 
   useEffect(() => {
     if (Object.keys(house).length > 0) {
+      let hubConnetedData=[]
       let ttlockhub = house?.rooms?.reduce((p, c) => {
         return [
           ...p,
@@ -82,6 +83,7 @@ export function LockDetails() {
           )
           .then((res) => {
             setHubConcted(res?.data || []);
+            hubConnetedData=res?.data || []
           })
           .catch((err) => {
             setHubConcted([]);
@@ -120,7 +122,7 @@ export function LockDetails() {
           return [
             ...p,
             ...c.ttlocks.map((l) => {
-              const battery = hubConneted.find((e) => e.lockId === l.lockId)?.electricQuantity || null;
+              const battery = hubConnetedData.find((e) => e.lockId === l.lockId)?.electricQuantity || null;
               return {
                 "Lock ID": l.lockId,
                 "Room Name": c.roomName,
@@ -132,10 +134,10 @@ export function LockDetails() {
             }),
           ];
         }, []);
-        setCsvData(locks);
+        setCsvData(locks.sort((a,b)=>a["Room Name"]-b["Room Name"]));
       }
     }
-  }, [house, hubConneted]);
+  }, [house]);
 
   const styles = {
     lebelHeader: {
