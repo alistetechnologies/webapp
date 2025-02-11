@@ -84,6 +84,25 @@ export function LockDetails() {
           .then((res) => {
             setHubConcted(res?.data || []);
             hubConnetedData=res?.data || []
+            if (house?.rooms?.length > 0) {
+              const locks = house.rooms.reduce((p, c) => {
+                return [
+                  ...p,
+                  ...c.ttlocks.map((l) => {
+                    const battery = hubConnetedData.find((e) => e.lockId === l.lockId)?.electricQuantity || null;
+                    return {
+                      "Lock ID": l.lockId,
+                      "Room Name": c.roomName,
+                      "Hub Connected": hubConnetedData.some((e) => e.lockId === l.lockId) ? "Yes" : "No",
+                      "Battery Level": battery !== null ? battery : "---",
+                      "Last Updated": moment(l.lastUpdatedTime).format("DD MMMM YYYY, LT"),
+                      "Hub ID": ttlockHubId[l.lockId] || "---"
+                    };
+                  }),
+                ];
+              }, []);
+              setCsvData(locks.sort((a,b)=>a["Room Name"]-b["Room Name"]));
+            }
           })
           .catch((err) => {
             setHubConcted([]);
@@ -126,7 +145,7 @@ export function LockDetails() {
               return {
                 "Lock ID": l.lockId,
                 "Room Name": c.roomName,
-                "Hub Connected": hubConneted.some((e) => e.lockId === l.lockId) ? "Yes" : "No",
+                "Hub Connected": hubConnetedData.some((e) => e.lockId === l.lockId) ? "Yes" : "No",
                 "Battery Level": battery !== null ? battery : "---",
                 "Last Updated": moment(l.lastUpdatedTime).format("DD MMMM YYYY, LT"),
                 "Hub ID": ttlockHubId[l.lockId] || "---"
