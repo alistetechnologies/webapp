@@ -66,13 +66,13 @@ const createAppRouter = () =>
       ],
     },
     {
-      path: '/lock',
+      path: "/lock",
       element: <AppRoot />,
       children: [
         {
-          path: '',
+          path: "",
           lazy: async () => {
-            const {Lock} = await import('./routes/lock/Lock');
+            const { Lock } = await import("./routes/lock/Lock");
 
             return { Component: Lock };
           },
@@ -80,20 +80,37 @@ const createAppRouter = () =>
       ],
     },
     {
-      path: '/lock/house',
+      path: "/lock/house",
       element: <AppRoot />,
       children: [
         {
-          path: '',
+          path: "",
           lazy: async () => {
-            const {LockDetails} = await import('../features/lock/LockDetails');
+            const { LockDetails } = await import(
+              "../features/lock/LockDetails"
+            );
 
             return { Component: LockDetails };
           },
         },
       ],
     },
-  
+    {
+      path: "/shareAccess",
+      element: <AppRoot />,
+      children: [
+        {
+          path: "",
+          lazy: async () => {
+            const { ShareAccess } = await import(
+              "./routes/shareAccess/ShareAccess"
+            );
+
+            return { Component: ShareAccess };
+          },
+        },
+      ],
+    },
   ]);
 
 export const AppRouter = () => {

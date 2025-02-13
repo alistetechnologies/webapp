@@ -1,5 +1,12 @@
 import { cn } from "@/lib/utils";
-import { CalendarCheck, ClockAlert, Home, Timer,Lock } from "lucide-react";
+import {
+  CalendarCheck,
+  ClockAlert,
+  Home,
+  Timer,
+  Lock,
+  Users,
+} from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
@@ -34,17 +41,17 @@ export default function Sidebar() {
     },
 
     {
-      label: 'Lock',
+      label: "Lock",
       icon: Lock,
-      href: '/lock',
-      color: '#292929',
+      href: "/lock",
+      color: "#292929",
     },
-    // {
-    //   label: 'Share Access',
-    //   icon: Users,
-    //   href: '/app/share',
-    //   color: '#292929',
-    // },
+    {
+      label: "Share Access",
+      icon: Users,
+      href: "/shareAccess",
+      color: "#292929",
+    },
     // {
     //   label: 'Share Access',
     //   icon: Users,
