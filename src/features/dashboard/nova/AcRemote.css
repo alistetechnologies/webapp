@@ -1,0 +1,59 @@
+.power-temp-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    gap: 25%;
+    margin-bottom: 10%;
+  
+}
+.temp_container{
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+}
+.counter{
+    border: 0.5px solid #c7bebe;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+}
+.plus_minus_btn{
+    background-color: #b5a9a994;
+    cursor: pointer;
+}
+.temp-text{
+    font-size: 22px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: 0.5px solid hsl(0, 7%, 76%);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.btn-text-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* width: 25%; */
+    height: max-content;
+    gap: 5px;
+    flex-direction: column;
+    text-align: center;
+}
+.btn-continer{
+    height: 45px;
+    width: 45px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
