@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { CSVLink } from "react-csv";
-import useRoomStore from "./roomSore";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import TTLockHeader from "./TTLockHeader";
 import { fetchHouse } from "../dashboard/api/house";
@@ -20,9 +17,9 @@ import { useUser } from "../auth/api/userStore";
 import toast from "react-hot-toast";
 import { Download } from "lucide-react";
 import moment from 'moment';
+import { CSVLink } from "react-csv";
 
 export function LockDetails() {
-  const params = useParams();
   const user = useUser.getState().user;
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
