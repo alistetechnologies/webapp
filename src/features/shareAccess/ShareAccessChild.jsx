@@ -12,11 +12,12 @@ import AddUser from "./AddUser";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/common/ConfirmationDialog";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export function ShareAccessChild() {
   const house = useHouseStore((state) => state.house);
   const authUser = useAuth((state) => state.auth);
-
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [error, setError] = useState("");
 
@@ -70,7 +71,10 @@ export function ShareAccessChild() {
   return (
     <div>
       <div className="flex gap-4 items-center">
-        <AddUser houseUsers={data} refetch={fetchData} />
+      {
+        masters.includes(`+91${authUser.number.replace('+91','')}`) && <AddUser houseUsers={data} refetch={fetchData} />
+
+      }
 
         <ConfirmationDialog
           message={
@@ -80,6 +84,9 @@ export function ShareAccessChild() {
           onConfirm={() => {
             removeUserFromHouse(houseId, `+91${authUser.number}`);
             fetchData();
+          
+              navigate('/')
+            0
           }}
           buttonStyle="bg-red-600"
           buttonVariant="destructive"
@@ -91,14 +98,19 @@ export function ShareAccessChild() {
         owner={true}
         houseUsers={data}
         refetch={fetchData}
+        createdBy={createdBy}
+        masters={masters}
       />
+      {
+        masters.includes(`+91${authUser.number.replace('+91','')}`) &&<>
+ 
 
       <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
         Admins
       </h2>
       {masters
         .filter(
-          (user) => user !== createdBy || user !== `+91${authUser.number}`
+          (user) => user !== createdBy 
         )
         .map((userId) => {
           let user = userLookup[userId];
@@ -110,12 +122,14 @@ export function ShareAccessChild() {
                 key={userId}
                 houseUsers={data}
                 refetch={fetchData}
+                createdBy={createdBy}
+                masters={masters}
+
               />
             </div>
           );
         })}
-
-      {rest.length > 0 && (
+           {rest.length > 0 && (
         <div>
           <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
             Users
@@ -130,14 +144,15 @@ export function ShareAccessChild() {
                   key={userId}
                   houseUsers={data}
                   refetch={fetchData}
+                  createdBy={createdBy}
+                  masters={masters}
                 />
               </div>
             );
           })}
         </div>
       )}
-
-      {timed.length > 0 && (
+        {timed.length > 0 && (
         <div>
           <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
             Guest
@@ -148,16 +163,27 @@ export function ShareAccessChild() {
             return (
               <div className="my-2">
                 <UserCard
-                  user={user}
+                  user={{...user,...userId}}
                   key={userId}
                   houseUsers={data}
                   refetch={fetchData}
+                  timed={true}
+                  createdBy={createdBy}
+                  masters={masters}
+
                 />
               </div>
             );
           })}
         </div>
       )}
+        </>
+      }
+  
+
+   
+
+    
     </div>
   );
 }

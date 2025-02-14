@@ -74,7 +74,7 @@ const AddUser = ({
       } else {
         userRole = 3;
       }
-
+console.log(edit,"edit");
       setPhoneNumber(edit);
       const userRoomAccess = roomAccess[edit];
       console.log("userRoomAccess", userRoomAccess, rooms);
@@ -96,7 +96,7 @@ const AddUser = ({
         );
       }
     }
-  }, [rooms]);
+  }, [rooms,edit]);
 
   useEffect(() => {
     if (edit) {
@@ -284,8 +284,8 @@ const AddUser = ({
 
     const response = await changeRoomAccess(
       houseId,
-      email,
-      `+91${authUser.number}`,
+      phoneNumber,
+      `+91${authUser.number.replace('+91')}`,
       roomIds,
       selectedRole.value,
       validTill

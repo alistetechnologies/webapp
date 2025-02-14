@@ -40,12 +40,7 @@ export default function Navbar() {
               </PopoverTrigger>
               <PopoverContent className='p-0 w-[200px]'>
                 <div className='flex flex-col'>
-                  <div className='p-4 hover:bg-neutral-200 border border-b-1 text-muted-foreground'>
-                    Disabled
-                  </div>
-                  <div className='p-4 hover:bg-neutral-200 border border-b-1 text-muted-foreground'>
-                    Disabled
-                  </div>
+            
                   <div
                     className='p-4 hover:bg-neutral-200 border border-b-1 cursor-pointer font-semibold'
                     onClick={() => navigate('/')}

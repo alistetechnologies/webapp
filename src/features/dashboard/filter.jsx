@@ -15,12 +15,16 @@ export default function Filter({ house, setSelectedHouse, date, setDate,dateShow
   useEffect(() => {
     const getUserHouses = async () => {
       const response = await fetchUserHouses(user?.email);
-
+console.log(response,"rs");
       const options = response?.masterOf?.map((h) => ({
         label: h?.houseName,
         value: h?.houseAccessCode,
       }));
-      setOptions(options);
+      let memberof = response?.memberOf?.map((h) => ({
+        label: h?.houseName,
+        value: h?.houseAccessCode,
+      }));
+      setOptions([...options,...memberof]);
     };
     getUserHouses();
   }, [user]);

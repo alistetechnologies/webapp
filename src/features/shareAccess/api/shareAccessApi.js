@@ -25,11 +25,14 @@ export const fetchHouseUserDetails = async (houseId, userNumber) => {
 };
 
 export const checkUserExists = async (email, authUser) => {
+  console.log('====================================');
+  console.log(email.replace("+91",''),"email.replace");
+  console.log('====================================');
   try {
     const response = await axios.get(
       `${
         serverUrl.sub
-      }/v2/user/exists/+91${email}?user=${authUser}&time=${new Date().getTime()}`
+      }/v2/user/exists/+91${email.replace("+91",'')}?user=${authUser}&time=${new Date().getTime()}`
     );
 
     const { data, success, message } = response.data;
@@ -73,12 +76,12 @@ export const changeRoomAccess = async (
   validtill
 ) => {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       `${
         serverUrl.sub
       }/v2/house/change_room_access?user=${authUser}&timestamp=${new Date().getTime()}`,
       {
-        userId: `+91${userNumber}`,
+        userId: `${userNumber}`,
         houseId,
         roomIds,
         role,
@@ -92,6 +95,47 @@ export const changeRoomAccess = async (
       message: error.response?.data?.message,
     };
   }
+};
+
+export const changeOwner = (email, houseId, newowner) => dispatch => {
+  return new Promise(resolve => {
+
+    console.log('====================================');
+    console.log( `${baseurl}/v2/house/change_owner?user=${
+      store.getState().user.email
+    }&time=${new Date().getTime()}`,
+    {user: email, houseId, newowner},);
+    console.log('====================================');
+    try {
+      axios.put(
+        `${serverUrl.sub}/v2/house/change_owner?user=${
+          store.getState().user.email
+        }&time=${new Date().getTime()}`,
+        {user: email, houseId, newowner},
+      )
+        .then(
+          result => {
+            const {data, success, message} = result.data;
+            dispatch(updateOwner(data));
+            resolve({success, message});
+          },
+          error => {
+            var message = error.message;
+            if (error.response && error.response.data) {
+              var message = error.response.data.message;
+            }
+            throw new Error(message);
+          },
+        )
+        .catch(error => {
+          dispatch(errored(error.message));
+          resolve({success: false, message: error.message});
+        });
+    } catch (exception) {
+      dispatch(loading(false));
+      resolve({success: false, message: 'Shareable error'});
+    }
+  });
 };
 
 export const updateUserHouseAccess = async (userNumber, payload) => {
