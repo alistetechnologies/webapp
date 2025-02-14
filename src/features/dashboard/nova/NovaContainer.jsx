@@ -1,7 +1,8 @@
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui/table'
 import React from 'react'
-import { NovaHeader } from './novaHeader'
+
 import NovaRow from './NovaRow'
+import { NovaHeader } from './NovaHeader'
 
 function NovaContainer({novas}) {
   return (
