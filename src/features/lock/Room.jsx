@@ -13,16 +13,15 @@ export default function Room({room,index}) {
         <TableCell>{room?.roomName}</TableCell>
         <TableCell>{(room?.ttlocks?.length || 0)+(room.ttgateways.length || 0)}</TableCell>
         <TableCell>
-  <Button
-    onClick={() => {
-      useRoomStore.getState().updateRoom(room);
-      navigate(`/lock/room/${room._id}`);
-    }}
-  >
-    {showRoomDetails ? "Hide Details" : "View Details"}
-  </Button>
-</TableCell>
-
+          <Button
+            onClick={() => {
+              useRoomStore.getState().updateRoom(room);
+               navigate(`/lock/room/${room._id}`)
+            }}
+          >
+            View Details
+          </Button>
+        </TableCell>
       </TableRow>
   )
 }
