@@ -6,8 +6,8 @@ import React, { useEffect, useState } from 'react'
 function Row({lock,index,lockRoomName,hubConneted}) {
   let [roomName,setRoomName] = useState("")
   useEffect(()=>{
-    if(Object.keys(lockRoomName).length>0){
-      let name = lock?.locks.reduce((p,c)=>{
+    if(Object.keys(lockRoomName).length>0 && hubConneted.length>0){
+      let name = hubConneted.filter(e=>e.hubId==lock.gatewayId).reduce((p,c)=>{
         if(lockRoomName[c.lockId]!==undefined){
           return `${p===""?"":`${p},`}${lockRoomName[c.lockId]}`
         }else{
@@ -17,7 +17,7 @@ function Row({lock,index,lockRoomName,hubConneted}) {
    
       setRoomName(name)
     }
-  },[lockRoomName])
+  },[lockRoomName,hubConneted])
   return (
   
     <TableRow className='text-lg' key={lock?.gatewayId}>

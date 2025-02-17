@@ -86,7 +86,7 @@ export function LockDetails() {
                let mapHubID = res?.data[c].map((e)=>{
                 return{...e,hubId:c}
               })
-              return [...p,mapHubID]
+              return [...p,...mapHubID]
             },[]):res?.data
             setHubConcted(dataAarray || []);
             hubConnetedData=dataAarray || []
@@ -276,6 +276,7 @@ export function LockDetails() {
                         index={index}
                         lockRoomName={lockRoomName}
                         key={lock?.gatewayId}
+                        hubConneted={hubConneted}
                       />
                     );
                   })}
