@@ -111,7 +111,7 @@ export function AddAutoCut({ update = false, data }) {
 
     // Generating Payload, adding turnOffAfter
     const payload = {
-      payload: selectedAppliances.map((item) => ({ ...item, turnOffAfter })),
+      payload: selectedAppliances?.map((item) => ({ ...item, turnOffAfter })),
     };
 
     setLoading(true);
@@ -165,7 +165,7 @@ export function AddAutoCut({ update = false, data }) {
               </TableHeader>
               <TableBody className="max-h-64 overflow-y-scroll">
                 {house &&
-                  house.rooms.map((room) => {
+                  house.rooms?.map((room) => {
                     return (
                       <>
                         <div className="text-muted-foreground my-2">

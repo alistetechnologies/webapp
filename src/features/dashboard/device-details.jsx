@@ -94,14 +94,13 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
         <TableCell>{connectedAppliances}</TableCell>
         <Commands analysisData={appliancesAnalysisData} />
         <TableCell>
-          <Button
-            onClick={() => {
-              setShowAppliances(!showAppliances);
-            }}
-          >
-            View Details
-          </Button>
-        </TableCell>
+  <Button
+    onClick={() => setShowAppliances((prev) => !prev)}
+  >
+    {showAppliances ? "Hide Details" : "View Details"}
+  </Button>
+</TableCell>
+
       </TableRow>
       {showAppliances && (
         <Appliances

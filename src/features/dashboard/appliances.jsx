@@ -21,7 +21,7 @@ export function Appliances({ appliances, analysisData, connectedDevices }) {
               analysisData
                 ?.flat()
                 ?.filter((device) => {
-                  const appliance = appliances[device?.deviceId].find(
+                  const appliance = appliances[device?.deviceId]?.find(
                     (appliance) => appliance.switchId === device?.switchId
                   );
 

@@ -17,7 +17,6 @@ const createAppRouter = () =>
           path: "",
           lazy: async () => {
             const { Dashboard } = await import("./routes/app/dashboard");
-
             return { Component: Dashboard };
           },
         },
@@ -31,7 +30,6 @@ const createAppRouter = () =>
           path: "",
           lazy: async () => {
             const { Timers } = await import("./routes/timers/Timers");
-
             return { Component: Timers };
           },
         },
@@ -45,7 +43,6 @@ const createAppRouter = () =>
           path: "",
           lazy: async () => {
             const { Schedules } = await import("./routes/schedules/Schedules");
-
             return { Component: Schedules };
           },
         },
@@ -59,7 +56,6 @@ const createAppRouter = () =>
           path: "",
           lazy: async () => {
             const { AutoCut } = await import("./routes/autocut/AutoCut");
-
             return { Component: AutoCut };
           },
         },
@@ -73,7 +69,6 @@ const createAppRouter = () =>
           path: "",
           lazy: async () => {
             const { Lock } = await import("./routes/lock/Lock");
-
             return { Component: Lock };
           },
         },
@@ -91,6 +86,15 @@ const createAppRouter = () =>
             );
 
             return { Component: LockDetails };
+            try {
+              const { LockDetails } = await import(
+                "../features/lock/LockDetails"
+              );
+              return { Component: LockDetails };
+            } catch (error) {
+              console.error("Error loading LockDetails:", error);
+              throw error;
+            }
           },
         },
       ],

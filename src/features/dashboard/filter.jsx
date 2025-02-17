@@ -31,7 +31,7 @@ console.log(response,"rs");
 
   rerender += 1;
 
-  const houseName = options.find((h) => {
+  const houseName = options?.find((h) => {
     return h?.value === house?.value;
   });
 

@@ -33,7 +33,7 @@ export function AutoCuts() {
               </h4>
               <div className="flex flex-wrap gap-4 items-center">
                 {room?.devices?.map((device) => {
-                  return device.switches.map((s) => {
+                  return device?.switches?.map((s) => {
                     console.log("S", s);
                     if (s.autoTurnOff) {
                       return (
