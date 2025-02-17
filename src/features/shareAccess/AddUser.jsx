@@ -74,7 +74,7 @@ const AddUser = ({
       } else {
         userRole = 3;
       }
-console.log(edit,"edit");
+      console.log(edit, "edit");
       setPhoneNumber(edit);
       const userRoomAccess = roomAccess[edit];
       console.log("userRoomAccess", userRoomAccess, rooms);
@@ -96,7 +96,7 @@ console.log(edit,"edit");
         );
       }
     }
-  }, [rooms,edit]);
+  }, [rooms, edit]);
 
   useEffect(() => {
     if (edit) {
@@ -142,6 +142,7 @@ console.log(edit,"edit");
     setValidTill(e.target.value);
   };
 
+  console.log("EMAIL- ", edit);
   const handleAdd = async () => {
     if (phoneNumber.length === 0) {
       toast.error("Invalid user details!");
@@ -285,7 +286,7 @@ console.log(edit,"edit");
     const response = await changeRoomAccess(
       houseId,
       phoneNumber,
-      `+91${authUser.number.replace('+91')}`,
+      `+91${authUser.number.replace("+91")}`,
       roomIds,
       selectedRole.value,
       validTill

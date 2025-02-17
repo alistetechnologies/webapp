@@ -11,38 +11,54 @@ import { removeUserFromHouse } from "./api/shareAccessApi";
 import { useAuth } from "../auth/api/authStore";
 import moment from "moment";
 
-export const UserCard = ({ user, owner=false, refetch, houseUsers,timed=false,createdBy,masters }) => {
+export const UserCard = ({
+  user,
+  owner = false,
+  refetch,
+  houseUsers,
+  timed = false,
+  createdBy,
+  masters,
+}) => {
   const authUser = useAuth((state) => state.auth);
-  console.log('====================================');
-  console.log(authUser,"auth");
-  console.log('====================================');
-  const { name, email } = user;
+  console.log("====================================");
+  console.log(authUser, "auth");
+  console.log("====================================");
+  if (!user) return;
+  const { email } = user;
+  console.log("USER in USERCARD", user);
   const { houseId } = houseUsers;
   const userName = user.name
     ? user.name
     : `${user.first_name} ${user.last_name}`;
-console.log(createdBy,"createdBy");
- let show = !owner && createdBy.includes(authUser.number) || !owner  && masters.includes(`+91${authUser.number.replace('+91','')}`) && !email.includes(authUser.number)
+  console.log(createdBy, "createdBy");
+  let show =
+    (!owner && createdBy.includes(authUser.number)) ||
+    (!owner &&
+      masters.includes(`+91${authUser.number.replace("+91", "")}`) &&
+      !email.includes(authUser.number));
 
   return (
     <div className="px-4 flex items-center justify-between bg-white shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
       <div className="p-5">
         <p className="font-semibold text-lg">{userName}</p>
-        <p className="text-sm text-gray-500">{email} {timed && `- access till ${moment(user?.validtill).format('DD-MMM-YYYY')}`}</p>
+        <p className="text-sm text-gray-500">
+          {email}{" "}
+          {timed &&
+            `- access till ${moment(user?.validtill).format("DD-MMM-YYYY")}`}
+        </p>
       </div>
 
       <div className="flex items-center">
-   
-
         {show && (
           <>
-               <AddUser
-          buttonText="Update User"
-          buttonVariant="primary"
-          edit={email}
-          houseUsers={houseUsers}
-          refetch={refetch}
-        />
+            <AddUser
+              buttonText="Update User"
+              buttonVariant="primary"
+              edit={email}
+              houseUsers={houseUsers}
+              refetch={refetch}
+            />
             <ConfirmationDialog
               message={
                 "Are you sure you want to leave house? This action can not be reversed."

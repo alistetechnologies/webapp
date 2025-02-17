@@ -66,15 +66,18 @@ export function ShareAccessChild() {
   const { createdBy, users, masters, rest, roomAccess, timed, houseId } = data;
 
   if (error || Object.keys(userLookup).length === 0)
-    return <h1>Something went wrong</h1>;
+    return (
+      <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
+        <Spinner size="lg" />
+      </div>
+    );
 
   return (
     <div>
       <div className="flex gap-4 items-center">
-      {
-        masters.includes(`+91${authUser.number.replace('+91','')}`) && <AddUser houseUsers={data} refetch={fetchData} />
-
-      }
+        {masters.includes(`+91${authUser.number.replace("+91", "")}`) && (
+          <AddUser houseUsers={data} refetch={fetchData} />
+        )}
 
         <ConfirmationDialog
           message={
@@ -84,9 +87,9 @@ export function ShareAccessChild() {
           onConfirm={() => {
             removeUserFromHouse(houseId, `+91${authUser.number}`);
             fetchData();
-          
-              navigate('/')
-            0
+
+            navigate("/");
+            0;
           }}
           buttonStyle="bg-red-600"
           buttonVariant="destructive"
@@ -101,89 +104,78 @@ export function ShareAccessChild() {
         createdBy={createdBy}
         masters={masters}
       />
-      {
-        masters.includes(`+91${authUser.number.replace('+91','')}`) &&<>
- 
+      {masters.includes(`+91${authUser.number.replace("+91", "")}`) && (
+        <>
+          <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
+            Admins
+          </h2>
+          {masters
+            .filter((user) => user !== createdBy)
+            .map((userId) => {
+              let user = userLookup[userId];
 
-      <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
-        Admins
-      </h2>
-      {masters
-        .filter(
-          (user) => user !== createdBy 
-        )
-        .map((userId) => {
-          let user = userLookup[userId];
+              return (
+                <div className="my-2">
+                  <UserCard
+                    user={user}
+                    key={userId}
+                    houseUsers={data}
+                    refetch={fetchData}
+                    createdBy={createdBy}
+                    masters={masters}
+                  />
+                </div>
+              );
+            })}
+          {rest.length > 0 && (
+            <div>
+              <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
+                Users
+              </h2>
+              {rest.map((userId) => {
+                const user = userLookup[userId];
 
-          return (
-            <div className="my-2">
-              <UserCard
-                user={user}
-                key={userId}
-                houseUsers={data}
-                refetch={fetchData}
-                createdBy={createdBy}
-                masters={masters}
-
-              />
+                return (
+                  <div className="my-2">
+                    <UserCard
+                      user={user}
+                      key={userId}
+                      houseUsers={data}
+                      refetch={fetchData}
+                      createdBy={createdBy}
+                      masters={masters}
+                    />
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-           {rest.length > 0 && (
-        <div>
-          <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
-            Users
-          </h2>
-          {rest.map((userId) => {
-            const user = userLookup[userId];
+          )}
+          {timed.length > 0 && (
+            <div>
+              <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
+                Guest
+              </h2>
+              {timed.map((userId) => {
+                const user = userLookup[userId.email];
 
-            return (
-              <div className="my-2">
-                <UserCard
-                  user={user}
-                  key={userId}
-                  houseUsers={data}
-                  refetch={fetchData}
-                  createdBy={createdBy}
-                  masters={masters}
-                />
-              </div>
-            );
-          })}
-        </div>
-      )}
-        {timed.length > 0 && (
-        <div>
-          <h2 className="text-2xl text-muted-foreground p-2 font-bold mt-4">
-            Guest
-          </h2>
-          {timed.map((userId) => {
-            const user = userLookup[userId.email];
-
-            return (
-              <div className="my-2">
-                <UserCard
-                  user={{...user,...userId}}
-                  key={userId}
-                  houseUsers={data}
-                  refetch={fetchData}
-                  timed={true}
-                  createdBy={createdBy}
-                  masters={masters}
-
-                />
-              </div>
-            );
-          })}
-        </div>
-      )}
+                return (
+                  <div className="my-2">
+                    <UserCard
+                      user={{ ...user, ...userId }}
+                      key={userId}
+                      houseUsers={data}
+                      refetch={fetchData}
+                      timed={true}
+                      createdBy={createdBy}
+                      masters={masters}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </>
-      }
-  
-
-   
-
-    
+      )}
     </div>
   );
 }

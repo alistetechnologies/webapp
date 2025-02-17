@@ -25,14 +25,15 @@ export const fetchHouseUserDetails = async (houseId, userNumber) => {
 };
 
 export const checkUserExists = async (email, authUser) => {
-  console.log('====================================');
-  console.log(email.replace("+91",''),"email.replace");
-  console.log('====================================');
+  console.log("====================================");
+  console.log(email.replace("+91", ""), "email.replace");
+  console.log("====================================");
   try {
     const response = await axios.get(
-      `${
-        serverUrl.sub
-      }/v2/user/exists/+91${email.replace("+91",'')}?user=${authUser}&time=${new Date().getTime()}`
+      `${serverUrl.sub}/v2/user/exists/+91${email.replace(
+        "+91",
+        ""
+      )}?user=${authUser}&time=${new Date().getTime()}`
     );
 
     const { data, success, message } = response.data;
@@ -97,43 +98,45 @@ export const changeRoomAccess = async (
   }
 };
 
-export const changeOwner = (email, houseId, newowner) => dispatch => {
-  return new Promise(resolve => {
+export const changeOwner = (email, houseId, newowner) => (dispatch) => {
+  return new Promise((resolve) => {
+    console.log("====================================");
+    console.log(
+      `${baseurl}/v2/house/change_owner?user=${
+        store.getState().user.email
+      }&time=${new Date().getTime()}`,
+      { user: email, houseId, newowner }
+    );
 
-    console.log('====================================');
-    console.log( `${baseurl}/v2/house/change_owner?user=${
-      store.getState().user.email
-    }&time=${new Date().getTime()}`,
-    {user: email, houseId, newowner},);
-    console.log('====================================');
     try {
-      axios.put(
-        `${serverUrl.sub}/v2/house/change_owner?user=${
-          store.getState().user.email
-        }&time=${new Date().getTime()}`,
-        {user: email, houseId, newowner},
-      )
+      axios
+        .put(
+          `${serverUrl.sub}/v2/house/change_owner?user=${
+            store.getState().user.email
+          }&time=${new Date().getTime()}`,
+          { user: email, houseId, newowner }
+        )
         .then(
-          result => {
-            const {data, success, message} = result.data;
+          (result) => {
+            const { data, success, message } = result.data;
             dispatch(updateOwner(data));
-            resolve({success, message});
+            resolve({ success, message });
           },
-          error => {
+          (error) => {
             var message = error.message;
             if (error.response && error.response.data) {
               var message = error.response.data.message;
             }
             throw new Error(message);
-          },
+          }
         )
-        .catch(error => {
+        .catch((error) => {
           dispatch(errored(error.message));
-          resolve({success: false, message: error.message});
+          resolve({ success: false, message: error.message });
         });
     } catch (exception) {
       dispatch(loading(false));
-      resolve({success: false, message: 'Shareable error'});
+      resolve({ success: false, message: "Shareable error" });
     }
   });
 };
