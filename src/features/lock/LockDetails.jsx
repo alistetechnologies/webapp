@@ -82,8 +82,14 @@ export function LockDetails() {
             }
           )
           .then((res) => {
-            setHubConcted(res?.data || []);
-            hubConnetedData=res?.data || []
+            let dataAarray = typeof res?.data  === "object"? Object.keys(res?.data).reduce((p,c)=>{
+               let mapHubID = res?.data[c].map((e)=>{
+                return{...e,hubId:c}
+              })
+              return [...p,mapHubID]
+            },[]):res?.data
+            setHubConcted(dataAarray || []);
+            hubConnetedData=dataAarray || []
             if (house?.rooms?.length > 0) {
               const locks = house.rooms.reduce((p, c) => {
                 return [
