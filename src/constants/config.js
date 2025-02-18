@@ -7,7 +7,8 @@ export const serverUrl = {
   deviceHandler:
     'https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default',
   web: 'https://web.alistetechnologies.com',
-  lockservice:' https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default'
+  lockservice:' https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default',
+  a2:"https://a3.alistetechnologies.com", 
 };
 export const token ="Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA="
 export const DeviceTypeMap = {
@@ -79,3 +80,11 @@ export const otpType = {
   "13": "Saturday Cyclic",
   "14": "Sunday Cyclic"
 }
+
+export const remoteTypes = {
+  0:"TV",
+  1:"AC",
+  2:"Speakers",
+  3:'Set-top Box',
+  6:"Custom",
+};

@@ -4,6 +4,7 @@ import { Appliances } from './appliances';
 import { fetchDayAnalytics } from './api/device';
 import Commands from './commands';
 import { TableCell, TableRow } from '@/components/ui/table';
+import NovaContainer from './nova/NovaContainer';
 
 export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [showAppliances, setShowAppliances] = useState(false);
@@ -12,7 +13,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [appliancesAnalysisData, setAppliancesAnalysisData] = useState([]);
   const [appliances, setAppliances] = useState();
   const [onAppliances, setOnAppliances] = useState(0);
-
+console.log(room,"room");
   function calculateAppliances() {
     let connectedAppliances = 0;
     let totalAppliances = 0;
@@ -103,11 +104,19 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
 
       </TableRow>
       {showAppliances && (
+        <>
         <Appliances
           appliances={appliances}
           analysisData={appliancesAnalysisData}
           connectedDevices={connectedDevices}
         />
+        {
+          room.novas.length>0 &&  <NovaContainer
+             novas={room.novas}
+          />
+        }
+       
+        </>
       )}
     </>
   );
