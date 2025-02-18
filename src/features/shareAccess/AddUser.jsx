@@ -74,18 +74,12 @@ const AddUser = ({
       } else {
         userRole = 3;
       }
-      console.log(edit, "edit");
+
       setPhoneNumber(edit);
       const userRoomAccess = roomAccess[edit];
-      console.log("userRoomAccess", userRoomAccess, rooms);
 
       setSelectedRooms(
         rooms.filter((room) => !userRoomAccess?.some((r) => r === room.value))
-      );
-
-      console.log(
-        rooms.filter((room) => userRoomAccess?.some((r) => r === room.value)),
-        "room123"
       );
 
       setSelectedRole(accessRoles.find((role) => role.value === userRole));
@@ -97,27 +91,6 @@ const AddUser = ({
       }
     }
   }, [rooms, edit]);
-
-  useEffect(() => {
-    if (edit) {
-      return;
-      const userId = user.email;
-      let userRole = 3;
-      let validTill = new Date();
-      if (createdBy === userId) {
-        role = 0;
-      } else if (masters.includes(userId)) {
-        role = 1;
-      } else if (rest.includes(userId)) {
-        role = 2;
-      } else {
-        let userIndex = timed.findIndex((tuser) => tuser.email === userId);
-        if (userIndex !== -1) {
-          validTill = new Date(timed[userIndex].validTill);
-        }
-      }
-    }
-  }, [edit]);
 
   const handleInputChange = (e) => {
     setPhoneNumber(e.target.value);
@@ -142,7 +115,6 @@ const AddUser = ({
     setValidTill(e.target.value);
   };
 
-  console.log("EMAIL- ", edit);
   const handleAdd = async () => {
     if (phoneNumber.length === 0) {
       toast.error("Invalid user details!");
@@ -262,15 +234,6 @@ const AddUser = ({
       )
       .map((room) => room.value);
 
-    // const payload = {
-    //   houseId,
-    //   email: `+91${phoneNumber}`,
-    //   isMaster,
-    //   timed,
-    //   validtill,
-    //   owner,
-    //   roomIds,
-    // };
     setLoading(true);
 
     const userExists = await checkUserExists(phoneNumber, authUser.number);

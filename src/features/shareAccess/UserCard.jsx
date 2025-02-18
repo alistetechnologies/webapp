@@ -21,17 +21,15 @@ export const UserCard = ({
   masters,
 }) => {
   const authUser = useAuth((state) => state.auth);
-  console.log("====================================");
-  console.log(authUser, "auth");
-  console.log("====================================");
+
   if (!user) return;
   const { email } = user;
-  console.log("USER in USERCARD", user);
+
   const { houseId } = houseUsers;
   const userName = user.name
     ? user.name
     : `${user.first_name} ${user.last_name}`;
-  console.log(createdBy, "createdBy");
+
   let show =
     (!owner && createdBy.includes(authUser.number)) ||
     (!owner &&
