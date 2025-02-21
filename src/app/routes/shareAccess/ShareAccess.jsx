@@ -19,22 +19,22 @@ export function ShareAccess() {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
-    const getUserHouse = async () => {
-      setLoading(true);
-      const houseDetails = await fetchHouse(selectedHouse?.value);
+  const getUserHouse = async () => {
+    setLoading(true);
+    const houseDetails = await fetchHouse(selectedHouse?.value);
 
-      if (!houseDetails.success) {
-        toast.error("Failed to fetch House!!");
-        setLoading(false);
-        return;
-      }
-
-      setHouse(houseDetails?.data);
+    if (!houseDetails.success) {
+      toast.error("Failed to fetch House!!");
       setLoading(false);
-      useHouseStore.getState().updateHouse(houseDetails?.data);
-    };
+      return;
+    }
 
+    setHouse(houseDetails?.data);
+    setLoading(false);
+    useHouseStore.getState().updateHouse(houseDetails?.data);
+  };
+
+  useEffect(() => {
     getUserHouse();
   }, [selectedHouse?.value]);
 
@@ -53,6 +53,7 @@ export function ShareAccess() {
         date={date}
         setDate={setDate}
         dateShow={false}
+        onClick={() => getUserHouse()}
       />
 
       {loading && (
