@@ -55,8 +55,6 @@ export function AddAutoCut({ update = false, data }) {
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
 
-  console.log("{state}", selectedAppliances);
-
   useEffect(() => {
     if (update) {
       setSelectedAppliances([
@@ -97,12 +95,10 @@ export function AddAutoCut({ update = false, data }) {
     applianceData();
   }, [house]);
 
-  //
-  console.log("[duration]", duration);
-
   async function handleSubmit() {
-    const turnOffAfter =
-      duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
+    const turnOffAfter = Number(
+      duration.hours * 3600 + duration.minutes * 60 + duration.seconds
+    );
 
     if (turnOffAfter <= 0) {
       toast.error("Invalid AutoCut Time!!");
@@ -124,7 +120,7 @@ export function AddAutoCut({ update = false, data }) {
       return;
     }
 
-    toast.success(response.message || "Successfully created Autocut.");
+    toast.success(response.message || "Successfully created Auto cut.");
     setLoading(false);
     setOpen(false);
   }
