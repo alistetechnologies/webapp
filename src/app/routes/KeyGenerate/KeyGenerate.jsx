@@ -196,8 +196,7 @@ export function KeyGenerate() {
         purpose: formData.purpose,
         userId: user._id,
         role: roles,
-        validTill: formData.expiryDate,
-        permissions: formData.permissions, 
+        validTill: formData.expiryDate
       });
 
       const newKey = response.data.data;
@@ -346,7 +345,7 @@ export function KeyGenerate() {
   };
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
-      <Filter keyData={selectedKey} setSelectedKey={setSelectedKey} date={date} setDate={setDate} />
+      {/* <Filter keyData={selectedKey} setSelectedKey={setSelectedKey} date={date} setDate={setDate} /> */}
       <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4">
         Generate New Key
       </button>
