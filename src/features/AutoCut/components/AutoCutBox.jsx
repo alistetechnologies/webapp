@@ -66,11 +66,6 @@ export function AutoCutBox({ data = {}, deviceId }) {
     <div className="group relative">
       <div className="max-w-sm mx-auto p-4 border border-gray-300 rounded-lg shadow-md">
         <div className="flex items-center space-x-4">
-          {/* <div className="text-xl font-semibold">
-            {timeData.hours ? `${timeData.hours} hr` : ""}{" "}
-            {timeData.minutes ? `${timeData.minutes} mins` : ""}{" "}
-            {timeData.seconds ? `${timeData.seconds} sec` : ""}
-          </div> */}
           <div>{formatTime(data?.autoTurnOff)}</div>
 
           <div className="flex-1 text-lg font-medium text-gray-700">

@@ -7,7 +7,6 @@ import { fetchHouse } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
 import useHouseStore from "@/features/dashboard/houseStore";
 
-import { AutoTimers } from "@/features/timers/AutoTimers";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -20,32 +19,25 @@ export function AutoCut() {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
-    const getUserHouse = async () => {
-      setLoading(true);
-      const houseDetails = await fetchHouse(selectedHouse?.value);
+  const getUserHouse = async () => {
+    setLoading(true);
+    const houseDetails = await fetchHouse(selectedHouse?.value);
 
-      if (!houseDetails.success) {
-        toast.error("Failed to fetch House!!");
-        setLoading(false);
-        return;
-      }
-
-      setHouse(houseDetails?.data);
+    if (!houseDetails.success) {
+      toast.error("Failed to fetch House!!");
       setLoading(false);
-      useHouseStore.getState().updateHouse(houseDetails?.data);
-    };
+      return;
+    }
 
+    setHouse(houseDetails?.data);
+    setLoading(false);
+    useHouseStore.getState().updateHouse(houseDetails?.data);
+  };
+
+  useEffect(() => {
     getUserHouse();
   }, [selectedHouse?.value]);
 
-  // if (loading) {
-  //   return (
-  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   );
-  // }
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
       <Filter
@@ -53,6 +45,9 @@ export function AutoCut() {
         setSelectedHouse={setSelectedHouse}
         date={date}
         setDate={setDate}
+        dateShow={false}
+        refreshBtn={true}
+        onClick={getUserHouse}
       />
 
       {loading && (

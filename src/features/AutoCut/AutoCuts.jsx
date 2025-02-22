@@ -20,7 +20,6 @@ export function AutoCuts() {
   };
   return (
     <div className="w-full h-full bg-white p-4 overflow-scroll">
-      {/* <AddAutoTImer houseData={houseData} /> */}
       <AddAutoCut />
       {houseData &&
         houseData?.rooms?.map((room) => {

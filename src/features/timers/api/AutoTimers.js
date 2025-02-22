@@ -1,7 +1,7 @@
-import { serverUrl } from '@/constants/config';
-import { fetchHouse } from '@/features/dashboard/api/house';
-import useHouseStore from '@/features/dashboard/houseStore';
-import { api } from '@/lib/apiClient';
+import { serverUrl } from "@/constants/config";
+import { fetchHouse } from "@/features/dashboard/api/house";
+import useHouseStore from "@/features/dashboard/houseStore";
+import { api } from "@/lib/apiClient";
 
 export const toggleAutoTimers = async (data) => {
   try {
@@ -12,7 +12,7 @@ export const toggleAutoTimers = async (data) => {
 
     const house = useHouseStore.getState().house;
     if (response.data.success) {
-      fetchHouse(house._id);
+      await fetchHouse(house._id);
     }
     return response.data;
   } catch (error) {
