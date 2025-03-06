@@ -59,7 +59,7 @@ export const UserCard = ({
             />
             <ConfirmationDialog
               message={
-                "Are you sure you want to leave house? This action can not be reversed."
+                "Are you sure you want to remove the user? This action can not be reversed."
               }
               buttonText={"Remove"}
               onConfirm={() => {
