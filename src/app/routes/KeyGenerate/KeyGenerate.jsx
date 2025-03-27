@@ -8,8 +8,8 @@ import axios from "axios";
 import { serverUrl } from "@/constants/config";
 import { KeyPasswordCopyMModel } from "@/features/KeyGenerate/component/KeyPasswordCopyMModel";
 import KeyModal from "@/features/KeyGenerate/KeyModal";
-import KeyList from "@/features/KeyGenerate/KeyList"; 
-import KeyGenerateForm from "@/features/KeyGenerate/KeyGenerateForm"; 
+import KeyList from "@/features/KeyGenerate/KeyList";
+import KeyGenerateForm from "@/features/KeyGenerate/KeyGenerateForm";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
@@ -30,7 +30,7 @@ const allowedPermissions = [
   "House:Detail",
   "Appliance:List",
   "Appliance:Control",
-  "Appliance:Update"
+  "Appliance:Update",
 ];
 
 export function KeyGenerate() {
@@ -72,7 +72,9 @@ export function KeyGenerate() {
       const response = await axios.post(`${serverUrl.sub}/v3/key/getKeys`, {
         userId: user._id,
       });
-      setKeys(Array.isArray(response.data.data.keys) ? response.data.data.keys : []);
+      setKeys(
+        Array.isArray(response.data.data.keys) ? response.data.data.keys : []
+      );
     } catch (error) {
       console.error("Error fetching API Keys:", error);
       toast.error("An error occurred while fetching API Keys.");
@@ -114,22 +116,21 @@ export function KeyGenerate() {
         ...prevData.permissions,
         [category]: {
           ...prevData.permissions[category],
-          [permission]: !prevData.permissions[category][permission], 
+          [permission]: !prevData.permissions[category][permission],
         },
       };
-  
+
       const roles = [];
       Object.keys(updatedPermissions).forEach((cat) => {
         Object.keys(updatedPermissions[cat]).forEach((perm) => {
           if (updatedPermissions[cat][perm]) {
-            roles.push(`${cat}:${perm.charAt(0).toUpperCase() + perm.slice(1)}`);
+            roles.push(
+              `${cat}:${perm.charAt(0).toUpperCase() + perm.slice(1)}`
+            );
           }
         });
       });
-  
-      console.log("Updated Edit Permissions:", updatedPermissions);
-      console.log("Updated Roles:", roles);
-  
+
       return { ...prevData, permissions: updatedPermissions, role: roles };
     });
   };
@@ -140,10 +141,18 @@ export function KeyGenerate() {
       const updatedPermissions = {};
       Object.keys(prevData.permissions).forEach((category) => {
         updatedPermissions[category] = {
-          list: allowedPermissions.includes(`${category}:List`) ? !selectAll : prevData.permissions[category].list,
-          detail: allowedPermissions.includes(`${category}:Detail`) ? !selectAll : prevData.permissions[category].detail,
-          control: allowedPermissions.includes(`${category}:Control`) ? !selectAll : prevData.permissions[category].control,
-          update: allowedPermissions.includes(`${category}:Update`) ? !selectAll : prevData.permissions[category].update,
+          list: allowedPermissions.includes(`${category}:List`)
+            ? !selectAll
+            : prevData.permissions[category].list,
+          detail: allowedPermissions.includes(`${category}:Detail`)
+            ? !selectAll
+            : prevData.permissions[category].detail,
+          control: allowedPermissions.includes(`${category}:Control`)
+            ? !selectAll
+            : prevData.permissions[category].control,
+          update: allowedPermissions.includes(`${category}:Update`)
+            ? !selectAll
+            : prevData.permissions[category].update,
         };
       });
       return { ...prevData, permissions: updatedPermissions };
@@ -151,31 +160,43 @@ export function KeyGenerate() {
   };
 
   const handleEditSelectAll = () => {
-    const newSelectAll = !editSelectAll; 
+    const newSelectAll = !editSelectAll;
     setEditSelectAll(newSelectAll);
-  
+
     setEditFormData((prevData) => {
       const updatedPermissions = {};
       Object.keys(prevData.permissions).forEach((category) => {
         updatedPermissions[category] = {
-          list: allowedPermissions.includes(`${category}:List`) ? newSelectAll : prevData.permissions[category].list,
-          detail: allowedPermissions.includes(`${category}:Detail`) ? newSelectAll : prevData.permissions[category].detail,
-          control: allowedPermissions.includes(`${category}:Control`) ? newSelectAll : prevData.permissions[category].control,
-          update: allowedPermissions.includes(`${category}:Update`) ? newSelectAll : prevData.permissions[category].update,
+          list: allowedPermissions.includes(`${category}:List`)
+            ? newSelectAll
+            : prevData.permissions[category].list,
+          detail: allowedPermissions.includes(`${category}:Detail`)
+            ? newSelectAll
+            : prevData.permissions[category].detail,
+          control: allowedPermissions.includes(`${category}:Control`)
+            ? newSelectAll
+            : prevData.permissions[category].control,
+          update: allowedPermissions.includes(`${category}:Update`)
+            ? newSelectAll
+            : prevData.permissions[category].update,
         };
       });
-  
+
       const roles = [];
       if (newSelectAll) {
         Object.keys(updatedPermissions).forEach((category) => {
           Object.keys(updatedPermissions[category]).forEach((permission) => {
             if (updatedPermissions[category][permission]) {
-              roles.push(`${category}:${permission.charAt(0).toUpperCase() + permission.slice(1)}`);
+              roles.push(
+                `${category}:${
+                  permission.charAt(0).toUpperCase() + permission.slice(1)
+                }`
+              );
             }
           });
         });
       }
-  
+
       return { ...prevData, permissions: updatedPermissions, role: roles };
     });
   };
@@ -186,7 +207,9 @@ export function KeyGenerate() {
       Object.keys(formData.permissions).forEach((category) => {
         Object.keys(formData.permissions[category]).forEach((action) => {
           if (formData.permissions[category][action]) {
-            roles.push(`${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`);
+            roles.push(
+              `${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`
+            );
           }
         });
       });
@@ -196,16 +219,16 @@ export function KeyGenerate() {
         purpose: formData.purpose,
         userId: user._id,
         role: roles,
-        validTill: formData.expiryDate
+        validTill: formData.expiryDate,
       });
 
       const newKey = response.data.data;
       setKeys((prevKeys) => [...prevKeys, newKey]);
       setShowModal(false);
-      setApiRes(newKey); 
-      setShowKeyDetails(true); 
+      setApiRes(newKey);
+      setShowKeyDetails(true);
       setDisabled(false);
-      getApiKeys(); 
+      getApiKeys();
     } catch (error) {
       console.error("Error submitting data:", error);
       toast.error("An error occurred while generating the key.");
@@ -216,25 +239,25 @@ export function KeyGenerate() {
   const handleStatusToggle = async (index) => {
     try {
       const key = keys[index];
-      const updatedStatus = !key.active; 
-      console.log("Toggling status for key:", key);
+      const updatedStatus = !key.active;
 
-      const response = await axios.post(`${serverUrl.sub}/v3/key/updateKeyStatus`, {
-        id: key._id,
-        active: updatedStatus, 
-      });
-
-      console.log("Server response:", response.data);
+      const response = await axios.post(
+        `${serverUrl.sub}/v3/key/updateKeyStatus`,
+        {
+          id: key._id,
+          active: updatedStatus,
+        }
+      );
 
       setKeys((prevKeys) => {
         const newKeys = [...prevKeys];
-        newKeys[index].active = updatedStatus; 
+        newKeys[index].active = updatedStatus;
         return newKeys;
       });
     } catch (error) {
       console.error("Error toggling key status:", error);
       if (error.response) {
-        console.error("Server response:", error.response.data); 
+        console.error("Server response:", error.response.data);
       }
       toast.error("An error occurred while toggling the key status.");
     }
@@ -247,31 +270,35 @@ export function KeyGenerate() {
       Object.keys(editFormData.permissions).forEach((category) => {
         Object.keys(editFormData.permissions[category]).forEach((action) => {
           if (editFormData.permissions[category][action]) {
-            roles.push(`${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`);
+            roles.push(
+              `${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`
+            );
           }
         });
       });
 
       const updateData = {
-        id: key._id, 
+        id: key._id,
         role: roles,
         name: key.name,
         purpose: key.purpose,
         validTill: key.validTill,
-        permissions: editFormData.permissions, 
+        permissions: editFormData.permissions,
       };
 
-      const response = await axios.post(`${serverUrl.sub}/v3/key/update`, updateData);
-      console.log("Edit key at index:", index);
+      const response = await axios.post(
+        `${serverUrl.sub}/v3/key/update`,
+        updateData
+      );
 
-      const updatedKey = response.data.data; 
+      const updatedKey = response.data.data;
       setKeys((prevKeys) =>
         prevKeys.map((key) => (key._id === updatedKey._id ? updatedKey : key))
       );
     } catch (error) {
       console.error("Error editing key:", error);
       if (error.response) {
-        console.error("Server response:", error.response.data); 
+        console.error("Server response:", error.response.data);
       }
       toast.error("An error occurred while editing the key.");
     }
@@ -282,12 +309,12 @@ export function KeyGenerate() {
 
   const handleEditClick = (index) => {
     const key = keys[index];
-  
+
     const permissions = key.permissions || {
       House: { list: false, detail: false },
       Appliance: { list: false, control: false, update: false },
     };
-  
+
     const roles = key.role || [];
     roles.forEach((role) => {
       const [category, action] = role.split(":");
@@ -295,16 +322,16 @@ export function KeyGenerate() {
         permissions[category][action.toLowerCase()] = true;
       }
     });
-  
+
     setEditFormData({
       id: key._id,
       keyName: key.name,
       purpose: key.purpose,
       expiryDate: key.validTill.split("T")[0],
-      permissions: permissions, 
-      role: roles, 
+      permissions: permissions,
+      role: roles,
     });
-  
+
     setShowEditModal(true);
   };
 
@@ -314,11 +341,13 @@ export function KeyGenerate() {
       Object.keys(editFormData.permissions).forEach((category) => {
         Object.keys(editFormData.permissions[category]).forEach((action) => {
           if (editFormData.permissions[category][action]) {
-            roles.push(`${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`);
+            roles.push(
+              `${category}:${action.charAt(0).toUpperCase() + action.slice(1)}`
+            );
           }
         });
       });
-  
+
       const updateData = {
         id: editFormData.id,
         name: editFormData.keyName,
@@ -327,9 +356,12 @@ export function KeyGenerate() {
         role: roles,
       };
 
-      const response = await axios.post(`${serverUrl.sub}/v3/key/update`, updateData);
-  
-      const updatedKey = response.data.data; 
+      const response = await axios.post(
+        `${serverUrl.sub}/v3/key/update`,
+        updateData
+      );
+
+      const updatedKey = response.data.data;
       setKeys((prevKeys) =>
         prevKeys.map((key) => (key._id === updatedKey._id ? updatedKey : key))
       );
@@ -346,7 +378,10 @@ export function KeyGenerate() {
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
       {/* <Filter keyData={selectedKey} setSelectedKey={setSelectedKey} date={date} setDate={setDate} /> */}
-      <button onClick={() => setShowModal(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4">
+      <button
+        onClick={() => setShowModal(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+      >
         Generate New Key
       </button>
       {loading && (
@@ -366,28 +401,46 @@ export function KeyGenerate() {
       />
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-md w-1/2"> 
+          <div className="bg-white p-6 rounded-md w-1/2">
             <h2 className="text-xl font-semibold mb-4">Edit Key</h2>
             <KeyGenerateForm
               formData={editFormData}
               handleInputChange={handleEditInputChange}
               handleToggleChange={handleEditToggleChange}
-              handleSelectAll={handleEditSelectAll} 
+              handleSelectAll={handleEditSelectAll}
               selectAll={editSelectAll}
             />
             <div className="flex justify-end gap-4 mt-4">
-              <button onClick={() => setShowEditModal(false)} className="bg-red-500 text-white px-4 py-2 rounded-md">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+              >
                 Close
               </button>
-              <button onClick={handleEditSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              <button
+                onClick={handleEditSubmit}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              >
                 Submit
               </button>
             </div>
           </div>
         </div>
       )}
-      <KeyList keys={keys} handleStatusToggle={handleStatusToggle} handleEdit={handleEditClick} />
-      {showKeyDetails && <KeyPasswordCopyMModel data={apiRes} onClose={() => { setShowKeyDetails(false); getApiKeys(); }} />}
+      <KeyList
+        keys={keys}
+        handleStatusToggle={handleStatusToggle}
+        handleEdit={handleEditClick}
+      />
+      {showKeyDetails && (
+        <KeyPasswordCopyMModel
+          data={apiRes}
+          onClose={() => {
+            setShowKeyDetails(false);
+            getApiKeys();
+          }}
+        />
+      )}
     </div>
   );
 }

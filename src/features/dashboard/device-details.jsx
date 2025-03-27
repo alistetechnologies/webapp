@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button';
-import React, { useEffect, useState } from 'react';
-import { Appliances } from './appliances';
-import { fetchDayAnalytics } from './api/device';
-import Commands from './commands';
-import { TableCell, TableRow } from '@/components/ui/table';
-import NovaContainer from './nova/NovaContainer';
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
+import { Appliances } from "./appliances";
+import { fetchDayAnalytics } from "./api/device";
+import Commands from "./commands";
+import { TableCell, TableRow } from "@/components/ui/table";
+import NovaContainer from "./nova/NovaContainer";
 
 export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [showAppliances, setShowAppliances] = useState(false);
@@ -13,7 +13,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [appliancesAnalysisData, setAppliancesAnalysisData] = useState([]);
   const [appliances, setAppliances] = useState();
   const [onAppliances, setOnAppliances] = useState(0);
-console.log(room,"room");
+
   function calculateAppliances() {
     let connectedAppliances = 0;
     let totalAppliances = 0;
@@ -34,7 +34,7 @@ console.log(room,"room");
         }
         totalAppliances += 1;
 
-        if (s?.switchState !== '0') {
+        if (s?.switchState !== "0") {
           onDevices += 1;
         }
 
@@ -63,8 +63,8 @@ console.log(room,"room");
       deviceId,
       day: new Date(date).toISOString(),
     });
-
-    return response?.final;
+    console.log("New Analysis response", response?.data?.snapshot);
+    return response?.data?.snapshot;
   };
 
   useEffect(() => {
@@ -75,7 +75,22 @@ console.log(room,"room");
         );
 
         const deviceData = await Promise.all(devicePromises);
-        setAppliancesAnalysisData(deviceData);
+        const applianceWiseAnalysisData = [];
+        for (const device of deviceData) {
+          if (!device) continue;
+
+          for (const s of Object.keys(device.appliances)) {
+            applianceWiseAnalysisData.push({
+              deviceId: device?.deviceId,
+              onlineTime: device?.onlineTime,
+              switchId: s,
+              ...device?.appliances[s],
+            });
+          }
+        }
+
+        console.log("Appliance Wise Analysis Data", applianceWiseAnalysisData);
+        setAppliancesAnalysisData(applianceWiseAnalysisData);
       } catch (error) {}
     };
 
@@ -88,64 +103,56 @@ console.log(room,"room");
 
   return (
     <>
-      <TableRow className='text-lg'>
-        <TableCell>{String(sno).padStart(2, '0')}</TableCell>
+      <TableRow className="text-lg">
+        <TableCell>{String(sno).padStart(2, "0")}</TableCell>
         <TableCell>{room?.roomName}</TableCell>
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>{connectedAppliances}</TableCell>
         <Commands analysisData={appliancesAnalysisData} />
         <TableCell>
-  <Button
-    onClick={() => setShowAppliances((prev) => !prev)}
-  >
-    {showAppliances ? "Hide Details" : "View Details"}
-  </Button>
-</TableCell>
-
+          <Button onClick={() => setShowAppliances((prev) => !prev)}>
+            {showAppliances ? "Hide Details" : "View Details"}
+          </Button>
+        </TableCell>
       </TableRow>
       {showAppliances && (
         <>
-        <Appliances
-          appliances={appliances}
-          analysisData={appliancesAnalysisData}
-          connectedDevices={connectedDevices}
-        />
-        {
-          room.novas.length>0 &&  <NovaContainer
-             novas={room.novas}
+          <Appliances
+            appliances={appliances}
+            analysisData={appliancesAnalysisData}
+            connectedDevices={connectedDevices}
           />
-        }
-       
+          {room.novas.length > 0 && <NovaContainer novas={room.novas} />}
         </>
       )}
     </>
   );
   return (
     <div>
-      <div className='grid grid-cols-12 border-b border-gray-300 rounded-lg bg-white'>
+      <div className="grid grid-cols-12 border-b border-gray-300 rounded-lg bg-white">
         {/* Row 1 */}
-        <div className='col-span-1 p-4 flex items-center justify-center'>
-          {String(sno).padStart(2, '0')}
+        <div className="col-span-1 p-4 flex items-center justify-center">
+          {String(sno).padStart(2, "0")}
         </div>
 
-        <div className='col-span-2 p-4 flex items-center justify-center text-left'>
+        <div className="col-span-2 p-4 flex items-center justify-center text-left">
           {room?.roomName}
         </div>
 
-        <div className='col-span-2 p-4 flex items-center justify-center'>
-          <span className='text-xl font-bold'>{connectedAppliances}/</span>
-          <span className='text-sm'>{totalAppliances}</span>
+        <div className="col-span-2 p-4 flex items-center justify-center">
+          <span className="text-xl font-bold">{connectedAppliances}/</span>
+          <span className="text-sm">{totalAppliances}</span>
         </div>
 
         {/* Commands */}
         <Commands analysisData={appliancesAnalysisData} />
 
-        <div className='col-span-1 p-4 flex items-center justify-center'>
-          <span className='text-xl font-bold'>{onAppliances}/</span>
-          <span className='text-sm'>{totalAppliances}</span>
+        <div className="col-span-1 p-4 flex items-center justify-center">
+          <span className="text-xl font-bold">{onAppliances}/</span>
+          <span className="text-sm">{totalAppliances}</span>
         </div>
 
-        <div className='col-span-2 p-4 flex items-center justify-center'>
+        <div className="col-span-2 p-4 flex items-center justify-center">
           <Button
             onClick={() => {
               setShowAppliances(!showAppliances);

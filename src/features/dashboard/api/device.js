@@ -1,12 +1,9 @@
-import { serverUrl } from '@/constants/config';
-import { api } from '@/lib/apiClient';
+import { serverUrl } from "@/constants/config";
+import { api } from "@/lib/apiClient";
 
 export const fetchDayAnalytics = async (data) => {
   try {
-    const response = await api.post(
-      `${serverUrl.analytics}/legacy/dayAnalytics`,
-      data
-    );
+    const response = await api.post(`${serverUrl.deviceApi}/analyse/day`, data);
 
     if (!response.data?.success) {
       //TODO
