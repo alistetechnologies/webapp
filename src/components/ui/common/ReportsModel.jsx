@@ -133,6 +133,7 @@ export default function ReportsModel({
               className="flex-1"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              max={new Date().toJSON().split("T")[0]}
             />
           </div>
 
@@ -147,6 +148,8 @@ export default function ReportsModel({
               className="flex-1"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              min={startDate ? new Date(startDate).toJSON().split("T")[0] : ""}
+              max={`${new Date().toJSON().split("T")[0]}`}
             />
           </div>
 
