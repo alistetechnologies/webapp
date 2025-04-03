@@ -122,8 +122,23 @@ const createAppRouter = () =>
         {
           path: "",
           lazy: async () => {
-            const { KeyGenerate } = await import("./routes/KeyGenerate/KeyGenerate");
+            const { KeyGenerate } = await import(
+              "./routes/KeyGenerate/KeyGenerate"
+            );
             return { Component: KeyGenerate };
+          },
+        },
+      ],
+    },
+    {
+      path: "/reports",
+      element: <AppRoot />,
+      children: [
+        {
+          path: "",
+          lazy: async () => {
+            const { Reports } = await import("./routes/reports/Reports");
+            return { Component: Reports };
           },
         },
       ],

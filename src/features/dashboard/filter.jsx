@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowBigLeft, CircleChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import RefreshDataButton from "@/components/ui/common/RefreshData";
-
-let rerender = 0;
+import useUserHousesStore from "./housesStore";
 
 export default function Filter({
   house,
@@ -22,7 +21,9 @@ export default function Filter({
   const [options, setOptions] = useState([]);
 
   const user = useUser.getState().user;
+  const updateHouse = useUserHousesStore((state) => state.updateHouses);
   const navigate = useNavigate();
+
   useEffect(() => {
     const getUserHouses = async () => {
       const response = await fetchUserHouses(user?.email);
@@ -35,12 +36,12 @@ export default function Filter({
         label: h?.houseName,
         value: h?.houseAccessCode,
       }));
-      setOptions([...options, ...memberof]);
+      const allHouses = [...options, ...memberof];
+      setOptions(allHouses);
+      updateHouse(allHouses);
     };
     getUserHouses();
   }, [user]);
-
-  rerender += 1;
 
   const houseName = options?.find((h) => {
     return h?.value === house?.value;

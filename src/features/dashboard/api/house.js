@@ -1,8 +1,8 @@
-import { serverUrl } from '@/constants/config';
-import { useAuth } from '@/features/auth/api/authStore';
+import { serverUrl } from "@/constants/config";
+import { useAuth } from "@/features/auth/api/authStore";
 
-import { api } from '@/lib/apiClient';
-import useHouseStore from '../houseStore';
+import { api } from "@/lib/apiClient";
+import useHouseStore from "../houseStore";
 
 export const fetchHouse = async (houseId) => {
   const userNumber = useAuth.getState().auth.number;
@@ -21,7 +21,7 @@ export const fetchHouse = async (houseId) => {
     useHouseStore.getState().updateHouse(response.data);
 
     return {
-      success: 'success',
+      success: "success",
       data: response.data,
     };
   } catch (error) {
