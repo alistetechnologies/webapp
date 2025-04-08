@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UnlockRecored from "./Pop/UnLockRecord/UnlockRecored";
 import { data } from "autoprefixer";
 import {
@@ -10,6 +10,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { adminPasswordApi } from "./api";
+import { token } from "@/constants/config";
+import ViewAndUpdateAdminPass from "./ViewAndUpdateAdminPass";
+import toast from "react-hot-toast";
 
 function TTLockRow({
   lock,
@@ -21,6 +25,21 @@ function TTLockRow({
   hubConneted,
   lockHubId,
 }) {
+  const [modal, setModal] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const fetchPassword = async () => {
+    const res = await adminPasswordApi("fetchAdminPasscode", { lockId: lock.lockId }, token);
+    if (!res) {
+      return;
+    }
+    setPassword(res?.data?.adminPasscode);
+  }
+
+  useEffect(() => {
+    fetchPassword();
+  })
+
   let battery = hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity || null
   return (
     <TableRow className="text-lg" key={lock?.lockId}>
@@ -80,8 +99,22 @@ function TTLockRow({
           >
             Time Sync History
           </Button>
+          <Button
+            onClick={() => {
+              if(password===""){
+                toast.error("No password Found!")
+                return;
+              }
+              setModal(true);
+            }}
+          >
+            View/Update admin password
+          </Button>
         </div>
       </TableCell>
+      {
+        modal&& <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} />
+      }
     </TableRow>
   );
 }
