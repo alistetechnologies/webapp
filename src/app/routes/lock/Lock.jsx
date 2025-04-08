@@ -10,6 +10,8 @@ import { MainHeader } from "@/features/lock/MainHeader";
 import Room from "@/features/lock/Room";
 import useHouseStore from "@/features/dashboard/houseStore";
 import House from "@/features/lock/House";
+import { Download } from "lucide-react";
+import { CSVLink } from "react-csv";
 
 export function Lock() {
   const user = useUser.getState().user;
@@ -17,6 +19,64 @@ export function Lock() {
   const [search,setSearch] = useState('')
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const [CSVData, setCsvData] = useState([]);
+
+  const getDashboardCsv = async () => {
+    try {
+      const response = await fetchUserHouses(user?.email);
+			const options = response?.masterOf?.map((h) => ({
+				label: h?.houseName,
+				value: h?.houseAccessCode,
+			}));
+			let memberof = response?.memberOf?.map((h) => ({
+				label: h?.houseName,
+				value: h?.houseAccessCode,
+			}));
+      const allHouses = [...options, ...memberof];
+      let csvData = [];
+      const allRecordsIds = [];
+      let extra = 0;
+
+      for (let house of allHouses) {
+        const houseName = house.label;
+        const houseID = house.value;
+        if (!allRecordsIds.includes(houseID)) {
+          const res = await fetchHouse(houseID);
+          allRecordsIds.push(houseID);
+          if (!res || !res?.data) continue;
+          const data = res?.data;
+          for(let room of data?.rooms){
+            const roomName = room?.roomName;
+            const roomId = room._id;
+            for (const ttlock of room.ttlocks) {
+              csvData.push({
+                "House Name": houseName,
+                HouseId: houseID,
+                "Room Name": roomName,
+                RoomId: roomId,
+                "Lock Name": ttlock.lockName,
+                "LockId": ttlock.lockId,
+                "Admin Password": ttlock.adminPasscode,
+              })
+            }
+          }
+        }
+        else {
+          extra++;
+        }
+      }
+
+      console.log("Extra calls");
+      console.log(extra)
+      console.log("Csv")
+      console.log(csvData);
+      setCsvData(csvData);
+    } 
+    catch (err) {
+      console.log(err.message)
+    }
+  };
+
   useEffect(() => {
     const getUserHouses = async () => {
       const response = await fetchUserHouses(user?.email);
@@ -28,6 +88,7 @@ export function Lock() {
      setHouses(options)
     };
     getUserHouses();
+    getDashboardCsv()
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
@@ -43,6 +104,16 @@ export function Lock() {
           onChange={(e)=>setSearch(e.target.value)}
          />
         </div>
+         {CSVData.length > 0 && (
+            <CSVLink
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-200 shadow-sm transition-colors duration-200 ease-in-out hover:border-gray-300"
+              filename="master-otp-details.csv"
+              data={CSVData}
+            >
+              <Download className="w-4 h-4 text-gray-600" />
+              <span>Export CSV</span>
+            </CSVLink>
+          )}
         </div>
         </div>
 
