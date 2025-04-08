@@ -12,7 +12,6 @@ export default function ViewAndUpdateAdminPass({
 	setShowModal,
 	password,
 	lockId,
-	setPassword,
 }) {
 	const [editMode, setEditMode] = useState(false);
 	const [newPassword, setNewPassword] = useState("");
@@ -43,7 +42,6 @@ export default function ViewAndUpdateAdminPass({
 			return;
 		}
 		console.log(res);
-        setPassword(newPassword)
 		setShowModal(false);
 		setEditMode(false);
 		setNewPassword("");
@@ -57,7 +55,7 @@ export default function ViewAndUpdateAdminPass({
 		setConfirmPassword("");
 		setError("");
 	};
-	// 1194379
+	
 	return (
 		<>
 			{showModal && (

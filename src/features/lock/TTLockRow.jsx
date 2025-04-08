@@ -14,6 +14,7 @@ import { adminPasswordApi } from "./api";
 import { token } from "@/constants/config";
 import ViewAndUpdateAdminPass from "./ViewAndUpdateAdminPass";
 import toast from "react-hot-toast";
+import { Spinner } from "react-bootstrap";
 
 function TTLockRow({
   lock,
@@ -27,18 +28,20 @@ function TTLockRow({
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const fetchPassword = async () => {
-    const res = await adminPasswordApi("fetchAdminPasscode", { lockId: lock.lockId }, token);
-    if (!res) {
-      return;
+    try {
+      const res = await adminPasswordApi("fetchAdminPasscode", { lockId: lock.lockId }, token);
+      if (!res) {
+        return;
+      }
+      setPassword(res?.data?.adminPasscode);
     }
-    setPassword(res?.data?.adminPasscode);
+    catch (err) {
+      console.log("error in finding password", err.message);
+    }
   }
-
-  useEffect(() => {
-    fetchPassword();
-  })
 
   let battery = hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity || null
   return (
@@ -100,11 +103,12 @@ function TTLockRow({
             Time Sync History
           </Button>
           <Button
-            onClick={() => {
-              if(password===""){
-                toast.error("No password Found!");
-                return;
-              }
+            disabled={loading}
+            className="cursor-pointer"
+            onClick={async () => {
+              setLoading(true);
+              await fetchPassword();
+              setLoading(false);
               setModal(true);
             }}
           >
@@ -113,7 +117,7 @@ function TTLockRow({
         </div>
       </TableCell>
       {
-        modal && <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} setPassword={setPassword} />
+        modal && <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} />
       }
     </TableRow>
   );
