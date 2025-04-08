@@ -12,6 +12,7 @@ export default function ViewAndUpdateAdminPass({
 	setShowModal,
 	password,
 	lockId,
+	setPassword,
 }) {
 	const [editMode, setEditMode] = useState(false);
 	const [newPassword, setNewPassword] = useState("");
@@ -36,13 +37,13 @@ export default function ViewAndUpdateAdminPass({
 			token
 		);
 		setLoading(false);
-		if (!res) {
+		if (!res || !res?.data?.success) {
 			setShowModal(false);
 			setEditMode(false);
 			return;
 		}
 		console.log(res);
-
+        setPassword(newPassword)
 		setShowModal(false);
 		setEditMode(false);
 		setNewPassword("");
@@ -119,7 +120,7 @@ export default function ViewAndUpdateAdminPass({
 								</div>
 
 								{error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-                                {loading && <Spinner className="w-5 h-5 text-blue-500" />}
+								{loading && <Spinner className="w-5 h-5 text-blue-500" />}
 								<div className="flex justify-end space-x-2">
 									<Button
 										className="cursor-pointer"

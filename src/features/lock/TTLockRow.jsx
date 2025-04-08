@@ -102,7 +102,7 @@ function TTLockRow({
           <Button
             onClick={() => {
               if(password===""){
-                toast.error("No password Found!")
+                toast.error("No password Found!");
                 return;
               }
               setModal(true);
@@ -113,7 +113,7 @@ function TTLockRow({
         </div>
       </TableCell>
       {
-        modal&& <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} />
+        modal && <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} setPassword={setPassword} />
       }
     </TableRow>
   );
