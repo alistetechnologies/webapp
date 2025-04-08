@@ -30,6 +30,13 @@ function TTLockRow({
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const clickHandler = async () => {
+		setLoading(true);
+		await fetchPassword();
+		setLoading(false);
+		setModal(true);
+	};
+
   const fetchPassword = async () => {
     try {
       const res = await adminPasswordApi("fetchAdminPasscode", { lockId: lock.lockId }, token);
@@ -105,12 +112,7 @@ function TTLockRow({
           <Button
             disabled={loading}
             className="cursor-pointer"
-            onClick={async () => {
-              setLoading(true);
-              await fetchPassword();
-              setLoading(false);
-              setModal(true);
-            }}
+            onClick={clickHandler}
           >
             View/Update admin password
           </Button>
