@@ -24,7 +24,10 @@ export default function ViewAndUpdateAdminPass({
 			setError("Passwords do not match");
 			return;
 		}
-
+		if (newPassword.length !== 6) {
+			setError("Password must be 6 digits");
+			return;
+		}
 		setError("");
 		setLoading(true);
 		const res = await adminPasswordApi(
@@ -35,13 +38,17 @@ export default function ViewAndUpdateAdminPass({
 			},
 			token
 		);
+	
 		setLoading(false);
+		if(res.success && res.errmsg!=="" && res.errmsg !== 'none error message or means yes'){
+			toast.error(res.errmsg);
+		}
 		if (!res || !res?.data?.success) {
 			setShowModal(false);
 			setEditMode(false);
 			return;
 		}
-		console.log(res);
+	
 		setShowModal(false);
 		setEditMode(false);
 		setNewPassword("");
@@ -99,6 +106,8 @@ export default function ViewAndUpdateAdminPass({
 									</label>
 									<input
 										type="password"
+										name="newPassword"
+										autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');"
 										value={newPassword}
 										onChange={(e) => setNewPassword(e.target.value)}
 										className="w-full px-3 py-2 border rounded"
