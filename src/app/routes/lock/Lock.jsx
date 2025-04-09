@@ -88,7 +88,7 @@ export function Lock() {
      setHouses(options)
     };
     getUserHouses();
-    getDashboardCsv()
+    // getDashboardCsv()
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">

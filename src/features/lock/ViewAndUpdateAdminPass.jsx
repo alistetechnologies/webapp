@@ -38,9 +38,13 @@ export default function ViewAndUpdateAdminPass({
 			},
 			token
 		);
-	
+
 		setLoading(false);
-		if(res.success && res.errmsg!=="" && res.errmsg !== 'none error message or means yes'){
+		if (
+			res.success &&
+			res.errmsg !== "" &&
+			res.errmsg !== "none error message or means yes"
+		) {
 			toast.error(res.errmsg);
 		}
 		if (!res || !res?.data?.success) {
@@ -48,7 +52,7 @@ export default function ViewAndUpdateAdminPass({
 			setEditMode(false);
 			return;
 		}
-	
+
 		setShowModal(false);
 		setEditMode(false);
 		setNewPassword("");
@@ -62,7 +66,7 @@ export default function ViewAndUpdateAdminPass({
 		setConfirmPassword("");
 		setError("");
 	};
-	
+
 	return (
 		<>
 			{showModal && (
@@ -107,9 +111,20 @@ export default function ViewAndUpdateAdminPass({
 									<input
 										type="password"
 										name="newPassword"
-										autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');"
+										autocomplete="new-password"
+										readonly
+										onfocus="this.removeAttribute('readonly');"
 										value={newPassword}
-										onChange={(e) => setNewPassword(e.target.value)}
+										onChange={(e) => {
+											if (e.target.value[0] === "0") {
+												setError("Password can't start with 0");
+												return;
+											}
+											else {
+												setError("");
+											}
+											setNewPassword(e.target.value);
+										}}
 										className="w-full px-3 py-2 border rounded"
 									/>
 								</div>
@@ -121,7 +136,15 @@ export default function ViewAndUpdateAdminPass({
 									<input
 										type="password"
 										value={confirmPassword}
-										onChange={(e) => setConfirmPassword(e.target.value)}
+										onChange={(e) =>{
+											if (e.target.value[0] === "0") {
+												setError("Password can't start with 0");
+												return;
+											} else {
+												setError("");
+											}
+											setConfirmPassword(e.target.value);
+										}}
 										className="w-full px-3 py-2 border rounded"
 									/>
 								</div>
