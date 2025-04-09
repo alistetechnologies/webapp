@@ -22,6 +22,21 @@ export function Reports() {
           }
         />
       </div>
+      <div className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg">
+        <div className="">
+          <h4 className="text-xl font-bold text-gray-800">House Analysis</h4>
+          <p className="text-sm text-gray-600">
+            Analysis of house appliances with House Name, Room Name, Lock Name, Admin Passcode
+          </p>
+        </div>
+        <ReportsModel
+          modelHeader={"House Analysis"}
+          modelDescription={
+            "Analysis of house appliances with House Name, Room Name, Lock Name, Admin Passcode"
+          }
+          isDateRequired={"No"}
+        />
+      </div>
     </div>
   );
 }

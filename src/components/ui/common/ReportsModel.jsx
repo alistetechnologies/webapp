@@ -26,6 +26,7 @@ import { Spinner } from "../spinner";
 export default function ReportsModel({
   modelHeader = "Generate Report",
   modelDescription = "Fill the details to generate the report",
+  isDateRequired
 }) {
   const houses = useUserHousesStore((state) => state.houses);
 
@@ -40,7 +41,7 @@ export default function ReportsModel({
   }
 
   async function handleFetchData() {
-    if (startDate === "" || endDate === "") {
+    if (isDateRequired !== "No" && (startDate === "" || endDate === "")) {
       toast.error("Please provide the start and end Dates");
       return;
     }
@@ -50,15 +51,27 @@ export default function ReportsModel({
       return;
     }
 
-    const payload = {
-      startDate,
-      endDate,
-      houseIds: selectedHouses.map((h) => h.value),
-    };
+    const payload =
+			isDateRequired !== "No"
+				? {
+						startDate,
+						endDate,
+						houseIds: selectedHouses.map((h) => h.value),
+				  }
+				: {
+						houseIds: selectedHouses.map((h) => h.value),
+				  };
 
     setLoading(true);
 
-    const response = await fetchSyncAnalysisReport(payload);
+    let response;
+    if (isDateRequired === "No") {
+      response = "fetchData";
+      console.log("response")
+    }
+    else {
+      response = await fetchSyncAnalysisReport(payload);
+    }
     setLoading(false);
     if (!response.success) {
       toast.error(response.message || "Failed to generate data");
@@ -123,7 +136,7 @@ export default function ReportsModel({
         </div> */}
         <div className="py-4">
           {/* Start Date Section */}
-          <div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" &&<div className="flex items-center gap-4 mb-4">
             <Label htmlFor="name" className="w-1/4 text-right">
               Start Date
             </Label>
@@ -135,10 +148,10 @@ export default function ReportsModel({
               onChange={(e) => setStartDate(e.target.value)}
               max={new Date().toJSON().split("T")[0]}
             />
-          </div>
+          </div>}
 
           {/* End Date Section */}
-          <div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" && <div className="flex items-center gap-4 mb-4">
             <Label htmlFor="endDate" className="w-1/4 text-right">
               End Date
             </Label>
@@ -151,7 +164,7 @@ export default function ReportsModel({
               min={startDate ? new Date(startDate).toJSON().split("T")[0] : ""}
               max={`${new Date().toJSON().split("T")[0]}`}
             />
-          </div>
+          </div>}
 
           {/* Select Houses Section */}
           <div className="flex items-center gap-4">
