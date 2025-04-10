@@ -22,32 +22,32 @@ export function Reports() {
           }
         />
       </div>
-      <div className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg">
+      <div className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg mt-2">
         <div className="">
-          <h4 className="text-xl font-bold text-gray-800">House Analysis</h4>
+          <h4 className="text-xl font-bold text-gray-800">Lock Details with Admin Password</h4>
           <p className="text-sm text-gray-600">
-            Analysis of house appliances with House Name, Room Name, Lock Name, Admin Passcode
+            Analysis of Admin Password with House Name, Room Name, Lock Name, Admin Password
           </p>
         </div>
         <ReportsModel
-          modelHeader={"House Analysis"}
+          modelHeader={"Lock Details with Admin Password"}
           modelDescription={
-            "Analysis of house appliances with House Name, Room Name, Lock Name, Admin Passcode"
+            "Analysis of Admin Password with House Name, Room Name, Lock Name, Admin Password"
           }
           isDateRequired={"No"}
         />
       </div>
-      <div className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg">
+      <div className="flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg mt-2">
         <div className="">
-          <h4 className="text-xl font-bold text-gray-800">House Analysis</h4>
+          <h4 className="text-xl font-bold text-gray-800">House Details</h4>
           <p className="text-sm text-gray-600">
-            Analysis of house appliances with House Name, Room Name, Lock Name, Admin Passcode
+            Analysis of house details with House Name, Room Name.
           </p>
         </div>
         <ReportsModel
-          modelHeader={"House Analysis"}
+          modelHeader={"House Details"}
           modelDescription={
-            "Analysis of house appliances with House Name, Room Name"
+            "Analysis of house details with House Name, Room Name."
           }
           isDateRequired={"no"}
         />
