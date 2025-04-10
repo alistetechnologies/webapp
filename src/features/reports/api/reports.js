@@ -16,3 +16,16 @@ export const fetchSyncAnalysisReport = async (data) => {
     };
   }
 };
+
+export const fetchLockRecordData = async (data) => {
+  try {
+		const response = await api.post(`${serverUrl.sub}/v3/reports/lockRecord`, data);
+
+		return response.data;
+	} catch (error) {
+		return {
+			success: false,
+			message: error?.response?.data?.message || error.message,
+		};
+	}
+}

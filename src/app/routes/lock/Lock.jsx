@@ -35,7 +35,6 @@ export function Lock() {
       const allHouses = [...options, ...memberof];
       let csvData = [];
       const allRecordsIds = [];
-      let extra = 0;
 
       for (let house of allHouses) {
         const houseName = house.label;
@@ -61,15 +60,8 @@ export function Lock() {
             }
           }
         }
-        else {
-          extra++;
-        }
       }
 
-      console.log("Extra calls");
-      console.log(extra)
-      console.log("Csv")
-      console.log(csvData);
       setCsvData(csvData);
     } 
     catch (err) {
@@ -88,7 +80,7 @@ export function Lock() {
      setHouses(options)
     };
     getUserHouses();
-    getDashboardCsv()
+    // getDashboardCsv()
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">

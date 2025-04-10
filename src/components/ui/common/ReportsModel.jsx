@@ -18,8 +18,8 @@ import { CSVLink } from "react-csv";
 
 import useUserHousesStore from "@/features/dashboard/housesStore";
 import toast from "react-hot-toast";
-import { fetchSyncAnalysisReport } from "@/features/reports/api/reports";
-import moment from "moment";
+import { fetchLockRecordData, fetchSyncAnalysisReport } from "@/features/reports/api/reports";
+import moment, { isDate } from "moment";
 import { Spinner } from "../spinner";
 // import moment from "moment";
 
@@ -66,8 +66,37 @@ export default function ReportsModel({
 
     let response;
     if (isDateRequired === "No") {
-      response = "fetchData";
-      console.log("response")
+      response = await fetchLockRecordData(payload);
+      const resData = response?.data;
+      if (!response || !resData) {
+        toast.error(response?.message || "Failed to generate data");
+        setLoading(false);
+        return;
+      }
+
+      const csvData1 = [];
+      for (let d of resData) {
+        const houseName = d.houseName;
+        const houseId = d.houseId;
+        for (let room of d.roomDetails) {
+					let roomName = room.roomName;
+					let roomId = room.roomId;
+          csvData1.push({
+            "House Name": houseName,
+            HouseId: houseId,
+            "Room Name": roomName,
+            RoomId: roomId,
+            LockId: room.ttLockDetails.lockId,
+            "Lock Name": room.ttLockDetails.lockName,
+            "Admin password": room.ttLockDetails.adminPassword,
+          });
+				}
+      }
+
+      setCsvData(csvData1);
+      toast.success(response.message);
+      setLoading(false);
+      return
     }
     else {
       response = await fetchSyncAnalysisReport(payload);
@@ -77,7 +106,6 @@ export default function ReportsModel({
       toast.error(response.message || "Failed to generate data");
       return;
     }
-
     setCsvData(response.data);
     toast.success(response.message);
   }
@@ -187,7 +215,7 @@ export default function ReportsModel({
           {csvData.length !== 0 && (
             <CSVLink
               filename={
-                modelHeader
+                isDateRequired==="No"? "lock-record-details": modelHeader
                   ? `${modelHeader}-${moment(startDate).format(
                       "DD-MMM-YYYY"
                     )} - ${moment(endDate).format("DD-MMM-YYYY")}.csv`
