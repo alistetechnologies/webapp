@@ -78,10 +78,19 @@ export default function ReportsModel({
 				});
 			}
 		}
-
+    if (!checkData(csvData1)) {
+      toast.success(response.message);
+    }
 		setCsvData(csvData1);
-		toast.success(response.message);
 		setLoading(false);
+  }
+
+  const checkData = (csvData) => {
+    if (csvData.length === 0) {
+      toast.error("No Details found for this House");
+      return true;
+    }
+    return false;
   }
 
   const handleHouseRecord = async () => {
@@ -97,7 +106,6 @@ export default function ReportsModel({
 		setLoading(true);
     const response = await fetchHouseRecords(payload);
     const resData = response?.data;
-    console.log(resData)
     if (!response || !resData) {
       toast.error(response?.message || "Failed to generate data");
       setLoading(false);
@@ -114,8 +122,12 @@ export default function ReportsModel({
       })
     }
 
-		setCsvData(csvData1);
-		toast.success(response.message);
+   
+
+    setCsvData(csvData1);
+    if (!checkData(csvData1)) {
+  		toast.success(response.message);    
+    }
 		setLoading(false);
   }
 
