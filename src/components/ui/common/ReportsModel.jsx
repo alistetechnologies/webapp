@@ -18,7 +18,7 @@ import { CSVLink } from "react-csv";
 
 import useUserHousesStore from "@/features/dashboard/housesStore";
 import toast from "react-hot-toast";
-import { fetchSyncAnalysisReport } from "@/features/reports/api/reports";
+import { fetchHouseRecords, fetchLockRecordData, fetchSyncAnalysisReport } from "@/features/reports/api/reports";
 import moment from "moment";
 import { Spinner } from "../spinner";
 // import moment from "moment";
@@ -26,6 +26,7 @@ import { Spinner } from "../spinner";
 export default function ReportsModel({
   modelHeader = "Generate Report",
   modelDescription = "Fill the details to generate the report",
+  isDateRequired
 }) {
   const houses = useUserHousesStore((state) => state.houses);
 
@@ -37,6 +38,97 @@ export default function ReportsModel({
 
   function handleSelectHouse(data) {
     setSelectedHouses(data);
+  }
+
+  const handleLockRecordData = async () => {
+    if (selectedHouses.length === 0) {
+			toast.error("Please select a house");
+			return;
+		}
+
+    const payload = {
+			houseIds: selectedHouses.map((h) => h.value),
+		};
+
+    setLoading(true);
+    const response = await fetchLockRecordData(payload);
+
+    const resData = response?.data;
+		if (!response || !resData) {
+			toast.error(response?.message || "Failed to generate data");
+			setLoading(false);
+			return;
+		}
+
+		const csvData1 = [];
+		for (let d of resData) {
+			const houseName = d.houseName;
+			const houseId = d.houseId;
+			for (let room of d.roomDetails) {
+				let roomName = room.roomName;
+				let roomId = room.roomId;
+				csvData1.push({
+					"House Name": houseName,
+					HouseId: houseId,
+					"Room Name": roomName,
+					RoomId: roomId,
+					LockId: room.ttLockDetails.lockId,
+					"Lock Name": room.ttLockDetails.lockName,
+					"Admin password": room.ttLockDetails.adminPassword,
+				});
+			}
+		}
+    if (!checkData(csvData1)) {
+      toast.success(response.message);
+    }
+		setCsvData(csvData1);
+		setLoading(false);
+  }
+
+  const checkData = (csvData) => {
+    if (csvData.length === 0) {
+      toast.error("No Details found for this House");
+      return true;
+    }
+    return false;
+  }
+
+  const handleHouseRecord = async () => {
+    if (selectedHouses.length === 0) {
+			toast.error("Please select a house");
+			return;
+		}
+
+		const payload = {
+			houseIds: selectedHouses.map((h) => h.value),
+		};
+
+		setLoading(true);
+    const response = await fetchHouseRecords(payload);
+    const resData = response?.data;
+    if (!response || !resData) {
+      toast.error(response?.message || "Failed to generate data");
+      setLoading(false);
+      return;
+    }
+
+    const csvData1 = [];
+    for (let d of resData) {
+      csvData1.push({
+        "House Name": d.houseName,
+        "HouseId": d.houseId,
+        "Room Name": d.roomName,
+        "RoomId": d.roomId,
+      })
+    }
+
+   
+
+    setCsvData(csvData1);
+    if (!checkData(csvData1)) {
+  		toast.success(response.message);    
+    }
+		setLoading(false);
   }
 
   async function handleFetchData() {
@@ -58,16 +150,17 @@ export default function ReportsModel({
 
     setLoading(true);
 
-    const response = await fetchSyncAnalysisReport(payload);
+    let response = await fetchSyncAnalysisReport(payload);
+    
     setLoading(false);
     if (!response.success) {
       toast.error(response.message || "Failed to generate data");
       return;
     }
-
     setCsvData(response.data);
     toast.success(response.message);
   }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -123,7 +216,7 @@ export default function ReportsModel({
         </div> */}
         <div className="py-4">
           {/* Start Date Section */}
-          <div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" && isDateRequired !== "no" &&<div className="flex items-center gap-4 mb-4">
             <Label htmlFor="name" className="w-1/4 text-right">
               Start Date
             </Label>
@@ -135,10 +228,10 @@ export default function ReportsModel({
               onChange={(e) => setStartDate(e.target.value)}
               max={new Date().toJSON().split("T")[0]}
             />
-          </div>
+          </div>}
 
           {/* End Date Section */}
-          <div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" && isDateRequired !=="no" && <div className="flex items-center gap-4 mb-4">
             <Label htmlFor="endDate" className="w-1/4 text-right">
               End Date
             </Label>
@@ -151,7 +244,7 @@ export default function ReportsModel({
               min={startDate ? new Date(startDate).toJSON().split("T")[0] : ""}
               max={`${new Date().toJSON().split("T")[0]}`}
             />
-          </div>
+          </div>}
 
           {/* Select Houses Section */}
           <div className="flex items-center gap-4">
@@ -174,7 +267,7 @@ export default function ReportsModel({
           {csvData.length !== 0 && (
             <CSVLink
               filename={
-                modelHeader
+                isDateRequired==="No"? "lock-record-details": modelHeader
                   ? `${modelHeader}-${moment(startDate).format(
                       "DD-MMM-YYYY"
                     )} - ${moment(endDate).format("DD-MMM-YYYY")}.csv`
@@ -194,7 +287,17 @@ export default function ReportsModel({
           <Button
             className="min-w-[100px]"
             type="submit"
-            onClick={handleFetchData}
+            onClick={() => {
+              if (isDateRequired === "No") {
+								handleLockRecordData();
+								return;
+							}
+              if (isDateRequired === "no") {
+								handleHouseRecord();
+								return;
+							}
+              handleFetchData();
+            }}
             disabled={loading}
           >
             {loading ? <Spinner /> : "Generate Report"}
