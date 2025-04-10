@@ -18,8 +18,8 @@ import { CSVLink } from "react-csv";
 
 import useUserHousesStore from "@/features/dashboard/housesStore";
 import toast from "react-hot-toast";
-import { fetchLockRecordData, fetchSyncAnalysisReport } from "@/features/reports/api/reports";
-import moment, { isDate } from "moment";
+import { fetchHouseRecords, fetchLockRecordData, fetchSyncAnalysisReport } from "@/features/reports/api/reports";
+import moment from "moment";
 import { Spinner } from "../spinner";
 // import moment from "moment";
 
@@ -40,8 +40,87 @@ export default function ReportsModel({
     setSelectedHouses(data);
   }
 
+  const handleLockRecordData = async () => {
+    if (selectedHouses.length === 0) {
+			toast.error("Please select a house");
+			return;
+		}
+
+    const payload = {
+			houseIds: selectedHouses.map((h) => h.value),
+		};
+
+    setLoading(true);
+    const response = await fetchLockRecordData(payload);
+
+    const resData = response?.data;
+		if (!response || !resData) {
+			toast.error(response?.message || "Failed to generate data");
+			setLoading(false);
+			return;
+		}
+
+		const csvData1 = [];
+		for (let d of resData) {
+			const houseName = d.houseName;
+			const houseId = d.houseId;
+			for (let room of d.roomDetails) {
+				let roomName = room.roomName;
+				let roomId = room.roomId;
+				csvData1.push({
+					"House Name": houseName,
+					HouseId: houseId,
+					"Room Name": roomName,
+					RoomId: roomId,
+					LockId: room.ttLockDetails.lockId,
+					"Lock Name": room.ttLockDetails.lockName,
+					"Admin password": room.ttLockDetails.adminPassword,
+				});
+			}
+		}
+
+		setCsvData(csvData1);
+		toast.success(response.message);
+		setLoading(false);
+  }
+
+  const handleHouseRecord = async () => {
+    if (selectedHouses.length === 0) {
+			toast.error("Please select a house");
+			return;
+		}
+
+		const payload = {
+			houseIds: selectedHouses.map((h) => h.value),
+		};
+
+		setLoading(true);
+    const response = await fetchHouseRecords(payload);
+    const resData = response?.data;
+    console.log(resData)
+    if (!response || !resData) {
+      toast.error(response?.message || "Failed to generate data");
+      setLoading(false);
+      return;
+    }
+
+    const csvData1 = [];
+    for (let d of resData) {
+      csvData1.push({
+        "House Name": d.houseName,
+        "HouseId": d.houseId,
+        "Room Name": d.roomName,
+        "RoomId": d.roomId,
+      })
+    }
+
+		setCsvData(csvData1);
+		toast.success(response.message);
+		setLoading(false);
+  }
+
   async function handleFetchData() {
-    if (isDateRequired !== "No" && (startDate === "" || endDate === "")) {
+    if (startDate === "" || endDate === "") {
       toast.error("Please provide the start and end Dates");
       return;
     }
@@ -51,56 +130,16 @@ export default function ReportsModel({
       return;
     }
 
-    const payload =
-			isDateRequired !== "No"
-				? {
-						startDate,
-						endDate,
-						houseIds: selectedHouses.map((h) => h.value),
-				  }
-				: {
-						houseIds: selectedHouses.map((h) => h.value),
-				  };
+    const payload = {
+      startDate,
+      endDate,
+      houseIds: selectedHouses.map((h) => h.value),
+    };
 
     setLoading(true);
 
-    let response;
-    if (isDateRequired === "No") {
-      response = await fetchLockRecordData(payload);
-      const resData = response?.data;
-      if (!response || !resData) {
-        toast.error(response?.message || "Failed to generate data");
-        setLoading(false);
-        return;
-      }
-
-      const csvData1 = [];
-      for (let d of resData) {
-        const houseName = d.houseName;
-        const houseId = d.houseId;
-        for (let room of d.roomDetails) {
-					let roomName = room.roomName;
-					let roomId = room.roomId;
-          csvData1.push({
-            "House Name": houseName,
-            HouseId: houseId,
-            "Room Name": roomName,
-            RoomId: roomId,
-            LockId: room.ttLockDetails.lockId,
-            "Lock Name": room.ttLockDetails.lockName,
-            "Admin password": room.ttLockDetails.adminPassword,
-          });
-				}
-      }
-
-      setCsvData(csvData1);
-      toast.success(response.message);
-      setLoading(false);
-      return
-    }
-    else {
-      response = await fetchSyncAnalysisReport(payload);
-    }
+    let response = await fetchSyncAnalysisReport(payload);
+    
     setLoading(false);
     if (!response.success) {
       toast.error(response.message || "Failed to generate data");
@@ -109,6 +148,7 @@ export default function ReportsModel({
     setCsvData(response.data);
     toast.success(response.message);
   }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -164,7 +204,7 @@ export default function ReportsModel({
         </div> */}
         <div className="py-4">
           {/* Start Date Section */}
-          {isDateRequired !== "No" &&<div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" && isDateRequired !== "no" &&<div className="flex items-center gap-4 mb-4">
             <Label htmlFor="name" className="w-1/4 text-right">
               Start Date
             </Label>
@@ -179,7 +219,7 @@ export default function ReportsModel({
           </div>}
 
           {/* End Date Section */}
-          {isDateRequired !== "No" && <div className="flex items-center gap-4 mb-4">
+          {isDateRequired !== "No" && isDateRequired !=="no" && <div className="flex items-center gap-4 mb-4">
             <Label htmlFor="endDate" className="w-1/4 text-right">
               End Date
             </Label>
@@ -235,7 +275,17 @@ export default function ReportsModel({
           <Button
             className="min-w-[100px]"
             type="submit"
-            onClick={handleFetchData}
+            onClick={() => {
+              if (isDateRequired === "No") {
+								handleLockRecordData();
+								return;
+							}
+              if (isDateRequired === "no") {
+								handleHouseRecord();
+								return;
+							}
+              handleFetchData();
+            }}
             disabled={loading}
           >
             {loading ? <Spinner /> : "Generate Report"}

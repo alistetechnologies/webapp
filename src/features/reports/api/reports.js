@@ -29,3 +29,19 @@ export const fetchLockRecordData = async (data) => {
 		};
 	}
 }
+
+export const fetchHouseRecords = async (data) => {
+  try {
+		const response = await api.post(
+			`http://localhost:3001/v3/reports/houseRecord`,
+			data
+		);
+
+		return response.data;
+	} catch (error) {
+		return {
+			success: false,
+			message: error?.response?.data?.message || error.message,
+		};
+	}
+}
