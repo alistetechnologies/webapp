@@ -33,7 +33,7 @@ export const fetchLockRecordData = async (data) => {
 export const fetchHouseRecords = async (data) => {
   try {
 		const response = await api.post(
-			`http://localhost:3001/v3/reports/houseRecord`,
+			`${serverUrl.sub}/v3/reports/houseRecord`,
 			data
 		);
 
