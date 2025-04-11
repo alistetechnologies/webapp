@@ -165,10 +165,10 @@ export default function ViewAndUpdateAdminPass({
 										className="cursor-pointer"
 										disabled={loading}
 										onClick={() => {
-											const pass = Math.floor(Math.random() * 1e6);
+											let pass = Math.floor(Math.random() * 1e6);
 											console.log(pass);
-											setNewPassword(pass);
-											setConfirmPassword(pass);
+											setNewPassword(String(pass));
+											setConfirmPassword(String(pass));
 										}}>
 										Generate Password
 									</Button>
