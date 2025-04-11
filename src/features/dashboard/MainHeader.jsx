@@ -5,6 +5,7 @@ export function MainHeader() {
     <TableRow className='text-black'>
       <TableHead className='text-black'>S.No</TableHead>
       <TableHead className='text-black'>Room Name</TableHead>
+      <TableHead className='text-black'>Occupied</TableHead>
       <TableHead className='text-black'>Total Devices</TableHead>
       <TableHead className='text-black'>Connected Devices</TableHead>
       <TableHead className='text-black'>Total Commands</TableHead>

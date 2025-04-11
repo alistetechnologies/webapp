@@ -106,6 +106,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
       <TableRow className="text-lg">
         <TableCell>{String(sno).padStart(2, "0")}</TableCell>
         <TableCell>{room?.roomName}</TableCell>
+        <TableCell>{room?.occupied === null ? "---": room?.occupied ? "Yes": "No"}</TableCell>
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>{connectedAppliances}</TableCell>
         <Commands analysisData={appliancesAnalysisData} />
