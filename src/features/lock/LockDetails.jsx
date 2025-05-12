@@ -16,7 +16,7 @@ import Filter from "../dashboard/filter";
 import { useUser } from "../auth/api/userStore";
 import toast from "react-hot-toast";
 import { Download } from "lucide-react";
-import moment from 'moment';
+import moment from "moment";
 import { CSVLink } from "react-csv";
 
 export function LockDetails() {
@@ -37,7 +37,8 @@ export function LockDetails() {
 
   useEffect(() => {
     const getUserHouse = async () => {
-      setLoading(true);''
+      setLoading(true);
+      ("");
       const houseDetails = await fetchHouse(selectedHouse?.value);
 
       if (!houseDetails.success) {
@@ -55,7 +56,7 @@ export function LockDetails() {
 
   useEffect(() => {
     if (Object.keys(house).length > 0) {
-      let hubConnetedData=[]
+      let hubConnetedData = [];
       let ttlockhub = house?.rooms?.reduce((p, c) => {
         return [
           ...p,
@@ -79,32 +80,43 @@ export function LockDetails() {
             }
           )
           .then((res) => {
-            let dataAarray = typeof res?.data  === "object"? Object.keys(res?.data).reduce((p,c)=>{
-               let mapHubID = res?.data[c].map((e)=>{
-                return{...e,hubId:c}
-              })
-              return [...p,...mapHubID]
-            },[]):res?.data
+            let dataAarray =
+              typeof res?.data === "object"
+                ? Object.keys(res?.data).reduce((p, c) => {
+                    let mapHubID = res?.data[c].map((e) => {
+                      return { ...e, hubId: c };
+                    });
+                    return [...p, ...mapHubID];
+                  }, [])
+                : res?.data;
             setHubConcted(dataAarray || []);
-            hubConnetedData=dataAarray || []
+            hubConnetedData = dataAarray || [];
             if (house?.rooms?.length > 0) {
               const locks = house.rooms.reduce((p, c) => {
                 return [
                   ...p,
                   ...c.ttlocks.map((l) => {
-                    const battery = hubConnetedData.find((e) => e.lockId === l.lockId)?.electricQuantity || null;
+                    const battery =
+                      hubConnetedData.find((e) => e.lockId === l.lockId)
+                        ?.electricQuantity || null;
                     return {
                       "Lock ID": l.lockId,
                       "Room Name": c.roomName,
-                      "Hub Connected": hubConnetedData.some((e) => e.lockId === l.lockId) ? "Yes" : "No",
+                      "Hub Connected": hubConnetedData.some(
+                        (e) => e.lockId === l.lockId
+                      )
+                        ? "Yes"
+                        : "No",
                       "Battery Level": battery !== null ? battery : "---",
-                      "Last Updated": moment(l.lastUpdatedTime).format("DD MMMM YYYY, LT"),
-                      "Hub ID": ttlockHubId[l.lockId] || "---"
+                      "Last Updated": moment(l.lastUpdatedTime).format(
+                        "DD MMMM YYYY, LT"
+                      ),
+                      "Hub ID": ttlockHubId[l.lockId] || "---",
                     };
                   }),
                 ];
               }, []);
-              setCsvData(locks.sort((a,b)=>a["Room Name"]-b["Room Name"]));
+              setCsvData(locks.sort((a, b) => a["Room Name"] - b["Room Name"]));
             }
           })
           .catch((err) => {
@@ -138,25 +150,32 @@ export function LockDetails() {
 
       setLockHubId(ttlockHubId);
 
- 
       if (house?.rooms?.length > 0) {
         const locks = house.rooms.reduce((p, c) => {
           return [
             ...p,
             ...c.ttlocks.map((l) => {
-              const battery = hubConnetedData.find((e) => e.lockId === l.lockId)?.electricQuantity || null;
+              const battery =
+                hubConnetedData.find((e) => e.lockId === l.lockId)
+                  ?.electricQuantity || null;
               return {
                 "Lock ID": l.lockId,
                 "Room Name": c.roomName,
-                "Hub Connected": hubConnetedData.some((e) => e.lockId === l.lockId) ? "Yes" : "No",
+                "Hub Connected": hubConnetedData.some(
+                  (e) => e.lockId === l.lockId
+                )
+                  ? "Yes"
+                  : "No",
                 "Battery Level": battery !== null ? battery : "---",
-                "Last Updated": moment(l.lastUpdatedTime).format("DD MMMM YYYY, LT"),
-                "Hub ID": ttlockHubId[l.lockId] || "---"
+                "Last Updated": moment(l.lastUpdatedTime).format(
+                  "DD MMMM YYYY, LT"
+                ),
+                "Hub ID": ttlockHubId[l.lockId] || "---",
               };
             }),
           ];
         }, []);
-        setCsvData(locks.sort((a,b)=>a["Room Name"]-b["Room Name"]));
+        setCsvData(locks.sort((a, b) => a["Room Name"] - b["Room Name"]));
       }
     }
   }, [house]);
@@ -170,7 +189,7 @@ export function LockDetails() {
   };
 
   return (
-    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
+    <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <UnlockRecored
         lock={lockDetails}
         open={unlockingHistory}
@@ -182,15 +201,16 @@ export function LockDetails() {
         open={timeSyncHistory}
         setOpen={setTimeSyncHistory}
       />
-      <div className="mb-4">
-        <Filter
-          house={selectedHouse}
-          setSelectedHouse={setSelectedHouse}
-          dateShow={false}
-          backBtn={true}
-          link={'/lock'}
-        />
-      </div>
+
+      <Filter
+        house={selectedHouse}
+        setSelectedHouse={setSelectedHouse}
+        dateShow={false}
+        backBtn={true}
+        backLink="/lock"
+        link={"/lock"}
+      />
+
       {loading && (
         <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
           <Spinner size="lg" />
@@ -285,4 +305,4 @@ export function LockDetails() {
   );
 }
 
-export default LockDetails
+export default LockDetails;

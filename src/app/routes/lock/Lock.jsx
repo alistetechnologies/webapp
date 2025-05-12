@@ -82,17 +82,18 @@ export function Lock() {
     // getDashboardCsv()
   }, [user]);
   return (
-    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
-      <div className="w-full bg-white p-4 mb-6 rounded-md">
+    <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
+      <div className="w-full bg-white p-4 mb-6 rounded-md mt-8 sticky top-0 z-10">
         <div className="space-y-4 flex gap-4 items-center">
           <div className="flex gap-4 items-center flex-1">
             <h2 className="text-2xl hover:underline">House Name:</h2>
 
             <input
               type="text"
-              className="border p-2 rounded-lg"
+              className="border border-black p-2 rounded-lg flex-1"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder="House name"
             />
           </div>
           {CSVData.length > 0 && (
