@@ -5,8 +5,10 @@ import { useUser } from "@/features/auth/api/userStore";
 import {
   fetchHouse,
   fetchConnectedDevices,
+  fetchUserHouses,
 } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
+import Houses from "@/features/dashboard/houses";
 import useHouseStore from "@/features/dashboard/houseStore";
 
 import { MainHeader } from "@/features/dashboard/MainHeader";
@@ -15,56 +17,27 @@ import Rooms from "@/features/dashboard/Rooms";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-let rerender = 0;
 export function Dashboard() {
-  const user = useUser.getState().user;
-  const [selectedHouse, setSelectedHouse] = useState({
-    value: user?.selectedHouse || "",
-  });
-  const [house, setHouse] = useState({});
+  const user = useUser((state) => state.user);
+
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [connectedDevices, setConnectedDevices] = useState([]);
-
-  const getUserHouse = async () => {
-    setLoading(true);
-    const houseDetails = await fetchHouse(selectedHouse?.value);
-
-    if (!houseDetails.success) {
-      toast.error("Failed to fetch House!!");
-      setLoading(false);
-      return;
-    }
-
-    setHouse(houseDetails?.data);
-    setLoading(false);
-    useHouseStore.getState().updateHouse(houseDetails?.data);
-  };
+  const [houses, setHouses] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    getUserHouse();
-  }, [selectedHouse?.value]);
+    const getUserHouses = async () => {
+      const response = await fetchUserHouses(user?.email);
 
-  useEffect(() => {
-    const getConnectedDevices = async () => {
-      if (!selectedHouse?.value) {
-        toast.error("No Selected House!!");
-      }
+      const options = response?.masterOf?.map((h) => ({
+        label: h?.houseName,
+        value: h?.houseAccessCode,
+      }));
 
-      const connectedDevicesResponse = await fetchConnectedDevices({
-        houseId: selectedHouse?.value,
-      });
-
-      if (!connectedDevicesResponse.success) {
-        toast.error("Failed to fetch Connected devices!!");
-        return;
-      }
-
-      setConnectedDevices(connectedDevicesResponse?.data?.devices);
+      setHouses(options);
     };
 
-    getConnectedDevices();
-  }, [selectedHouse?.value]);
+    getUserHouses();
+  }, [user]);
 
   // if (loading) {
   //   return (
@@ -73,40 +46,36 @@ export function Dashboard() {
   //     </div>
   //   );
   // }
-  return (
-    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
-      <Filter
-        house={selectedHouse}
-        setSelectedHouse={setSelectedHouse}
-        date={date}
-        setDate={setDate}
-        onClick={() => getUserHouse()}
-      />
-      {/* <h2>{rerender}</h2> */}
 
-      {loading && (
-        <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
+  return (
+    <div className="w-full h-full p-8 pt-0 overflow-y-scroll bg-[#EAEBF0] ">
+      {/* Search Box */}
+      <div className="w-full bg-white p-4 mt-8 mb-6 rounded-md sticky top-0  z-10">
+        <div className="flex gap-4 items-center pt-0">
+          {/* <h2 className="text-xl hover:underline">House Name:</h2> */}
+
+          <input
+            type="text"
+            className="border border-black p-2 rounded-lg flex-1"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search house..."
+          />
+        </div>
+      </div>
+
+      {/* Houses */}
+
+      {loading ? (
+        <div className="flex justify-center items-center  w-full bg-[#EAEBF0]">
           <Spinner size="lg" />
         </div>
-      )}
-      {!loading && (
-        <Table className="w-full bg-white">
-          <TableHeader>
-            <MainHeader />
-          </TableHeader>
-          <TableBody>
-            {house?.rooms ? (
-              <Rooms
-                roomsData={house?.rooms}
-                connectedDevices={connectedDevices}
-                date={date}
-                setDate={setDate}
-              />
-            ) : (
-              <NoRooms />
-            )}
-          </TableBody>
-        </Table>
+      ) : (
+        <Houses
+          houses={houses?.filter((e) =>
+            e.label.toLowerCase().includes(searchText.toLowerCase())
+          )}
+        />
       )}
     </div>
   );

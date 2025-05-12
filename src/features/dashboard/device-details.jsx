@@ -5,6 +5,7 @@ import { fetchDayAnalytics } from "./api/device";
 import Commands from "./commands";
 import { TableCell, TableRow } from "@/components/ui/table";
 import NovaContainer from "./nova/NovaContainer";
+import { Dot } from "lucide-react";
 
 export function DeviceDetails({ room, sno, connectedDevices, date }) {
   const [showAppliances, setShowAppliances] = useState(false);
@@ -63,7 +64,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
       deviceId,
       day: new Date(date).toISOString(),
     });
-    console.log("New Analysis response", response?.data?.snapshot);
+
     return response?.data?.snapshot;
   };
 
@@ -88,8 +89,6 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
             });
           }
         }
-
-        console.log("Appliance Wise Analysis Data", applianceWiseAnalysisData);
         setAppliancesAnalysisData(applianceWiseAnalysisData);
       } catch (error) {}
     };
@@ -105,8 +104,21 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
     <>
       <TableRow className="text-lg">
         <TableCell>{String(sno).padStart(2, "0")}</TableCell>
-        <TableCell>{room?.roomName}</TableCell>
-        <TableCell>{room?.occupied === null ? "---": room?.occupied ? "Yes": "No"}</TableCell>
+        <TableCell className="flex items-center gap-x-2">
+          {room?.roomName}
+          {totalAppliances === connectedAppliances ? (
+            <span className="text-green-400">
+              <Dot size={32} />
+            </span>
+          ) : (
+            <span className="text-red-400">
+              <Dot size={32} />
+            </span>
+          )}
+        </TableCell>
+        <TableCell>
+          {room?.occupied === null ? "---" : room?.occupied ? "Yes" : "No"}
+        </TableCell>
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>{connectedAppliances}</TableCell>
         <Commands analysisData={appliancesAnalysisData} />

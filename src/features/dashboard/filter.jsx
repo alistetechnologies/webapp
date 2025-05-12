@@ -14,6 +14,7 @@ export default function Filter({
   setDate,
   dateShow = true,
   backBtn = false,
+  backLink = "/",
   link = "/",
   refreshBtn = true,
   onClick,
@@ -48,10 +49,10 @@ export default function Filter({
   });
 
   return (
-    <div className="w-full bg-white p-4 mb-6 rounded-md">
+    <div className="w-full bg-white p-4 mb-6 rounded-md top-0 sticky mt-8 z-10">
       <div className="space-y-4 flex gap-4 items-center">
         <div className="flex gap-4 items-center flex-1">
-          {backBtn && <CircleChevronLeft onClick={() => navigate("/lock")} />}
+          {backBtn && <CircleChevronLeft onClick={() => navigate(backLink)} />}
           <h2 className="text-2xl hover:underline">House Name:</h2>
 
           <Select
@@ -78,6 +79,7 @@ export default function Filter({
               className="border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
         )}

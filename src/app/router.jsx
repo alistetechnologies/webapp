@@ -23,6 +23,22 @@ const createAppRouter = () =>
       ],
     },
     {
+      path: "/app/house",
+      element: <AppRoot />,
+      children: [
+        {
+          path: "",
+          lazy: async () => {
+            const { HouseDetails } = await import(
+              "../features/dashboard/house-details"
+            );
+
+            return { Component: HouseDetails };
+          },
+        },
+      ],
+    },
+    {
       path: "/autoTimers",
       element: <AppRoot />,
       children: [
