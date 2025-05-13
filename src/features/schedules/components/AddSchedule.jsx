@@ -54,9 +54,6 @@ export function AddSchedule({ update = false, data }) {
   // Initializing State
   useEffect(() => {
     if (update) {
-      //
-
-      console.log("[data]", data);
       setName(data.name);
       setFrequency(data.type);
       setSelectedDevicesData(data.actions);
@@ -224,7 +221,7 @@ export function AddSchedule({ update = false, data }) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="min-w-[1000px] ">
         <DialogHeader>
           <DialogTitle>Schedules</DialogTitle>
           {/* <DialogDescription>
@@ -235,12 +232,12 @@ export function AddSchedule({ update = false, data }) {
           </DialogDescription> */}
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-8 w-full">
           <InputWithLabel
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            // label='Schedule Name'
+            label="Schedule Name"
             placeholder="Schedule Name"
           />
 
