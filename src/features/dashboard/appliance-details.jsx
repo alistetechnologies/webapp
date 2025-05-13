@@ -1,6 +1,12 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { convertMilliseconds } from "@/utils/format";
 import { Dot } from "lucide-react";
+import { controlDevice } from "./api/device";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import toast from "react-hot-toast";
+import { useUser } from "../auth/api/userStore";
+import useHouseStore from "./houseStore";
 
 export function ApplianceDetails({
   appliances,
@@ -8,13 +14,19 @@ export function ApplianceDetails({
   sno,
   connectedDevices,
 }) {
+  const user = useUser((state) => state.user);
+  const house = useHouseStore((state) => state.house);
+  const updateState = useHouseStore((state) => state.updateState);
+
+  // console.log("Appliances", appliances);
+  // console.log("AnalysisData", analysisData);
+  const [loading, setLoading] = useState(false);
   const onTime = convertMilliseconds(analysisData?.totalOnTime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
 
   const appliance = appliances[analysisData?.deviceId].find(
     (appliance) => String(appliance.switchId) === String(analysisData?.switchId)
   );
-
   if (appliance?.deviceType === 7 || !appliance) return;
 
   const switchCommands = analysisData?.controlLogs.filter(
@@ -23,6 +35,24 @@ export function ApplianceDetails({
   const smartCommands = analysisData?.controlLogs.filter(
     (cmd) => cmd?.controllerType !== "switch"
   ).length;
+  console.debug("house", house);
+  const toggleApplianceState = async () => {
+    setLoading(true);
+    const command = String(appliance.switchState) === "0" ? "100" : "0";
+    // const resp = await controlDevice({
+    //   command,
+    //   deviceId: appliance.deviceId,
+    //   switchId: appliance.switchId,
+    //   controllerId: user.email,
+    // });
+    updateState(appliance.deviceId, appliance.switchId, command);
+    // console.log("control response", resp);
+    setLoading(false);
+
+    // if (!resp.success) {
+    //   toast.error(resp.message);
+    // }
+  };
   return (
     <TableRow className="">
       <TableCell>{sno}</TableCell>
@@ -52,14 +82,29 @@ export function ApplianceDetails({
       <TableCell className="font-bold text-center">
         {switchCommands || "-"}
       </TableCell>
-      <TableCell className="cursor-pointer text-lg">
+      <TableCell
+        className="cursor-pointer text-lg"
+        onClick={toggleApplianceState}
+      >
         {appliance?.switchState === "0" ? (
           <div className="p-1 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-20">
-            <Dot className="" /> Off
+            {loading ? (
+              <Spinner />
+            ) : (
+              <>
+                <Dot /> Off{" "}
+              </>
+            )}
           </div>
         ) : (
           <div className="p-1 bg-green-500/10 flex items-center justify-center rounded-md text-green-500 w-20">
-            <Dot /> On
+            {loading ? (
+              <Spinner />
+            ) : (
+              <>
+                <Dot /> On
+              </>
+            )}
           </div>
         )}
       </TableCell>

@@ -81,21 +81,23 @@ export function HouseDetails() {
       )}
       {!loading && (
         <Table className="w-full bg-white">
-          <TableHeader>
-            <MainHeader />
-          </TableHeader>
-          <TableBody>
-            {house?.rooms ? (
-              <Rooms
-                roomsData={house?.rooms}
-                connectedDevices={connectedDevices}
-                date={date}
-                setDate={setDate}
-              />
-            ) : (
-              <NoRooms />
-            )}
-          </TableBody>
+          <div className="relative">
+            <TableHeader className="sticky top-0 ">
+              <MainHeader />
+            </TableHeader>
+            <TableBody>
+              {house?.rooms ? (
+                <Rooms
+                  roomsData={house?.rooms}
+                  connectedDevices={connectedDevices}
+                  date={date}
+                  setDate={setDate}
+                />
+              ) : (
+                <NoRooms />
+              )}
+            </TableBody>
+          </div>
         </Table>
       )}
     </div>
