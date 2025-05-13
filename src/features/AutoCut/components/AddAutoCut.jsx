@@ -136,7 +136,7 @@ export function AddAutoCut({ update = false, data }) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="min-w-[1000px]">
         <DialogHeader>
           <DialogTitle>Auto Cut</DialogTitle>
           <DialogDescription>
@@ -144,53 +144,54 @@ export function AddAutoCut({ update = false, data }) {
             and save on electricity.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-8">
           <h4 className="text-lg font-bold">Run Time</h4>
           <AutoCutTimeInput state={duration} setState={setDuration} />
 
           {/* Appliances Data */}
-          <div className="max-h-64 overflow-y-scroll">
-            <p>Select Devices</p>
-            <Table className="w-full bg-white">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-black">Appliance</TableHead>
+          <div className=" relative">
+            <p className="text-lg font-bold">Select Devices</p>
+            <div className="max-h-80 overflow-y-scroll my-4">
+              <Table className="w-full bg-white ">
+                <TableHeader className="sticky top-0 z-10 bg-white">
+                  <TableRow className="sticky top-0">
+                    <TableHead className="text-black">Appliance</TableHead>
+                    <TableHead className="text-black">Select</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="max-h-64 overflow-y-scroll">
+                  {house &&
+                    house.rooms?.map((room) => {
+                      return (
+                        <>
+                          <div className="text-muted-foreground my-2">
+                            {room.roomName}
+                          </div>
 
-                  <TableHead className="text-black">Select</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="max-h-64 overflow-y-scroll">
-                {house &&
-                  house.rooms?.map((room) => {
-                    return (
-                      <>
-                        <div className="text-muted-foreground my-2">
-                          {room.roomName}
-                        </div>
-
-                        {room.devices.map((device) => {
-                          return device.switches.map((swit) => {
-                            if (swit.deviceType !== DeviceTypeMap.NA) {
-                              return (
-                                <>
-                                  <AutoCutSelectAppliance
-                                    data={{
-                                      ...swit,
-                                      deviceId: device.deviceId,
-                                    }}
-                                    state={selectedAppliances}
-                                    updateState={setSelectedAppliances}
-                                  />
-                                </>
-                              );
-                            }
-                          });
-                        })}
-                      </>
-                    );
-                  })}
-              </TableBody>
-            </Table>
+                          {room.devices.map((device) => {
+                            return device.switches.map((swit) => {
+                              if (swit.deviceType !== DeviceTypeMap.NA) {
+                                return (
+                                  <>
+                                    <AutoCutSelectAppliance
+                                      data={{
+                                        ...swit,
+                                        deviceId: device.deviceId,
+                                      }}
+                                      state={selectedAppliances}
+                                      updateState={setSelectedAppliances}
+                                    />
+                                  </>
+                                );
+                              }
+                            });
+                          })}
+                        </>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? <Spinner /> : update ? "Update" : "Create"}
