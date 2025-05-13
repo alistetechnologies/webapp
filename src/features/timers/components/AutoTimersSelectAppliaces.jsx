@@ -3,8 +3,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import React, { useState } from "react";
 
 export function AutoTimersSelectAppliances({ data, state, updateState }) {
-  // console.log("[Switch Data]", data);
-
   // Handle checkbox change (add or remove data from state)
   const handleCheckboxChange = (e) => {
     if (e.target.checked) {

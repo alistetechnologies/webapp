@@ -102,22 +102,28 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
 
   return (
     <>
-      <TableRow className="text-lg">
+      <TableRow className="text-lg text-center">
         <TableCell>{String(sno).padStart(2, "0")}</TableCell>
-        <TableCell className="flex items-center gap-x-2">
+        <TableCell className="flex items-center gap-x-2 text-left">
           {room?.roomName}
           {totalAppliances === connectedAppliances ? (
-            <span className="text-green-400">
-              <Dot size={32} />
+            <span className="text-green-500">
+              <Dot size={40} />
             </span>
           ) : (
             <span className="text-red-400">
-              <Dot size={32} />
+              <Dot size={40} />
             </span>
           )}
         </TableCell>
         <TableCell>
-          {room?.occupied === null ? "---" : room?.occupied ? "Yes" : "No"}
+          {room?.occupied === null ? (
+            "---"
+          ) : room?.occupied ? (
+            <span className="text-green-500">Yes</span>
+          ) : (
+            <span className="text-red-400">No</span>
+          )}
         </TableCell>
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>{connectedAppliances}</TableCell>

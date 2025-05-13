@@ -46,8 +46,6 @@ export function UpdateAutoTimer({ data, deviceId }) {
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [active, setActive] = useState("Always");
 
-  console.log("Selected", selectedAppliances);
-
   useEffect(() => {
     if (!open) return;
 
@@ -81,7 +79,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
         ).padStart(2, "0")}`
       );
     }
-    console.log("DATA", data);
+
     setSelectedAppliances([
       {
         deviceId,

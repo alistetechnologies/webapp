@@ -5,7 +5,6 @@ export default function Commands({ analysisData }) {
   const [smartCommands, setSmartCommands] = useState(0);
   const [switchCommands, setSwitchCommands] = useState(0);
 
-  console.log("analysisData", analysisData);
   function calculateCommands() {
     let smartCommands = 0;
     let switchCommands = 0;
@@ -28,7 +27,6 @@ export default function Commands({ analysisData }) {
       let totalSwitchCommands = 0;
 
       for (const device of analysisData) {
-        console.log("DEVICE", device);
         if (device.applianceType === 7) continue;
         if (device) {
           const switchCommands = device?.controlLogs.filter(

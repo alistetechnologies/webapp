@@ -21,7 +21,7 @@ function formatTime(seconds) {
 
 export function AutoCutBox({ data = {}, deviceId }) {
   const [active, setActive] = useState(data?.autoTImers?.enabled);
-  console.log("[data]", data);
+
   useEffect(() => {
     setActive(data?.autoTurnOffEnabled);
   }, [data]);

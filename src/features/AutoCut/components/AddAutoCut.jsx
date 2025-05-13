@@ -41,7 +41,6 @@ function convertToHMS(seconds) {
   };
 }
 export function AddAutoCut({ update = false, data }) {
-  console.log("update", data);
   const house = useHouseStore((state) => state.house);
   const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState({

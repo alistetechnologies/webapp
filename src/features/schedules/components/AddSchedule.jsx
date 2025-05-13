@@ -181,8 +181,6 @@ export function AddSchedule({ update = false, data }) {
       tags: [new Date().getTime()],
     };
 
-    console.log("[payload]", payload);
-
     setLoading(true);
 
     let response;
