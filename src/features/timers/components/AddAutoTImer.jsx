@@ -14,11 +14,18 @@ import useHouseStore from "@/features/dashboard/houseStore";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import Select from "react-select";
 import { DurationInput } from "./DurationInput";
 import toast from "react-hot-toast";
 import { setAutoTimers } from "../api/AutoTimers";
 import { Spinner } from "@/components/ui/spinner";
+import { AutoTimersSelectAppliances } from "./AutoTimersSelectAppliaces";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export function AddAutoTImer() {
   const houseData = useHouseStore((state) => state.house);
@@ -37,46 +44,6 @@ export function AddAutoTImer() {
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [active, setActive] = useState("Always");
-
-  const [appliancesData, setAppliancesData] = useState([]);
-
-  useEffect(() => {
-    const applianceData = () => {
-      const appliances = [];
-
-      if (!houseData?.rooms) return;
-
-      for (const room of houseData?.rooms) {
-        for (let d of room.devices) {
-          for (let s of d.switches) {
-            if (s.deviceType !== DeviceTypeMap.NA) {
-              if (s.autoTurnOff) {
-                appliances.push({
-                  value: {
-                    deviceId: d.deviceId,
-                    switchId: s.switchId,
-                  },
-                  label: `${s.switchName} - ${room.roomName} - AutoCut Enabled`,
-                  isDisabled: true,
-                });
-              } else {
-                appliances.push({
-                  value: {
-                    deviceId: d.deviceId,
-                    switchId: s.switchId,
-                  },
-                  label: `${s.switchName} - ${room.roomName}`,
-                });
-              }
-            }
-          }
-        }
-      }
-
-      setAppliancesData(appliances);
-    };
-    applianceData();
-  }, [houseData]);
 
   const createAutoTimers = async () => {
     let payload = [];
@@ -100,8 +67,8 @@ export function AddAutoTImer() {
       }
 
       payload.push({
-        deviceId: appliance.value.deviceId,
-        switchId: appliance.value.switchId,
+        deviceId: appliance.deviceId,
+        switchId: appliance.switchId,
         mode: active,
         startTime: startTimeDateObject,
         stopTime: stopTimeDateObject,
@@ -117,6 +84,7 @@ export function AddAutoTImer() {
       toast.error("Invalid OnTime and OffTime");
       return;
     }
+
     setLoading(true);
 
     const resp = await setAutoTimers(payload);
@@ -135,7 +103,7 @@ export function AddAutoTImer() {
           Add Auto Timers
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[1000px]">
         <DialogHeader>
           <DialogTitle>Auto Timers</DialogTitle>
           <DialogDescription>
@@ -170,15 +138,55 @@ export function AddAutoTImer() {
                 The Ac will be turned off for the selected frequency in every
                 selected interval
               </p>
+              {/* Appliances Data */}
+              <div className=" relative">
+                <p className="text-lg font-bold">Select Devices</p>
+                <div className="max-h-80 overflow-y-scroll my-4">
+                  <Table className="w-full bg-white ">
+                    <TableHeader className="sticky top-0 z-10 bg-white">
+                      <TableRow className="sticky top-0">
+                        <TableHead className="text-black">Appliance</TableHead>
+                        <TableHead className="text-black">Select</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="max-h-64 overflow-y-scroll">
+                      {houseData &&
+                        houseData.rooms?.map((room) => {
+                          return (
+                            <>
+                              <div
+                                className="text-muted-foreground my-2"
+                                key={room._id}
+                              >
+                                {room.roomName}
+                              </div>
 
-              <Select
-                options={appliancesData}
-                isMulti={true}
-                placeholder="Select Appliances"
-                closeMenuOnSelect={false}
-                value={selectedAppliances}
-                onChange={(selected) => setSelectedAppliances(selected)}
-              />
+                              {room.devices.map((device) => {
+                                return device.switches.map((swit) => {
+                                  if (swit.deviceType !== DeviceTypeMap.NA) {
+                                    return (
+                                      <>
+                                        <AutoTimersSelectAppliances
+                                          data={{
+                                            ...swit,
+                                            deviceId: device.deviceId,
+                                          }}
+                                          state={selectedAppliances}
+                                          updateState={setSelectedAppliances}
+                                          key={device.deviceId + swit.switchId}
+                                        />
+                                      </>
+                                    );
+                                  }
+                                });
+                              })}
+                            </>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
 
               <Button
                 className="w-full"
@@ -227,15 +235,55 @@ export function AddAutoTImer() {
                 The AC will be turned off for the selected frequency in every
                 selected interval.
               </p>
+              {/* Appliances Data */}
+              <div className=" relative">
+                <p className="text-lg font-bold">Select Devices</p>
+                <div className="max-h-64 overflow-y-scroll my-4">
+                  <Table className="w-full bg-white ">
+                    <TableHeader className="sticky top-0 z-10 bg-white">
+                      <TableRow className="sticky top-0">
+                        <TableHead className="text-black">Appliance</TableHead>
+                        <TableHead className="text-black">Select</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="max-h-52 overflow-y-scroll">
+                      {houseData &&
+                        houseData.rooms?.map((room) => {
+                          return (
+                            <>
+                              <div
+                                className="text-muted-foreground my-2"
+                                key={room._id}
+                              >
+                                {room.roomName}
+                              </div>
 
-              <Select
-                options={appliancesData}
-                isMulti={true}
-                placeholder="Select Appliances"
-                closeMenuOnSelect={false}
-                value={selectedAppliances}
-                onChange={(selected) => setSelectedAppliances(selected)}
-              />
+                              {room.devices.map((device) => {
+                                return device.switches.map((swit) => {
+                                  if (swit.deviceType !== DeviceTypeMap.NA) {
+                                    return (
+                                      <>
+                                        <AutoTimersSelectAppliances
+                                          data={{
+                                            ...swit,
+                                            deviceId: device.deviceId,
+                                          }}
+                                          state={selectedAppliances}
+                                          updateState={setSelectedAppliances}
+                                          key={device.deviceId + swit.switchId}
+                                        />
+                                      </>
+                                    );
+                                  }
+                                });
+                              })}
+                            </>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
 
               <Button
                 className="w-full"
