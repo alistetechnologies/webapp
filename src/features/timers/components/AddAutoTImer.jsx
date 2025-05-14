@@ -43,6 +43,7 @@ export function AddAutoTImer() {
   });
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [active, setActive] = useState("Always");
 
   const createAutoTimers = async () => {
@@ -105,8 +106,8 @@ export function AddAutoTImer() {
       </DialogTrigger>
       <DialogContent className="max-w-[1000px]">
         <DialogHeader>
-          <DialogTitle>Auto Timers</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-center">Auto Timers</DialogTitle>
+          <DialogDescription className="text-center">
             Set up your energy savings system by fixing the frequency of
             regulating your appliances operation. For example, you can set your
             AC to turn off for 5 minutes every 30 minutes during the night :
@@ -140,6 +141,13 @@ export function AddAutoTImer() {
               </p>
               {/* Appliances Data */}
               <div className=" relative">
+                <Input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder="Search Appliances"
+                  className="mb-4"
+                />
                 <p className="text-lg font-bold">Select Devices</p>
                 <div className="max-h-80 overflow-y-scroll my-4">
                   <Table className="w-full bg-white ">
@@ -163,7 +171,12 @@ export function AddAutoTImer() {
 
                               {room.devices.map((device) => {
                                 return device.switches.map((swit) => {
-                                  if (swit.deviceType !== DeviceTypeMap.NA) {
+                                  if (
+                                    swit.deviceType !== DeviceTypeMap.NA ||
+                                    swit.switchName
+                                      .toLowerCase()
+                                      .includes(searchText.toLowerCase())
+                                  ) {
                                     return (
                                       <>
                                         <AutoTimersSelectAppliances
@@ -237,6 +250,13 @@ export function AddAutoTImer() {
               </p>
               {/* Appliances Data */}
               <div className=" relative">
+                <Input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder="Search Appliances"
+                  className="mb-4"
+                />
                 <p className="text-lg font-bold">Select Devices</p>
                 <div className="max-h-64 overflow-y-scroll my-4">
                   <Table className="w-full bg-white ">
@@ -260,7 +280,12 @@ export function AddAutoTImer() {
 
                               {room.devices.map((device) => {
                                 return device.switches.map((swit) => {
-                                  if (swit.deviceType !== DeviceTypeMap.NA) {
+                                  if (
+                                    swit.deviceType !== DeviceTypeMap.NA &&
+                                    swit.switchName
+                                      .toLowerCase()
+                                      .includes(searchText.toLowerCase())
+                                  ) {
                                     return (
                                       <>
                                         <AutoTimersSelectAppliances
