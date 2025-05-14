@@ -27,6 +27,7 @@ import { SelectAppliance } from "./SelectAppliance";
 import toast from "react-hot-toast";
 import { createSchedule, updateSchedule } from "../api/schedules";
 import { Spinner } from "@/components/ui/spinner";
+import { Separator } from "@/components/ui/separator";
 
 export function AddSchedule({ update = false, data }) {
   const house = useHouseStore((state) => state.house);
@@ -38,6 +39,7 @@ export function AddSchedule({ update = false, data }) {
   const [time, setTime] = useState("");
   const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
   const [frequency, setFrequency] = useState("cron");
+  const [searchText, setSearchText] = useState("");
 
   const [days, setDays] = useState({
     1: true,
@@ -219,9 +221,11 @@ export function AddSchedule({ update = false, data }) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="min-w-[1000px] ">
+      <DialogContent className="min-w-[1100px] ">
         <DialogHeader>
-          <DialogTitle>Schedules</DialogTitle>
+          <DialogTitle className="text-center">
+            {update ? "Update Schedule" : "Create Schedule"}
+          </DialogTitle>
           {/* <DialogDescription>
             Set up your energy savings system by fixing the frequency of
             regulating your appliances operation. For example, you can set your
@@ -229,116 +233,131 @@ export function AddSchedule({ update = false, data }) {
             Thereby reducing your power consumption by 17%
           </DialogDescription> */}
         </DialogHeader>
+        <div className="flex h-sceen w-full">
+          {/* Left */}
+          <div className="w-1/2 p-6 bg-gray-50">
+            <div className="space-y-10 w-full">
+              <InputWithLabel
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                label="Schedule Name"
+                placeholder="Schedule Name"
+              />
 
-        <div className="space-y-8 w-full">
-          <InputWithLabel
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            label="Schedule Name"
-            placeholder="Schedule Name"
-          />
+              <InputWithLabel
+                label="Select Time"
+                name="time"
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
 
-          <InputWithLabel
-            label="Select Time"
-            name="time"
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-          />
+              <RadioGroup
+                defaultValue="option-one"
+                value={frequency}
+                onValueChange={setFrequency}
+              >
+                <div className="flex gap-8 items-center">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="cron" id="cron" />
+                    <Label htmlFor="cron">Repeat Every</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="at" id="at" />
+                    <Label htmlFor="at">Repeat Once</Label>
+                  </div>
+                </div>
+              </RadioGroup>
 
-          <RadioGroup
-            defaultValue="option-one"
-            value={frequency}
-            onValueChange={setFrequency}
-          >
-            <div className="flex gap-8 items-center">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="cron" id="cron" />
-                <Label htmlFor="cron">Repeat Every</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="at" id="at" />
-                <Label htmlFor="at">Repeat Once</Label>
-              </div>
-            </div>
-          </RadioGroup>
+              {/* Date */}
+              {frequency === "at" && (
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              )}
 
-          {/* Date */}
-          {frequency === "at" && (
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          )}
-
-          {/* Day selector */}
-          <div className="flex justify-between">
-            {frequency === "cron" &&
-              daysOfWeek.map((day, index) => {
-                return (
-                  <Button
-                    key={index}
-                    onClick={() =>
-                      setDays({ ...days, [index + 1]: !days[index + 1] })
-                    }
-                    variant={days[index + 1] === false ? "outlined" : ""}
-                  >
-                    {day.slice(0, 3)}
-                  </Button>
-                );
-              })}
-          </div>
-
-          {/* Appliances Data */}
-          <div className="max-h-64 overflow-y-scroll">
-            <p>Select Devices</p>
-            <Table className="w-full bg-white">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-black">Appliance</TableHead>
-                  <TableHead className="text-black">On/Off State</TableHead>
-                  <TableHead className="text-black">Select</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="max-h-64 overflow-y-scroll">
-                {house &&
-                  house.rooms.map((room) => {
+              {/* Day selector */}
+              <div className="flex justify-between">
+                {frequency === "cron" &&
+                  daysOfWeek.map((day, index) => {
                     return (
-                      <>
-                        <div className="text-muted-foreground my-2">
-                          {room.roomName}
-                        </div>
-
-                        {room.devices.map((device) => {
-                          return device.switches.map((swit) => {
-                            if (swit.deviceType !== DeviceTypeMap.NA) {
-                              return (
-                                <>
-                                  <SelectAppliance
-                                    data={{
-                                      ...swit,
-                                      deviceId: device.deviceId,
-                                    }}
-                                    state={selectedDevicesData}
-                                    updateState={setSelectedDevicesData}
-                                  />
-                                </>
-                              );
-                            }
-                          });
-                        })}
-                      </>
+                      <Button
+                        key={index}
+                        onClick={() =>
+                          setDays({ ...days, [index + 1]: !days[index + 1] })
+                        }
+                        variant={days[index + 1] === false ? "outlined" : ""}
+                      >
+                        {day.slice(0, 3)}
+                      </Button>
                     );
                   })}
-              </TableBody>
-            </Table>
+              </div>
+            </div>
           </div>
+          <Separator orientation="vertical" className="mx-0.5" />
+          <div className="w--1/2 p-6 bg-white space-y-10">
+            <Input
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search Appliances"
+            />
+            {/* Appliances Data */}
+            <div className="max-h-64 overflow-y-scroll">
+              <p>Select Devices</p>
+              <Table className="w-full bg-white">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-black">Appliance</TableHead>
+                    <TableHead className="text-black">On/Off State</TableHead>
+                    <TableHead className="text-black">Select</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="max-h-64 overflow-y-scroll">
+                  {house &&
+                    house.rooms.map((room) => {
+                      return (
+                        <>
+                          <div className="text-muted-foreground my-2">
+                            {room.roomName}
+                          </div>
 
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spinner /> : update ? "Update" : "Create"}
-          </Button>
+                          {room.devices.map((device) => {
+                            return device.switches.map((swit) => {
+                              if (swit.deviceType !== DeviceTypeMap.NA) {
+                                return (
+                                  <>
+                                    <SelectAppliance
+                                      data={{
+                                        ...swit,
+                                        deviceId: device.deviceId,
+                                      }}
+                                      state={selectedDevicesData}
+                                      updateState={setSelectedDevicesData}
+                                    />
+                                  </>
+                                );
+                              }
+                            });
+                          })}
+                        </>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full"
+            >
+              {loading ? <Spinner /> : update ? "Update" : "Create"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
