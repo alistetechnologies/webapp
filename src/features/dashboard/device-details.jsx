@@ -107,11 +107,17 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
         <TableCell className="flex items-center gap-x-2 text-left">
           {room?.roomName}
           {totalAppliances === connectedAppliances ? (
-            <span className="text-green-500">
+            <span
+              className="text-green-500"
+              title="Connectivity Status: All Online"
+            >
               <Dot size={40} />
             </span>
           ) : (
-            <span className="text-red-400">
+            <span
+              className="text-red-400"
+              title="Connectivity Status: Some Offline"
+            >
               <Dot size={40} />
             </span>
           )}

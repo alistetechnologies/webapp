@@ -12,7 +12,7 @@ const EditProperty = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Edit Property</Button>
+        <Button>Edit</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
