@@ -26,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Separator } from "@/components/ui/separator";
 
 export function AddAutoTImer() {
   const houseData = useHouseStore((state) => state.house);
@@ -129,194 +130,223 @@ export function AddAutoTImer() {
               <TabsTrigger value="Particular">Particular Time</TabsTrigger>
             </TabsList>
             <TabsContent value="Always" className="space-y-4">
-              <DurationInput
-                onTime={onTime}
-                setOnTime={setOnTime}
-                offTime={offTime}
-                setOffTime={setOffTime}
-              />
-              <p className="text-sm text-muted-foreground">
-                The Ac will be turned off for the selected frequency in every
-                selected interval
-              </p>
-              {/* Appliances Data */}
-              <div className=" relative">
-                <Input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search Appliances"
-                  className="mb-4"
-                />
-                <p className="text-lg font-bold">Select Devices</p>
-                <div className="max-h-80 overflow-y-scroll my-4">
-                  <Table className="w-full bg-white ">
-                    <TableHeader className="sticky top-0 z-10 bg-white">
-                      <TableRow className="sticky top-0">
-                        <TableHead className="text-black">Appliance</TableHead>
-                        <TableHead className="text-black">Select</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="max-h-64 overflow-y-scroll">
-                      {houseData &&
-                        houseData.rooms?.map((room) => {
-                          return (
-                            <>
-                              <div
-                                className="text-muted-foreground my-2"
-                                key={room._id}
-                              >
-                                {room.roomName}
-                              </div>
+              <div className="flex w-full">
+                <div className="w-1/2 p-6 bg-gray-50">
+                  <DurationInput
+                    onTime={onTime}
+                    setOnTime={setOnTime}
+                    offTime={offTime}
+                    setOffTime={setOffTime}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    The Ac will be turned off for the selected frequency in
+                    every selected interval
+                  </p>
+                </div>
 
-                              {room.devices.map((device) => {
-                                return device.switches.map((swit) => {
-                                  if (
-                                    swit.deviceType !== DeviceTypeMap.NA ||
-                                    swit.switchName
-                                      .toLowerCase()
-                                      .includes(searchText.toLowerCase())
-                                  ) {
-                                    return (
-                                      <>
-                                        <AutoTimersSelectAppliances
-                                          data={{
-                                            ...swit,
-                                            deviceId: device.deviceId,
-                                          }}
-                                          state={selectedAppliances}
-                                          updateState={setSelectedAppliances}
-                                          key={device.deviceId + swit.switchId}
-                                        />
-                                      </>
-                                    );
-                                  }
-                                });
-                              })}
-                            </>
-                          );
-                        })}
-                    </TableBody>
-                  </Table>
+                <Separator orientation="vertical" className="mx-0.5" />
+                <div className="w-1/2 p-6 bg-gray-50">
+                  {/* Appliances Data */}
+                  <div className=" relative">
+                    <Input
+                      type="text"
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      placeholder="Search Appliances"
+                      className="mb-4"
+                    />
+                    <p className="text-lg font-bold">Select Devices</p>
+                    <div className="max-h-80 overflow-y-scroll my-4">
+                      <Table className="w-full bg-white ">
+                        <TableHeader className="sticky top-0 z-10 bg-white">
+                          <TableRow className="sticky top-0">
+                            <TableHead className="text-black">
+                              Appliance
+                            </TableHead>
+                            <TableHead className="text-black">Select</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody className="max-h-64 overflow-y-scroll">
+                          {houseData &&
+                            houseData.rooms?.map((room) => {
+                              return (
+                                <>
+                                  <div
+                                    className="text-muted-foreground my-2"
+                                    key={room._id}
+                                  >
+                                    {room.roomName}
+                                  </div>
+
+                                  {room.devices.map((device) => {
+                                    return device.switches.map((swit) => {
+                                      if (
+                                        swit.deviceType !== DeviceTypeMap.NA ||
+                                        swit.switchName
+                                          .toLowerCase()
+                                          .includes(searchText.toLowerCase())
+                                      ) {
+                                        return (
+                                          <>
+                                            <AutoTimersSelectAppliances
+                                              data={{
+                                                ...swit,
+                                                deviceId: device.deviceId,
+                                              }}
+                                              state={selectedAppliances}
+                                              updateState={
+                                                setSelectedAppliances
+                                              }
+                                              key={
+                                                device.deviceId + swit.switchId
+                                              }
+                                            />
+                                          </>
+                                        );
+                                      }
+                                    });
+                                  })}
+                                </>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+
+                  <Button
+                    className="w-full"
+                    onClick={() => createAutoTimers()}
+                    disabled={loading}
+                  >
+                    {loading ? <Spinner /> : "Create"}
+                  </Button>
                 </div>
               </div>
-
-              <Button
-                className="w-full"
-                onClick={() => createAutoTimers()}
-                disabled={loading}
-              >
-                {loading ? <Spinner /> : "Create"}
-              </Button>
             </TabsContent>
 
             <TabsContent value="Particular" className="space-y-4">
-              <div className="flex justify-between mt-4">
-                <div className="flex flex-col gap-4">
-                  <p>Start Time</p>
-                  <Input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="border-none focus:border-none"
+              <div className="flex w-full">
+                <div className="w-1/2 p-6 bg-white space-y-10">
+                  <div className="flex justify-between mt-4">
+                    <div className="flex flex-col gap-4">
+                      <p>Start Time</p>
+                      <Input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        className="border-none focus:border-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                      <p>Stop Time</p>
+                      <Input
+                        type="time"
+                        value={stopTime}
+                        onChange={(e) => setStopTime(e.target.value)}
+                        className="border-none"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    The energy savings system will run only for the selected
+                    window of time.
+                  </p>
+
+                  <DurationInput
+                    onTime={onTime}
+                    setOnTime={setOnTime}
+                    offTime={offTime}
+                    setOffTime={setOffTime}
                   />
+
+                  <p className="text-sm text-muted-foreground">
+                    The AC will be turned off for the selected frequency in
+                    every selected interval.
+                  </p>
                 </div>
 
-                <div className="flex flex-col gap-4">
-                  <p>Stop Time</p>
-                  <Input
-                    type="time"
-                    value={stopTime}
-                    onChange={(e) => setStopTime(e.target.value)}
-                    className="border-none"
-                  />
+                <Separator orientation="vertical" className="mx-0.5" />
+
+                <div className="w-1/2 p-6 bg-gray-50">
+                  {/* Appliances Data */}
+                  <div className=" relative">
+                    <Input
+                      type="text"
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      placeholder="Search Appliances"
+                      className="mb-4"
+                    />
+                    <p className="text-lg font-bold">Select Devices</p>
+                    <div className="max-h-64 overflow-y-scroll my-4">
+                      <Table className="w-full bg-white ">
+                        <TableHeader className="sticky top-0 z-10 bg-white">
+                          <TableRow className="sticky top-0">
+                            <TableHead className="text-black">
+                              Appliance
+                            </TableHead>
+                            <TableHead className="text-black">Select</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody className="max-h-52 overflow-y-scroll">
+                          {houseData &&
+                            houseData.rooms?.map((room) => {
+                              return (
+                                <>
+                                  <div
+                                    className="text-muted-foreground my-2"
+                                    key={room._id}
+                                  >
+                                    {room.roomName}
+                                  </div>
+
+                                  {room.devices.map((device) => {
+                                    return device.switches.map((swit) => {
+                                      if (
+                                        swit.deviceType !== DeviceTypeMap.NA &&
+                                        swit.switchName
+                                          .toLowerCase()
+                                          .includes(searchText.toLowerCase())
+                                      ) {
+                                        return (
+                                          <>
+                                            <AutoTimersSelectAppliances
+                                              data={{
+                                                ...swit,
+                                                deviceId: device.deviceId,
+                                              }}
+                                              state={selectedAppliances}
+                                              updateState={
+                                                setSelectedAppliances
+                                              }
+                                              key={
+                                                device.deviceId + swit.switchId
+                                              }
+                                            />
+                                          </>
+                                        );
+                                      }
+                                    });
+                                  })}
+                                </>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+
+                  <Button
+                    className="w-full"
+                    onClick={() => createAutoTimers()}
+                    disabled={loading}
+                  >
+                    {loading ? <Spinner /> : "Create"}
+                  </Button>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                The energy savings system will run only for the selected window
-                of time.
-              </p>
-
-              <DurationInput
-                onTime={onTime}
-                setOnTime={setOnTime}
-                offTime={offTime}
-                setOffTime={setOffTime}
-              />
-
-              <p className="text-sm text-muted-foreground">
-                The AC will be turned off for the selected frequency in every
-                selected interval.
-              </p>
-              {/* Appliances Data */}
-              <div className=" relative">
-                <Input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search Appliances"
-                  className="mb-4"
-                />
-                <p className="text-lg font-bold">Select Devices</p>
-                <div className="max-h-64 overflow-y-scroll my-4">
-                  <Table className="w-full bg-white ">
-                    <TableHeader className="sticky top-0 z-10 bg-white">
-                      <TableRow className="sticky top-0">
-                        <TableHead className="text-black">Appliance</TableHead>
-                        <TableHead className="text-black">Select</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="max-h-52 overflow-y-scroll">
-                      {houseData &&
-                        houseData.rooms?.map((room) => {
-                          return (
-                            <>
-                              <div
-                                className="text-muted-foreground my-2"
-                                key={room._id}
-                              >
-                                {room.roomName}
-                              </div>
-
-                              {room.devices.map((device) => {
-                                return device.switches.map((swit) => {
-                                  if (
-                                    swit.deviceType !== DeviceTypeMap.NA &&
-                                    swit.switchName
-                                      .toLowerCase()
-                                      .includes(searchText.toLowerCase())
-                                  ) {
-                                    return (
-                                      <>
-                                        <AutoTimersSelectAppliances
-                                          data={{
-                                            ...swit,
-                                            deviceId: device.deviceId,
-                                          }}
-                                          state={selectedAppliances}
-                                          updateState={setSelectedAppliances}
-                                          key={device.deviceId + swit.switchId}
-                                        />
-                                      </>
-                                    );
-                                  }
-                                });
-                              })}
-                            </>
-                          );
-                        })}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-
-              <Button
-                className="w-full"
-                onClick={() => createAutoTimers()}
-                disabled={loading}
-              >
-                {loading ? <Spinner /> : "Create"}
-              </Button>
             </TabsContent>
           </Tabs>
         </div>
