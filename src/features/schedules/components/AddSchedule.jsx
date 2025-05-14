@@ -114,7 +114,7 @@ export function AddSchedule({ update = false, data }) {
       for (let d of room.devices) {
         for (let s of d.switches) {
           if (s.deviceType !== DeviceTypeMap.NA) {
-            appliances.push(s);
+            appliances.push({ ...s, deviceId: d.deviceid });
           }
           continue;
         }
@@ -299,7 +299,7 @@ export function AddSchedule({ update = false, data }) {
             </div>
           </div>
           <Separator orientation="vertical" className="mx-0.5" />
-          <div className="w--1/2 p-6 bg-white space-y-10">
+          <div className="w-1/2 p-6 bg-white space-y-10">
             <Input
               type="text"
               value={searchText}
@@ -307,8 +307,8 @@ export function AddSchedule({ update = false, data }) {
               placeholder="Search Appliances"
             />
             {/* Appliances Data */}
+            <p className="text-xl">Select Devices:</p>
             <div className="max-h-64 overflow-y-scroll">
-              <p>Select Devices</p>
               <Table className="w-full bg-white">
                 <TableHeader>
                   <TableRow>
@@ -328,7 +328,10 @@ export function AddSchedule({ update = false, data }) {
 
                           {room.devices.map((device) => {
                             return device.switches.map((swit) => {
-                              if (swit.deviceType !== DeviceTypeMap.NA) {
+                              if (
+                                swit.deviceType !== DeviceTypeMap.NA &&
+                                swit.switchName.includes(searchText)
+                              ) {
                                 return (
                                   <>
                                     <SelectAppliance
