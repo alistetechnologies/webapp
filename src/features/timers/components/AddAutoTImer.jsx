@@ -94,6 +94,7 @@ export function AddAutoTImer() {
     setLoading(false);
     if (resp.success) {
       toast.success("Successfully created AutoTimer.");
+      setSelectedAppliances([]);
       setOpen(false);
     }
   };
@@ -145,6 +146,7 @@ export function AddAutoTImer() {
                 </div>
 
                 <Separator orientation="vertical" className="mx-0.5" />
+
                 <div className="w-1/2 p-6 bg-gray-50">
                   {/* Appliances Data */}
                   <div className=" relative">
