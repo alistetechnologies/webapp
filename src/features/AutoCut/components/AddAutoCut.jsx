@@ -28,6 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { setAutoCut } from "../api/autocut";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 
 function convertToHMS(seconds) {
   const hours = Math.floor(seconds / 3600);
@@ -53,6 +55,7 @@ export function AddAutoCut({ update = false, data }) {
   const [appliancesData, setAppliancesData] = useState([]);
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (update) {
@@ -135,66 +138,88 @@ export function AddAutoCut({ update = false, data }) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="min-w-[1000px]">
+      <DialogContent className="min-w-[1100px]">
         <DialogHeader>
-          <DialogTitle>Auto Cut</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-center text-2xl">Auto Cut</DialogTitle>
+          <DialogDescription className="text-center">
             Automatically turn off your appliance whenever they are turned on
             and save on electricity.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-8">
-          <h4 className="text-lg font-bold">Run Time</h4>
-          <AutoCutTimeInput state={duration} setState={setDuration} />
-
-          {/* Appliances Data */}
-          <div className=" relative">
-            <p className="text-lg font-bold">Select Devices</p>
-            <div className="max-h-80 overflow-y-scroll my-4">
-              <Table className="w-full bg-white ">
-                <TableHeader className="sticky top-0 z-10 bg-white">
-                  <TableRow className="sticky top-0">
-                    <TableHead className="text-black">Appliance</TableHead>
-                    <TableHead className="text-black">Select</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="max-h-64 overflow-y-scroll">
-                  {house &&
-                    house.rooms?.map((room) => {
-                      return (
-                        <>
-                          <div className="text-muted-foreground my-2">
-                            {room.roomName}
-                          </div>
-
-                          {room.devices.map((device) => {
-                            return device.switches.map((swit) => {
-                              if (swit.deviceType !== DeviceTypeMap.NA) {
-                                return (
-                                  <>
-                                    <AutoCutSelectAppliance
-                                      data={{
-                                        ...swit,
-                                        deviceId: device.deviceId,
-                                      }}
-                                      state={selectedAppliances}
-                                      updateState={setSelectedAppliances}
-                                    />
-                                  </>
-                                );
-                              }
-                            });
-                          })}
-                        </>
-                      );
-                    })}
-                </TableBody>
-              </Table>
+        <div className="flex w-full">
+          <div className="w-1/2 p-6 bg-gray-50">
+            <div className="space-y-8">
+              <h4 className="text-lg font-bold">Select Run Time</h4>
+              <AutoCutTimeInput state={duration} setState={setDuration} />
             </div>
           </div>
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spinner /> : update ? "Update" : "Create"}
-          </Button>
+          <Separator orientation="vertical" className="mx-0.5" />
+          <div className="w-1/2 p-6 bg-gray-50 space-y-6">
+            <Input
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search Appliances"
+            />
+
+            {/* Appliances Data */}
+            <div className=" relative">
+              <p className="text-lg font-bold">Select Devices</p>
+              <div className="max-h-80 overflow-y-scroll my-4">
+                <Table className="w-full bg-white p-2">
+                  <TableHeader className="sticky top-0 z-10 bg-white">
+                    <TableRow className="sticky top-0">
+                      <TableHead className="text-black">Appliance</TableHead>
+                      <TableHead className="text-black">Select</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="max-h-64 overflow-y-scroll">
+                    {house &&
+                      house.rooms?.map((room) => {
+                        return (
+                          <>
+                            <div className="text-muted-foreground my-2">
+                              {room.roomName}
+                            </div>
+
+                            {room.devices.map((device) => {
+                              return device.switches.map((swit) => {
+                                if (
+                                  swit.deviceType !== DeviceTypeMap.NA &&
+                                  swit.switchName
+                                    .toLowerCase()
+                                    .includes(searchText.toLowerCase())
+                                ) {
+                                  return (
+                                    <>
+                                      <AutoCutSelectAppliance
+                                        data={{
+                                          ...swit,
+                                          deviceId: device.deviceId,
+                                        }}
+                                        state={selectedAppliances}
+                                        updateState={setSelectedAppliances}
+                                      />
+                                    </>
+                                  );
+                                }
+                              });
+                            })}
+                          </>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full"
+            >
+              {loading ? <Spinner /> : update ? "Update" : "Create"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
