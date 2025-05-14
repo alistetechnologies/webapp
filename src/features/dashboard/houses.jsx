@@ -1,6 +1,8 @@
 import { Table, TableHeader, TableBody } from "@/components/ui/table";
 import HousesHeader from "./houses-header";
 import House from "./house-row";
+import EditHouse from "./EditHouse";
+import { Fragment } from "react";
 
 const Houses = ({ houses }) => {
   return (
@@ -12,7 +14,7 @@ const Houses = ({ houses }) => {
           </TableHeader>
           <TableBody>
             {houses?.map((house, index) => {
-              return <House house={house} index={index} />;
+              return <House house={house} index={index} key={index} />;
             })}
           </TableBody>
         </Table>
