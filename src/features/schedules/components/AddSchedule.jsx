@@ -153,6 +153,11 @@ export function AddSchedule({ update = false, data }) {
       return;
     }
 
+    if (selectedDevicesData?.length === 0) {
+      toast.error("No appliance selected");
+      return;
+    }
+
     let expression = "";
 
     if (frequency === "cron") {
