@@ -31,6 +31,32 @@ export const fetchHouse = async (houseId) => {
   }
 };
 
+export const fetchHouseWithoutStateUpdate = async (houseId) => {
+  const userNumber = useAuth.getState().auth.number;
+  try {
+    const response = await api.get(
+      `${serverUrl.sub}/api/fetch/house2/${houseId}/+91${userNumber}`
+    );
+
+    if (response.status !== 200) {
+      return {
+        success: false,
+        data: {},
+      };
+    }
+
+    // useHouseStore.getState().updateHouse(response.data);
+
+    return {
+      success: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+    };
+  }
+};
 export const fetchConnectedDevices = async (data) => {
   try {
     const response = await api.post(

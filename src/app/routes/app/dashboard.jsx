@@ -24,18 +24,18 @@ export function Dashboard() {
   const [houses, setHouses] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const getUserHouses = async () => {
+    const response = await fetchUserHouses(user?.email);
+
+    const options = response?.masterOf?.map((h) => ({
+      label: h?.houseName,
+      value: h?.houseAccessCode,
+    }));
+
+    setHouses(options);
+  };
+
   useEffect(() => {
-    const getUserHouses = async () => {
-      const response = await fetchUserHouses(user?.email);
-
-      const options = response?.masterOf?.map((h) => ({
-        label: h?.houseName,
-        value: h?.houseAccessCode,
-      }));
-
-      setHouses(options);
-    };
-
     getUserHouses();
   }, [user]);
 
@@ -75,6 +75,7 @@ export function Dashboard() {
           houses={houses?.filter((e) =>
             e.label.toLowerCase().includes(searchText.toLowerCase())
           )}
+          refreshUserHouses={getUserHouses}
         />
       )}
     </div>

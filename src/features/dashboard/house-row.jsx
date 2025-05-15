@@ -5,17 +5,17 @@ import { useNavigate, useNavigation } from "react-router-dom";
 import { useUser } from "../auth/api/userStore";
 import EditProperty from "./EditHouse";
 
-function HouseRow({ house, index }) {
+function HouseRow({ house, index, refreshUserHouses }) {
   const navigate = useNavigate();
   const user = useUser.getState().user;
-
+  console.debug("HOUSE---", house);
   return (
     <TableRow className="text-lg">
       <TableCell>{index + 1}</TableCell>
       <TableCell>{house?.label}</TableCell>
       <TableCell>
         <div className="flex gap-4">
-          <EditProperty house={house} />
+          <EditProperty house={house} refreshUserHouses={refreshUserHouses} />
           <Button
             onClick={() => {
               useUser

@@ -17,6 +17,7 @@ export function ApplianceDetails({
   const user = useUser((state) => state.user);
   const house = useHouseStore((state) => state.house);
   const updateState = useHouseStore((state) => state.updateState);
+  const [state, setState] = useState(false);
 
   // console.log("Appliances", appliances);
   // console.log("AnalysisData", analysisData);
@@ -39,13 +40,15 @@ export function ApplianceDetails({
   const toggleApplianceState = async () => {
     setLoading(true);
     const command = String(appliance.switchState) === "0" ? "100" : "0";
-    // const resp = await controlDevice({
-    //   command,
-    //   deviceId: appliance.deviceId,
-    //   switchId: appliance.switchId,
-    //   controllerId: user.email,
-    // });
+    const resp = await controlDevice({
+      command,
+      deviceId: appliance.deviceId,
+      switchId: appliance.switchId,
+      controllerId: user.email,
+    });
+
     updateState(appliance.deviceId, appliance.switchId, command);
+    setState(!state);
     // console.log("control response", resp);
     setLoading(false);
 

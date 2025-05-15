@@ -44,7 +44,10 @@ const useHouseStore = create(
           //     })),
           //   })),
           // };
-          console.log("HOUSE", house?.rooms);
+
+          // console.info("HOUSE", house?.rooms);
+          // console.info("UPDATDHOUSE", updatedHouse?.rooms);
+
           // for (let room of house.rooms) {
           //   for (let device of room?.devices) {
           //     if (device.deviceId === deviceId) {
@@ -62,7 +65,7 @@ const useHouseStore = create(
           //     }
           //   }
           // }
-          console.debug("UpdatedHouse", house?.rooms);
+
           return updatedHouse;
         });
       },

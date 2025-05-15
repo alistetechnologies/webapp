@@ -4,7 +4,7 @@ import House from "./house-row";
 import EditHouse from "./EditHouse";
 import { Fragment } from "react";
 
-const Houses = ({ houses }) => {
+const Houses = ({ houses, refreshUserHouses }) => {
   return (
     <div>
       {houses?.length ? (
@@ -14,7 +14,14 @@ const Houses = ({ houses }) => {
           </TableHeader>
           <TableBody>
             {houses?.map((house, index) => {
-              return <House house={house} index={index} key={index} />;
+              return (
+                <House
+                  house={house}
+                  index={index}
+                  key={index}
+                  refreshUserHouses={refreshUserHouses}
+                />
+              );
             })}
           </TableBody>
         </Table>

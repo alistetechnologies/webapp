@@ -3,7 +3,11 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
+
+import Select from "react-select";
+import countries from "@/data/countries.json";
+import states from "@/data/states.json";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,23 +19,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LocationSelector from "@/components/ui/location-input";
+
 import useHouseStore from "./houseStore";
+import { Separator } from "@/components/ui/separator";
+import { api } from "@/lib/apiClient";
+import { serverUrl } from "@/constants/config";
 
 const formSchema = z.object({
   houseName: z.string().min(1),
-  address: z.string().min(1),
-  street: z.string().min(1),
+  flatPlotNumber: z.string().min(1),
+  streetAddress: z.string().min(1),
+  locality: z.string().min(1),
   city: z.string().min(1),
   pincode: z.string().regex(/^[1-9][0-9]{5}$/, {
     message: "Invalid PIN Code",
   }),
-  country: z.tuple([z.string(), z.string().optional()]),
+  state: z.string().min(1),
+  country: z.string().min(1),
 });
 
-export default function EditPropertyForm({}) {
-  const house = useHouseStore((state) => state.house);
-  console.info("HOuSE", house);
+export default function EditPropertyForm({
+  house,
+  refreshUserHouses,
+  closeModal,
+}) {
   const [countryName, setCountryName] = useState("India");
   const [stateName, setStateName] = useState("");
 
@@ -45,11 +56,30 @@ export default function EditPropertyForm({}) {
     },
   });
 
-  console.log("ERRORS", form.formState.errors);
-  function onSubmit(values) {
-    console.log("HERE");
+  // console.log("ERRORS", form.formState.errors);
+  console.log("HERE", house);
+  async function onSubmit(values) {
     try {
-      console.log(values);
+      const { houseName, ...address } = values;
+      const payload = {
+        houseName,
+        address,
+        houseId: house?._id,
+      };
+
+      console.warn("RESP", payload);
+      const response = await api.post(
+        `${serverUrl.sub}/v3/house/updateHouse`,
+        payload
+      );
+
+      if (!response.data?.success) {
+        //
+      }
+
+      refreshUserHouses();
+      closeModal();
+
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -65,115 +95,148 @@ export default function EditPropertyForm({}) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-full  py-10"
+        className="space-y-8 w-full py-2"
       >
-        <FormField
-          control={form.control}
-          name="houseName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>House Name</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="House name" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        ></FormField>
+        <div className="flex w-full">
+          <div className="w-1/2 p-2 space-y-6">
+            <FormField
+              control={form.control}
+              name="houseName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>House Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="House name" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
 
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Flat / Plot Number</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Flat / Plot Number"
-                  type="text"
-                  {...field}
-                />
-              </FormControl>
+            <FormField
+              control={form.control}
+              name="flatPlotNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Flat / Plot Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Flat / Plot Number"
+                      type="text"
+                      {...field}
+                    />
+                  </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="street"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Street Address</FormLabel>
-              <FormControl>
-                <Input placeholder="Street Address" type="text" {...field} />
-              </FormControl>
+            <FormField
+              control={form.control}
+              name="streetAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Street Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Street Address"
+                      type="text"
+                      {...field}
+                    />
+                  </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="city"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>City</FormLabel>
-              <FormControl>
-                <Input placeholder="City" type="text" {...field} />
-              </FormControl>
+            <FormField
+              control={form.control}
+              name="locality"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Street Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="locality" type="text" {...field} />
+                  </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Separator orientation="vertical" />
+          <div className="w-1/2 p-2 space-y-6">
+            <FormField
+              control={form.control}
+              name="pincode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pincode</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Pincode" type="number" {...field} />
+                  </FormControl>
+                  {/* <FormDescription>Pincode</FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="pincode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Pincode</FormLabel>
-              <FormControl>
-                <Input placeholder="Pincode" type="number" {...field} />
-              </FormControl>
-              {/* <FormDescription>Pincode</FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>State</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={{ label: stateName, value: stateName }}
+                      onChange={(selected) => {
+                        const state = selected?.value || "";
+                        setStateName(state);
 
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Select Country</FormLabel>
-              <FormControl>
-                <LocationSelector
-                  onCountryChange={(country) => {
-                    setCountryName(country?.name || "");
-                    form.setValue(field.name, [
-                      country?.name || "",
-                      stateName || "",
-                    ]);
-                  }}
-                  onStateChange={(state) => {
-                    setStateName(state?.name || "");
-                    form.setValue(field.name, [
-                      form.getValues(field.name)[0] || "",
-                      state?.name || "",
-                    ]);
-                  }}
-                />
-              </FormControl>
+                        form.setValue("state", state);
+                      }}
+                      options={states
+                        .filter((s) => s.country_name === "India")
+                        .map((c) => ({
+                          label: c.name,
+                          value: c.name,
+                        }))}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={{ label: countryName, value: countryName }}
+                      onChange={(selected) => {
+                        const country = selected?.value || "";
+                        setCountryName(country);
+                        setStateName("");
+                        form.setValue("country", country);
+                      }}
+                      options={countries.map((c) => ({
+                        label: c.name,
+                        value: c.name,
+                      }))}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit">Submit</Button>
+          </div>
+        </div>
       </form>
     </Form>
   );
