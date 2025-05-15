@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/table";
 import { AutoTimersSelectAppliances } from "./AutoTimersSelectAppliaces";
 import { Separator } from "@/components/ui/separator";
-import { Plus } from "react-bootstrap-icons";
 
 export function UpdateAutoTimer({ data, deviceId }) {
   const houseData = useHouseStore((state) => state.house);
@@ -102,7 +101,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
         startTimeDateObject = new Date();
         startTimeDateObject.setHours(startTime.split(":")[0]);
         startTimeDateObject.setMinutes(startTime.split(":")[1]);
-        startTimeDateObject.setSeconds(0);
+        startTimeDateObject.setMinutes(0);
       }
 
       let stopTimeDateObject = "";
@@ -141,15 +140,25 @@ export function UpdateAutoTimer({ data, deviceId }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="mb-4" onClick={() => setOpen(true)}>
-          <Plus />
-          Add Auto Timers
-        </Button>
+        <div
+          className="flex justify-between text-sm text-blue-700 font-semibold cursor-pointer hover:underline"
+          onClick={() => setOpen(true)}
+        >
+          <p className="text-sm text-blue-700 font-semibold">
+            Run Time:{" "}
+            {data?.autoTimers?.mode === "Always"
+              ? "Always"
+              : `${convertTimeStringTo12Hour(
+                  data?.autoTimers?.startTime
+                )} to ${convertTimeStringTo12Hour(data?.autoTimers?.stopTime)}`}
+          </p>
+          <ChevronRight />
+        </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[1100px]">
+      <DialogContent className="max-w-[1000px]">
         <DialogHeader>
-          <DialogTitle className="text-center">Auto Timers</DialogTitle>
-          <DialogDescription className="text-center">
+          <DialogTitle>Auto Timers</DialogTitle>
+          <DialogDescription>
             Set up your energy savings system by fixing the frequency of
             regulating your appliances operation. For example, you can set your
             AC to turn off for 5 minutes every 30 minutes during the night :
@@ -161,7 +170,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
             <div className="space-y-4">
               <h4 className="text-lg font-bold">Run Time</h4>
               <Tabs
-                defaultValue="Always"
+                defaultValue={active}
                 onValueChange={(value) => {
                   setActive(value);
                   setStartTime("");
@@ -229,6 +238,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
               </Tabs>
             </div>
           </div>
+
           <Separator orientation="vertical" className="mx-0.5" />
 
           <div className="w-1/2 p-6 bg-gray-50">
@@ -265,8 +275,8 @@ export function UpdateAutoTimer({ data, deviceId }) {
                             {room.devices.map((device) => {
                               return device.switches.map((swit) => {
                                 if (
-                                  swit.deviceType !== DeviceTypeMap.NA &&
-                                  `${swit.switchName} ${room.roomName}`
+                                  swit.deviceType !== DeviceTypeMap.NA ||
+                                  swit.switchName
                                     .toLowerCase()
                                     .includes(searchText.toLowerCase())
                                 ) {
