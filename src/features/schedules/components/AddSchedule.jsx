@@ -335,7 +335,9 @@ export function AddSchedule({ update = false, data }) {
                             return device.switches.map((swit) => {
                               if (
                                 swit.deviceType !== DeviceTypeMap.NA &&
-                                swit.switchName.includes(searchText)
+                                `${swit.switchName} ${room.roomName}`
+                                  .toLowerCase()
+                                  .includes(searchText.toLowerCase())
                               ) {
                                 return (
                                   <>
