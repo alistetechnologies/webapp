@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
-import { Appliances } from "./appliances";
-import { fetchDayAnalytics } from "./api/device";
-import Commands from "./commands";
-import { TableCell, TableRow } from "@/components/ui/table";
-import NovaContainer from "./nova/NovaContainer";
-import { Dot } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from 'react';
+import { Appliances } from './appliances';
+import { fetchDayAnalytics } from './api/device';
+import Commands from './commands';
+import { TableCell, TableRow } from '@/components/ui/table';
+import NovaContainer from './nova/NovaContainer';
+import { Dot } from 'lucide-react';
 
 export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
   const [showAppliances, setShowAppliances] = useState(false);
@@ -35,7 +35,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
         }
         totalAppliances += 1;
 
-        if (s?.switchState !== "0") {
+        if (s?.switchState !== '0') {
           onDevices += 1;
         }
 
@@ -106,50 +106,54 @@ export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
   ).toFixed(0);
   return (
     <>
-      <TableRow className="text-lg text-center">
-        <TableCell>{String(sno).padStart(2, "0")}</TableCell>
-        <TableCell className="flex items-center gap-x-2 text-left">
-          {room?.roomName}
-          {totalAppliances === connectedAppliances ? (
-            <span
-              className="text-green-500"
-              title="Connectivity Status: All Online"
-            >
-              <Dot size={40} />
-            </span>
-          ) : (
-            <span
-              className="text-red-400"
-              title="Connectivity Status: Some Offline"
-            >
-              <Dot size={40} />
-            </span>
-          )}
+      <TableRow className='text-lg text-center'>
+        <TableCell>{String(sno).padStart(2, '0')}</TableCell>
+        <TableCell className='flex items-center gap-x-2 text-left'>
+          <div className='flex justify-end w-full'>
+            <div className='flex justify-between w-full'>
+              <span>{room?.roomName}</span>
+              {totalAppliances === connectedAppliances ? (
+                <span
+                  className='text-green-500'
+                  title='Connectivity Status: All Online'
+                >
+                  <Dot size={40} />
+                </span>
+              ) : (
+                <span
+                  className='text-red-400'
+                  title='Connectivity Status: Some Offline'
+                >
+                  <Dot size={40} />
+                </span>
+              )}
+            </div>
+          </div>
         </TableCell>
         <TableCell>
           {room?.occupied === null ? (
-            "---"
+            '---'
           ) : room?.occupied ? (
-            <span className="text-green-500">Yes</span>
+            <span className='text-green-500'>Yes</span>
           ) : (
-            <span className="text-red-400">No</span>
+            <span className='text-red-400'>No</span>
           )}
         </TableCell>
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>
           {totalAppliances === 0 ? (
-            <span className="text-red-600">0 %</span>
-          ) : connectivityStatus === "100" ? (
-            <span className="text-green-400">{connectivityStatus} %</span>
+            <span className='text-red-600'>0 %</span>
+          ) : connectivityStatus === '100' ? (
+            <span className='text-green-400'>{connectivityStatus} %</span>
           ) : (
-            <span className="text-red-400">{connectivityStatus} %</span>
+            <span className='text-red-400'>{connectivityStatus} %</span>
           )}
         </TableCell>
         <Commands analysisData={appliancesAnalysisData} />
         {room?.devices.length !== 0 && (
           <TableCell>
             <Button onClick={() => setShowAppliances((prev) => !prev)}>
-              {showAppliances ? "Hide Details" : "View Details"}
+              {showAppliances ? 'Hide Details' : 'View Details'}
             </Button>
           </TableCell>
         )}

@@ -7,7 +7,7 @@ export function MainHeader() {
       <TableHead className='text-black'>Room Name</TableHead>
       <TableHead className='text-black'>Occupied</TableHead>
       <TableHead className='text-black'>Total Devices</TableHead>
-      <TableHead className='text-black'>Connected Devices</TableHead>
+      <TableHead className='text-black'>Connectivity Status</TableHead>
       <TableHead className='text-black'>Total Commands</TableHead>
       <TableHead className='text-black'>Smart Commands</TableHead>
       <TableHead className='text-black'>Switch Commands</TableHead>
