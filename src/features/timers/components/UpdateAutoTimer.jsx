@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { AutoTimersSelectAppliances } from "./AutoTimersSelectAppliaces";
 import { Separator } from "@/components/ui/separator";
+import { Plus } from "react-bootstrap-icons";
 
 export function UpdateAutoTimer({ data, deviceId }) {
   const houseData = useHouseStore((state) => state.house);
