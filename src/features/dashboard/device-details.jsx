@@ -6,8 +6,16 @@ import Commands from './commands';
 import { TableCell, TableRow } from '@/components/ui/table';
 import NovaContainer from './nova/NovaContainer';
 import { Dot } from 'lucide-react';
+import RoomDialog from './EditRoom';
 
-export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
+export function DeviceDetails({
+  room,
+  sno,
+  connectedDevices,
+  date,
+  reload,
+  houseId,
+}) {
   const [showAppliances, setShowAppliances] = useState(false);
   const [totalAppliances, setTotalAppliances] = useState(0);
   const [connectedAppliances, setConnectedAppliances] = useState(0);
@@ -112,21 +120,11 @@ export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
           <div className='flex justify-end w-full'>
             <div className='flex justify-between w-full'>
               <span>{room?.roomName}</span>
-              {totalAppliances === connectedAppliances ? (
-                <span
-                  className='text-green-500'
-                  title='Connectivity Status: All Online'
-                >
-                  <Dot size={40} />
-                </span>
-              ) : (
-                <span
-                  className='text-red-400'
-                  title='Connectivity Status: Some Offline'
-                >
-                  <Dot size={40} />
-                </span>
-              )}
+              <RoomDialog
+                roomId={room?._id}
+                roomName={room?.roomName}
+                houseId={houseId}
+              />
             </div>
           </div>
         </TableCell>
