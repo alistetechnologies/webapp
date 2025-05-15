@@ -134,11 +134,13 @@ export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
         <TableCell>{totalAppliances}</TableCell>
         <TableCell>{connectedAppliances}</TableCell>
         <Commands analysisData={appliancesAnalysisData} />
-        <TableCell>
-          <Button onClick={() => setShowAppliances((prev) => !prev)}>
-            {showAppliances ? "Hide Details" : "View Details"}
-          </Button>
-        </TableCell>
+        {room?.devices.length !== 0 && (
+          <TableCell>
+            <Button onClick={() => setShowAppliances((prev) => !prev)}>
+              {showAppliances ? "Hide Details" : "View Details"}
+            </Button>
+          </TableCell>
+        )}
       </TableRow>
       {showAppliances && (
         <>

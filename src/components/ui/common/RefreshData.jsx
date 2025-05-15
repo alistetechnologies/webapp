@@ -13,9 +13,9 @@ import {
 
 const RefreshDataButton = ({ onClick, text }) => {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
+    <TooltipProvider className="!mt-0">
+      <Tooltip className="!mt-0">
+        <TooltipTrigger className="!mt-0">
           <Button
             onClick={onClick}
             className="px-4 text-white rounded-lg flex items-center py-0"

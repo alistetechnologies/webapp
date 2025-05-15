@@ -46,7 +46,7 @@ export function ShareAccess() {
   //   );
   // }
   return (
-    <div className="w-full h-full bg-[#EAEBF0] p-8 overflow-y-scroll">
+    <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <Filter
         house={selectedHouse}
         setSelectedHouse={setSelectedHouse}
