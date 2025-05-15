@@ -186,7 +186,7 @@ export function AddAutoCut({ update = false, data }) {
                               return device.switches.map((swit) => {
                                 if (
                                   swit.deviceType !== DeviceTypeMap.NA &&
-                                  swit.switchName
+                                  `${swit.switchName} ${room.roomName}`
                                     .toLowerCase()
                                     .includes(searchText.toLowerCase())
                                 ) {
