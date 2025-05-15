@@ -1,6 +1,6 @@
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import React, { useState } from "react";
+import { Switch } from '@/components/ui/switch';
+import { TableCell, TableRow } from '@/components/ui/table';
+import React, { useState } from 'react';
 
 export function AutoCutSelectAppliance({ data, state, updateState }) {
   // console.log("[Switch Data]", data);
@@ -33,21 +33,31 @@ export function AutoCutSelectAppliance({ data, state, updateState }) {
     (item) => item.deviceId === data.deviceId && item.switchId === data.switchId
   );
 
+  const disabled = Boolean(
+    data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter
+  );
   return (
     <TableRow>
-      <TableCell className="w-auto">{data.switchName}</TableCell>
+      <TableCell className='w-auto text-muted-foreground'>
+        {data.switchName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {disabled ? (
+          <span className='text-muted-foreground'>Auto Timers Enabled</span>
+        ) : (
+          ''
+        )}
+      </TableCell>
 
       {/* Checkbox */}
-      <TableCell className="w-auto">
-        <div className="flex items-center space-x-2">
+      <TableCell className='w-auto'>
+        <div className='flex items-center space-x-2'>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={isDataInState !== undefined}
             onChange={handleCheckboxChange}
             disabled={
               data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter
             }
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
           />
           {/* <label
             htmlFor='terms'
