@@ -36,7 +36,6 @@ export function UpdateAutoTimer({ data, deviceId }) {
   const [startTime, setStartTime] = useState("");
   const [stopTime, setStopTime] = useState("");
 
-  console.debug("StartTime, stopTime", startTime, stopTime);
   const [onTime, setOnTime] = useState({
     hours: 0,
     minutes: 0,
@@ -309,7 +308,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
               onClick={() => createAutoTimers()}
               disabled={loading}
             >
-              {loading ? <Spinner /> : "Create"}
+              {loading ? <Spinner /> : "Update"}
             </Button>
           </div>
         </div>
