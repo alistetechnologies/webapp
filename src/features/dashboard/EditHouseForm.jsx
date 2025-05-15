@@ -67,6 +67,7 @@ export default function EditPropertyForm({
       form.reset({
         houseName: house.houseName,
         city: house.address?.city,
+        locality: house?.address?.locality || "",
         pincode: house.address?.pincode,
         country: house.address?.country,
         flatPlotNumber: house?.address?.flatPlotNumber || "",
@@ -171,16 +172,12 @@ export default function EditPropertyForm({
 
             <FormField
               control={form.control}
-              name="streetAddress"
+              name="locality"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Street Address</FormLabel>
+                  <FormLabel>Locality</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Street Address"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder="locality" type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
