@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AutoTimersSelectAppliances } from "./AutoTimersSelectAppliaces";
+import { Separator } from "@/components/ui/separator";
 
 export function UpdateAutoTimer({ data, deviceId }) {
   const houseData = useHouseStore((state) => state.house);

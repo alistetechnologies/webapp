@@ -93,7 +93,7 @@ export default function Schedule() {
                   ) : (
                     <div>
                       <div>
-                        {convertCronTo12HourFormat(sch.expression).time}
+                        {/* {convertCronTo12HourFormat(sch.expression).time} */}
                       </div>
                       <div>
                         {convertCronTo12HourFormat(
