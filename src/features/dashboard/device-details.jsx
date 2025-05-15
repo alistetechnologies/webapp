@@ -7,7 +7,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import NovaContainer from "./nova/NovaContainer";
 import { Dot } from "lucide-react";
 
-export function DeviceDetails({ room, sno, connectedDevices, date }) {
+export function DeviceDetails({ room, sno, connectedDevices, date, reload }) {
   const [showAppliances, setShowAppliances] = useState(false);
   const [totalAppliances, setTotalAppliances] = useState(0);
   const [connectedAppliances, setConnectedAppliances] = useState(0);
@@ -98,7 +98,7 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
 
   useEffect(() => {
     calculateAppliances();
-  }, [room, connectedDevices]);
+  }, [room, connectedDevices, reload]);
 
   return (
     <>
@@ -151,49 +151,5 @@ export function DeviceDetails({ room, sno, connectedDevices, date }) {
         </>
       )}
     </>
-  );
-  return (
-    <div>
-      <div className="grid grid-cols-12 border-b border-gray-300 rounded-lg bg-white">
-        {/* Row 1 */}
-        <div className="col-span-1 p-4 flex items-center justify-center">
-          {String(sno).padStart(2, "0")}
-        </div>
-
-        <div className="col-span-2 p-4 flex items-center justify-center text-left">
-          {room?.roomName}
-        </div>
-
-        <div className="col-span-2 p-4 flex items-center justify-center">
-          <span className="text-xl font-bold">{connectedAppliances}/</span>
-          <span className="text-sm">{totalAppliances}</span>
-        </div>
-
-        {/* Commands */}
-        <Commands analysisData={appliancesAnalysisData} />
-
-        <div className="col-span-1 p-4 flex items-center justify-center">
-          <span className="text-xl font-bold">{onAppliances}/</span>
-          <span className="text-sm">{totalAppliances}</span>
-        </div>
-
-        <div className="col-span-2 p-4 flex items-center justify-center">
-          <Button
-            onClick={() => {
-              setShowAppliances(!showAppliances);
-            }}
-          >
-            View Details
-          </Button>
-        </div>
-      </div>
-      {showAppliances && (
-        <Appliances
-          appliances={appliances}
-          analysisData={appliancesAnalysisData}
-          connectedDevices={connectedDevices}
-        />
-      )}
-    </div>
   );
 }

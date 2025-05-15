@@ -2,7 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { convertMilliseconds } from "@/utils/format";
 import { Dot } from "lucide-react";
 import { controlDevice } from "./api/device";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import toast from "react-hot-toast";
 import { useUser } from "../auth/api/userStore";
@@ -17,26 +17,33 @@ export function ApplianceDetails({
   const user = useUser((state) => state.user);
   const house = useHouseStore((state) => state.house);
   const updateState = useHouseStore((state) => state.updateState);
-  const [state, setState] = useState(false);
 
-  // console.log("Appliances", appliances);
-  // console.log("AnalysisData", analysisData);
   const [loading, setLoading] = useState(false);
   const onTime = convertMilliseconds(analysisData?.totalOnTime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
 
-  const appliance = appliances[analysisData?.deviceId].find(
+  let appliance = appliances[analysisData?.deviceId].find(
     (appliance) => String(appliance.switchId) === String(analysisData?.switchId)
   );
   if (appliance?.deviceType === 7 || !appliance) return;
-
+  useEffect(() => {
+    if (
+      appliances[analysisData?.deviceId] === undefined ||
+      appliances[analysisData?.deviceId] === null
+    )
+      return;
+    appliance = appliances[analysisData?.deviceId].find(
+      (appliance) =>
+        String(appliance.switchId) === String(analysisData?.switchId)
+    );
+  }, [appliances]);
   const switchCommands = analysisData?.controlLogs.filter(
     (cmd) => cmd?.controllerType === "switch"
   ).length;
   const smartCommands = analysisData?.controlLogs.filter(
     (cmd) => cmd?.controllerType !== "switch"
   ).length;
-  console.debug("house", house);
+
   const toggleApplianceState = async () => {
     setLoading(true);
     const command = String(appliance.switchState) === "0" ? "100" : "0";
@@ -48,7 +55,7 @@ export function ApplianceDetails({
     });
 
     updateState(appliance.deviceId, appliance.switchId, command);
-    setState(!state);
+
     // console.log("control response", resp);
     setLoading(false);
 
@@ -56,6 +63,7 @@ export function ApplianceDetails({
     //   toast.error(resp.message);
     // }
   };
+
   return (
     <TableRow className="">
       <TableCell>{sno}</TableCell>

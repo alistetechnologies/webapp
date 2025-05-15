@@ -46,6 +46,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
 
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [active, setActive] = useState("Always");
+  const [search, setSearchText] = useState("");
 
   useEffect(() => {
     if (!open) return;

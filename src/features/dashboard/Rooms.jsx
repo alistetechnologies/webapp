@@ -1,6 +1,6 @@
 import { DeviceDetails } from "./device-details";
 
-export default function Rooms({ roomsData, connectedDevices, date }) {
+export default function Rooms({ roomsData, connectedDevices, date, reload }) {
   return (
     <>
       {roomsData?.map((room, sno) => (
@@ -10,6 +10,7 @@ export default function Rooms({ roomsData, connectedDevices, date }) {
           key={sno}
           date={date}
           connectedDevices={connectedDevices}
+          reload={reload}
         />
       ))}
     </>

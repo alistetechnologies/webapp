@@ -15,7 +15,10 @@ export function HouseDetails() {
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
-  const [house, setHouse] = useState({});
+
+  const house = useHouseStore((state) => state.house);
+  // const updateHouse = useHouseStore(state => state.updateHouse);
+  // const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
   const [connectedDevices, setConnectedDevices] = useState([]);
@@ -30,7 +33,7 @@ export function HouseDetails() {
       return;
     }
 
-    setHouse(houseDetails?.data);
+    // setHouse(houseDetails?.data);
     setLoading(false);
     useHouseStore.getState().updateHouse(houseDetails?.data);
   };
@@ -58,8 +61,8 @@ export function HouseDetails() {
     };
 
     getConnectedDevices();
-  }, [selectedHouse?.value]);
-
+  }, [selectedHouse?.value, house]);
+  console.debug(house, "house");
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <Filter
@@ -89,6 +92,7 @@ export function HouseDetails() {
               {house?.rooms ? (
                 <Rooms
                   roomsData={house?.rooms}
+                  reload={house?.update || false}
                   connectedDevices={connectedDevices}
                   date={date}
                   setDate={setDate}
