@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,7 +46,7 @@ export default function EditPropertyForm({
   const [countryName, setCountryName] = useState("India");
   const [stateName, setStateName] = useState("");
 
-  const form = useForm({
+  let form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       houseName: house?.houseName,
@@ -56,8 +56,19 @@ export default function EditPropertyForm({
     },
   });
 
+  useEffect(() => {
+    if (house) {
+      // If the house object exists, reset the form values
+      form.reset({
+        houseName: house.houseName,
+        city: house.address?.city,
+        pincode: house.address?.pincode,
+        country: house.address?.country,
+      });
+    }
+  }, [house, form]);
   // console.log("ERRORS", form.formState.errors);
-  console.log("HERE", house);
+
   async function onSubmit(values) {
     try {
       const { houseName, ...address } = values;
