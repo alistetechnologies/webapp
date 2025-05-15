@@ -8,7 +8,7 @@ import EditProperty from "./EditHouse";
 function HouseRow({ house, index, refreshUserHouses }) {
   const navigate = useNavigate();
   const user = useUser.getState().user;
-  console.debug("HOUSE---", house);
+
   return (
     <TableRow className="text-lg">
       <TableCell>{index + 1}</TableCell>

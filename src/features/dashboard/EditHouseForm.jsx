@@ -24,6 +24,7 @@ import useHouseStore from "./houseStore";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/apiClient";
 import { serverUrl } from "@/constants/config";
+import { Label } from "@/components/ui/label";
 
 const formSchema = z.object({
   houseName: z.string().min(1),
@@ -45,7 +46,7 @@ export default function EditPropertyForm({
 }) {
   const [countryName, setCountryName] = useState("India");
   const [stateName, setStateName] = useState("");
-
+  console.debug("house", house);
   let form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,6 +54,10 @@ export default function EditPropertyForm({
       city: house?.address?.city,
       pincode: house?.address?.pincode,
       country: house?.address?.country,
+      flatPlotNumber: house?.address?.flatPlotNumber || "",
+      locality: house?.address?.locality || "",
+      state: house?.address?.state || "",
+      streetAddress: house?.address?.streetAddress || "",
     },
   });
 
@@ -64,6 +69,9 @@ export default function EditPropertyForm({
         city: house.address?.city,
         pincode: house.address?.pincode,
         country: house.address?.country,
+        flatPlotNumber: house?.address?.flatPlotNumber || "",
+        state: house?.address?.state || "",
+        streetAddress: house?.address?.streetAddress || "",
       });
     }
   }, [house, form]);
@@ -163,12 +171,16 @@ export default function EditPropertyForm({
 
             <FormField
               control={form.control}
-              name="locality"
+              name="streetAddress"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Street Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="locality" type="text" {...field} />
+                    <Input
+                      placeholder="Street Address"
+                      type="text"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -245,7 +257,19 @@ export default function EditPropertyForm({
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <FormField
+              name="submit"
+              render={() => (
+                <FormItem>
+                  <FormLabel></FormLabel>
+                  <FormControl>
+                    <Button type="submit" className="w-full">
+                      Submit
+                    </Button>
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
           </div>
         </div>
       </form>

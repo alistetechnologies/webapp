@@ -34,10 +34,14 @@ export function AddAutoTImer() {
   const [loading, setLoading] = useState(false);
   const [startTime, setStartTime] = useState("");
   const [stopTime, setStopTime] = useState("");
+
+  console.debug("StartTime, stopTime", startTime, stopTime);
+
   const [onTime, setOnTime] = useState({
     hours: 0,
     minutes: 0,
   });
+
   const [offTime, setOffTime] = useState({
     hours: 0,
     minutes: 0,
@@ -56,13 +60,12 @@ export function AddAutoTImer() {
         startTimeDateObject = new Date();
         startTimeDateObject.setHours(startTime.split(":")[0]);
         startTimeDateObject.setMinutes(startTime.split(":")[1]);
-        startTimeDateObject.setMinutes(0);
+        startTimeDateObject.setSeconds(0);
       }
 
       let stopTimeDateObject = "";
       if (stopTime) {
         stopTimeDateObject = new Date();
-
         stopTimeDateObject.setHours(stopTime.split(":")[0]);
         stopTimeDateObject.setMinutes(stopTime.split(":")[1]);
         stopTimeDateObject.setSeconds(0);
@@ -106,7 +109,7 @@ export function AddAutoTImer() {
           Add Auto Timers
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1000px]">
+      <DialogContent className="max-w-[1100px]">
         <DialogHeader>
           <DialogTitle className="text-center">Auto Timers</DialogTitle>
           <DialogDescription className="text-center">
@@ -116,23 +119,23 @@ export function AddAutoTImer() {
             Thereby reducing your power consumption by 17%
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
-          <h4 className="text-lg font-bold">Run Time</h4>
-          <Tabs
-            defaultValue="Always"
-            onValueChange={(value) => {
-              setActive(value);
-              setStartTime("");
-              setStopTime("");
-            }}
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="Always">Always</TabsTrigger>
-              <TabsTrigger value="Particular">Particular Time</TabsTrigger>
-            </TabsList>
-            <TabsContent value="Always" className="space-y-4">
-              <div className="flex w-full">
-                <div className="w-1/2 p-6 bg-gray-50">
+        <div className="flex w-full">
+          <div className="w-1/2 pg-6 bg-gray-50 px-2">
+            <div className="space-y-4">
+              <h4 className="text-lg font-bold">Run Time</h4>
+              <Tabs
+                defaultValue="Always"
+                onValueChange={(value) => {
+                  setActive(value);
+                  setStartTime("");
+                  setStopTime("");
+                }}
+              >
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="Always">Always</TabsTrigger>
+                  <TabsTrigger value="Particular">Particular Time</TabsTrigger>
+                </TabsList>
+                <TabsContent value="Always" className="space-y-4 w-full">
                   <DurationInput
                     onTime={onTime}
                     setOnTime={setOnTime}
@@ -143,93 +146,11 @@ export function AddAutoTImer() {
                     The Ac will be turned off for the selected frequency in
                     every selected interval
                   </p>
-                </div>
 
-                <Separator orientation="vertical" className="mx-0.5" />
+                  {/* <Separator orientation="vertical" className="mx-0.5" /> */}
+                </TabsContent>
 
-                <div className="w-1/2 p-6 bg-gray-50">
-                  {/* Appliances Data */}
-                  <div className=" relative">
-                    <Input
-                      type="text"
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      placeholder="Search Appliances"
-                      className="mb-4"
-                    />
-                    <p className="text-lg font-bold">Select Devices</p>
-                    <div className="max-h-80 overflow-y-scroll my-4">
-                      <Table className="w-full bg-white ">
-                        <TableHeader className="sticky top-0 z-10 bg-white">
-                          <TableRow className="sticky top-0">
-                            <TableHead className="text-black">
-                              Appliance
-                            </TableHead>
-                            <TableHead className="text-black">Select</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody className="max-h-64 overflow-y-scroll">
-                          {houseData &&
-                            houseData.rooms?.map((room) => {
-                              return (
-                                <>
-                                  <div
-                                    className="text-muted-foreground my-2"
-                                    key={room._id}
-                                  >
-                                    {room.roomName}
-                                  </div>
-
-                                  {room.devices.map((device) => {
-                                    return device.switches.map((swit) => {
-                                      if (
-                                        swit.deviceType !== DeviceTypeMap.NA ||
-                                        swit.switchName
-                                          .toLowerCase()
-                                          .includes(searchText.toLowerCase())
-                                      ) {
-                                        return (
-                                          <>
-                                            <AutoTimersSelectAppliances
-                                              data={{
-                                                ...swit,
-                                                deviceId: device.deviceId,
-                                              }}
-                                              state={selectedAppliances}
-                                              updateState={
-                                                setSelectedAppliances
-                                              }
-                                              key={
-                                                device.deviceId + swit.switchId
-                                              }
-                                            />
-                                          </>
-                                        );
-                                      }
-                                    });
-                                  })}
-                                </>
-                              );
-                            })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-
-                  <Button
-                    className="w-full"
-                    onClick={() => createAutoTimers()}
-                    disabled={loading}
-                  >
-                    {loading ? <Spinner /> : "Create"}
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="Particular" className="space-y-4">
-              <div className="flex w-full">
-                <div className="w-1/2 p-6 bg-white space-y-10">
+                <TabsContent value="Particular" className="space-y-4">
                   <div className="flex justify-between mt-4">
                     <div className="flex flex-col gap-4">
                       <p>Start Time</p>
@@ -267,90 +188,83 @@ export function AddAutoTImer() {
                     The AC will be turned off for the selected frequency in
                     every selected interval.
                   </p>
-                </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+          <Separator orientation="vertical" className="mx-0.5" />
 
-                <Separator orientation="vertical" className="mx-0.5" />
+          <div className="w-1/2 p-6 bg-gray-50">
+            {/* Appliances Data */}
+            <div className=" relative">
+              <Input
+                type="text"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search Appliances"
+                className="mb-4"
+              />
+              <p className="text-lg font-bold">Select Devices</p>
+              <div className="max-h-80 overflow-y-scroll my-4">
+                <Table className="w-full bg-white ">
+                  <TableHeader className="sticky top-0 z-10 bg-white">
+                    <TableRow className="sticky top-0">
+                      <TableHead className="text-black">Appliance</TableHead>
+                      <TableHead className="text-black">Select</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="max-h-64 overflow-y-scroll">
+                    {houseData &&
+                      houseData.rooms?.map((room) => {
+                        return (
+                          <>
+                            <div
+                              className="text-muted-foreground my-2"
+                              key={room._id}
+                            >
+                              {room.roomName}
+                            </div>
 
-                <div className="w-1/2 p-6 bg-gray-50">
-                  {/* Appliances Data */}
-                  <div className=" relative">
-                    <Input
-                      type="text"
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      placeholder="Search Appliances"
-                      className="mb-4"
-                    />
-                    <p className="text-lg font-bold">Select Devices</p>
-                    <div className="max-h-64 overflow-y-scroll my-4">
-                      <Table className="w-full bg-white ">
-                        <TableHeader className="sticky top-0 z-10 bg-white">
-                          <TableRow className="sticky top-0">
-                            <TableHead className="text-black">
-                              Appliance
-                            </TableHead>
-                            <TableHead className="text-black">Select</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody className="max-h-52 overflow-y-scroll">
-                          {houseData &&
-                            houseData.rooms?.map((room) => {
-                              return (
-                                <>
-                                  <div
-                                    className="text-muted-foreground my-2"
-                                    key={room._id}
-                                  >
-                                    {room.roomName}
-                                  </div>
-
-                                  {room.devices.map((device) => {
-                                    return device.switches.map((swit) => {
-                                      if (
-                                        swit.deviceType !== DeviceTypeMap.NA &&
-                                        swit.switchName
-                                          .toLowerCase()
-                                          .includes(searchText.toLowerCase())
-                                      ) {
-                                        return (
-                                          <>
-                                            <AutoTimersSelectAppliances
-                                              data={{
-                                                ...swit,
-                                                deviceId: device.deviceId,
-                                              }}
-                                              state={selectedAppliances}
-                                              updateState={
-                                                setSelectedAppliances
-                                              }
-                                              key={
-                                                device.deviceId + swit.switchId
-                                              }
-                                            />
-                                          </>
-                                        );
-                                      }
-                                    });
-                                  })}
-                                </>
-                              );
+                            {room.devices.map((device) => {
+                              return device.switches.map((swit) => {
+                                if (
+                                  swit.deviceType !== DeviceTypeMap.NA &&
+                                  `${swit.switchName} ${room.roomName}`
+                                    .toLowerCase()
+                                    .includes(searchText.toLowerCase())
+                                ) {
+                                  return (
+                                    <>
+                                      <AutoTimersSelectAppliances
+                                        data={{
+                                          ...swit,
+                                          deviceId: device.deviceId,
+                                        }}
+                                        state={selectedAppliances}
+                                        updateState={setSelectedAppliances}
+                                        key={device.deviceId + swit.switchId}
+                                      />
+                                    </>
+                                  );
+                                }
+                              });
                             })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-
-                  <Button
-                    className="w-full"
-                    onClick={() => createAutoTimers()}
-                    disabled={loading}
-                  >
-                    {loading ? <Spinner /> : "Create"}
-                  </Button>
-                </div>
+                          </>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+
+            <Button
+              className="w-full"
+              onClick={() => createAutoTimers()}
+              disabled={loading}
+            >
+              {loading ? <Spinner /> : "Create"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
