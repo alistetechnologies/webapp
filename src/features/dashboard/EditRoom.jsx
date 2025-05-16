@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-import { api } from '@/lib/apiClient';
-import { serverUrl } from '@/constants/config';
-import { Edit2 } from 'lucide-react';
-import { fetchHouse } from './api/house';
+import { api } from "@/lib/apiClient";
+import { serverUrl } from "@/constants/config";
+import { Edit2 } from "lucide-react";
+import { fetchHouse } from "./api/house";
 
 const RoomDialog = ({ roomId, roomName, houseId }) => {
   const [open, setOpen] = useState(false);
@@ -32,10 +32,9 @@ const RoomDialog = ({ roomId, roomName, houseId }) => {
       );
 
       await fetchHouse(houseId);
-      console.log('Room updated:', response.data);
+
       setOpen(false); // Close modal on success
     } catch (error) {
-      console.error('Error updating room:', error);
     } finally {
       setLoading(false);
     }
@@ -43,8 +42,8 @@ const RoomDialog = ({ roomId, roomName, houseId }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild className='cursor-pointer'>
-        <Edit2 />
+      <DialogTrigger asChild className="cursor-pointer">
+        <Button>Edit</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -53,10 +52,10 @@ const RoomDialog = ({ roomId, roomName, houseId }) => {
         <Input
           value={newRoomName}
           onChange={(e) => setNewRoomName(e.target.value)}
-          placeholder='Enter new room name'
+          placeholder="Enter new room name"
         />
         <Button onClick={handleSubmit} disabled={loading || !newRoomName}>
-          {loading ? 'Submitting...' : 'Submit'}
+          {loading ? "Submitting..." : "Submit"}
         </Button>
       </DialogContent>
     </Dialog>
