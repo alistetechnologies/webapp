@@ -7,7 +7,6 @@ export default function Rooms({
   reload,
   houseId,
 }) {
-  console.log("RoomsData", roomsData);
   const sorted = (arr) =>
     arr.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;

@@ -25,9 +25,6 @@ export const fetchHouseUserDetails = async (houseId, userNumber) => {
 };
 
 export const checkUserExists = async (email, authUser) => {
-  console.log("====================================");
-  console.log(email.replace("+91", ""), "email.replace");
-  console.log("====================================");
   try {
     const response = await axios.get(
       `${serverUrl.sub}/v2/user/exists/+91${email.replace(

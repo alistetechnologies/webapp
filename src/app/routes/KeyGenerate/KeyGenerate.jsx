@@ -255,10 +255,6 @@ export function KeyGenerate() {
         return newKeys;
       });
     } catch (error) {
-      console.error("Error toggling key status:", error);
-      if (error.response) {
-        console.error("Server response:", error.response.data);
-      }
       toast.error("An error occurred while toggling the key status.");
     }
   };

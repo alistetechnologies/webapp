@@ -108,7 +108,6 @@ const createAppRouter = () =>
               );
               return { Component: LockDetails };
             } catch (error) {
-              console.error("Error loading LockDetails:", error);
               throw error;
             }
           },

@@ -27,7 +27,6 @@ export const setAutoCut = async (data) => {
       data
     );
 
-    console.log("[response]", response.data);
     const house = useHouseStore.getState().house;
     if (response.data.success) {
       await fetchHouse(house._id);
