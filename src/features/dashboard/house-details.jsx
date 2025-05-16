@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useUser } from '../auth/api/userStore';
-import { fetchConnectedDevices, fetchHouse } from './api/house';
-import Filter from './filter';
-import { Spinner } from '@/components/ui/spinner';
-import { Table, TableBody, TableHeader } from '@/components/ui/table';
-import { MainHeader } from './MainHeader';
-import Rooms from './Rooms';
-import NoRooms from './no-rooms';
-import useHouseStore from './houseStore';
-import moment from 'moment';
+import React, { useEffect, useState } from "react";
+import { useUser } from "../auth/api/userStore";
+import { fetchConnectedDevices, fetchHouse } from "./api/house";
+import Filter from "./filter";
+import { Spinner } from "@/components/ui/spinner";
+import { Table, TableBody, TableHeader } from "@/components/ui/table";
+import { MainHeader } from "./MainHeader";
+import Rooms from "./Rooms";
+import NoRooms from "./no-rooms";
+import useHouseStore from "./houseStore";
+import moment from "moment";
 
 export function HouseDetails() {
   const user = useUser((state) => state.user);
   const [selectedHouse, setSelectedHouse] = useState({
-    value: user?.selectedHouse || '',
+    value: user?.selectedHouse || "",
   });
 
   const house = useHouseStore((state) => state.house);
   // const updateHouse = useHouseStore(state => state.updateHouse);
   // const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
   const [connectedDevices, setConnectedDevices] = useState([]);
 
   const getUserHouse = async () => {
@@ -28,7 +28,7 @@ export function HouseDetails() {
     const houseDetails = await fetchHouse(selectedHouse?.value);
 
     if (!houseDetails.success) {
-      toast.error('Failed to fetch House!!');
+      toast.error("Failed to fetch House!!");
       setLoading(false);
       return;
     }
@@ -45,7 +45,7 @@ export function HouseDetails() {
   useEffect(() => {
     const getConnectedDevices = async () => {
       if (!selectedHouse?.value) {
-        toast.error('No Selected House!!');
+        toast.error("No Selected House!!");
       }
 
       const connectedDevicesResponse = await fetchConnectedDevices({
@@ -53,7 +53,7 @@ export function HouseDetails() {
       });
 
       if (!connectedDevicesResponse.success) {
-        toast.error('Failed to fetch Connected devices!!');
+        toast.error("Failed to fetch Connected devices!!");
         return;
       }
 
@@ -62,9 +62,9 @@ export function HouseDetails() {
 
     getConnectedDevices();
   }, [selectedHouse?.value, house]);
-  console.debug(house, 'house');
+  console.debug(house, "house");
   return (
-    <div className='w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll'>
+    <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <Filter
         house={selectedHouse}
         setSelectedHouse={setSelectedHouse}
@@ -72,20 +72,20 @@ export function HouseDetails() {
         setDate={setDate}
         onClick={() => getUserHouse()}
         backBtn
-        backLink='/app'
+        backLink="/app"
       />
 
       {/* <h2>{rerender}</h2> */}
 
       {loading && (
-        <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-          <Spinner size='lg' />
+        <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
+          <Spinner size="lg" />
         </div>
       )}
       {!loading && (
-        <Table className='w-full bg-white'>
-          <div className='relative'>
-            <TableHeader className='sticky top-0 '>
+        <div className="h-[81%] overflow-x-scroll">
+          <Table className="w-full bg-white h-[80%]">
+            <TableHeader className="sticky top-0 bg-white z-10">
               <MainHeader />
             </TableHeader>
             <TableBody>
@@ -102,8 +102,8 @@ export function HouseDetails() {
                 <NoRooms />
               )}
             </TableBody>
-          </div>
-        </Table>
+          </Table>
+        </div>
       )}
     </div>
   );
