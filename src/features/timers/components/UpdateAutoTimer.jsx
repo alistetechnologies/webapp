@@ -100,7 +100,7 @@ export function UpdateAutoTimer({ data, deviceId }) {
         startTimeDateObject = new Date();
         startTimeDateObject.setHours(startTime.split(":")[0]);
         startTimeDateObject.setMinutes(startTime.split(":")[1]);
-        startTimeDateObject.setMinutes(0);
+        startTimeDateObject.setSeconds(0);
       }
 
       let stopTimeDateObject = "";
@@ -136,6 +136,9 @@ export function UpdateAutoTimer({ data, deviceId }) {
       setOpen(false);
     }
   };
+
+  console.debug("StartTime", startTime);
+  console.debug("Stop Time", stopTime);
 
   const sorted = (arr) =>
     arr.sort((a, b) => {
