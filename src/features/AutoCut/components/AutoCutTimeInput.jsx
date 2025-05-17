@@ -11,12 +11,16 @@ export function AutoCutTimeInput({ state, setState }) {
           max={23}
           value={state.hours}
           onChange={(e) => {
+            console.log("HOUrs", e.target.value);
             const value = Number(e.target.value);
             if (value <= 23 && value >= 0) {
-              setState((prev) => ({
-                ...prev,
-                hours: value,
-              }));
+              setState((prev) => {
+                console.log("prev", prev);
+                return {
+                  ...prev,
+                  hours: Number(value),
+                };
+              });
             }
           }}
           className="w-20 text-center p-2 border border-gray-300 rounded-md"
@@ -34,6 +38,8 @@ export function AutoCutTimeInput({ state, setState }) {
           max="59"
           value={state.minutes}
           onChange={(e) => {
+            console.log("minutes", e.target.value);
+
             const value = e.target.value;
 
             if (value <= 59 && value >= 0) {
@@ -58,6 +64,8 @@ export function AutoCutTimeInput({ state, setState }) {
           max="59"
           value={state.seconds}
           onChange={(e) => {
+            console.log("Seconds", e.target.value);
+
             const value = e.target.value;
 
             if (value <= 59 && value >= 0) {

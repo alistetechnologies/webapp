@@ -52,11 +52,10 @@ export function AddAutoCut({ update = false, data }) {
   });
   const [loading, setLoading] = useState(false);
 
-  const [appliancesData, setAppliancesData] = useState([]);
-
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  console.log("Selected deices", selectedAppliances);
   useEffect(() => {
     if (update) {
       setSelectedAppliances([
@@ -69,37 +68,15 @@ export function AddAutoCut({ update = false, data }) {
 
       setDuration(convertToHMS(data.autoTurnOff));
     }
-  }, [update, data]);
-  useEffect(() => {
-    const applianceData = () => {
-      const appliances = [];
+  }, [update, data, open]);
 
-      if (!house?.rooms) return;
-
-      for (const room of house?.rooms) {
-        for (let d of room.devices) {
-          for (let s of d.switches) {
-            if (s.deviceType !== DeviceTypeMap.NA) {
-              appliances.push({
-                value: {
-                  deviceId: d.deviceId,
-                  switchId: s.switchId,
-                },
-                label: `${s.switchName} - ${room.roomName}`,
-              });
-            }
-          }
-        }
-      }
-
-      setAppliancesData(appliances);
-    };
-    applianceData();
-  }, [house]);
-
+  console.log("duration", duration);
   async function handleSubmit() {
+    console.log("ON Sumbit", duration);
     const turnOffAfter = Number(
-      duration.hours * 3600 + duration.minutes * 60 + duration.seconds
+      Number(duration.hours) * 3600 +
+        Number(duration.minutes) * 60 +
+        Number(duration.seconds)
     );
 
     if (turnOffAfter <= 0) {
@@ -108,6 +85,10 @@ export function AddAutoCut({ update = false, data }) {
     }
 
     // Generating Payload, adding turnOffAfter
+    if (selectedAppliances.length === 0) {
+      toast.error("Please select a device");
+      return;
+    }
     const payload = {
       payload: selectedAppliances?.map((item) => ({ ...item, turnOffAfter })),
     };
@@ -125,6 +106,12 @@ export function AddAutoCut({ update = false, data }) {
     toast.success(response.message || "Successfully created Auto cut.");
     setLoading(false);
     setOpen(false);
+    setDuration({
+      hours: "",
+      minutes: "",
+      seconds: "",
+    });
+    setSelectedAppliances([]);
   }
 
   const sorted = (arr) =>

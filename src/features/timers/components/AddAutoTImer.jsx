@@ -102,8 +102,9 @@ export function AddAutoTImer() {
     }
   };
 
-  const sorted = (arr) =>
-    arr.sort((a, b) => {
+  const sorted = (arr) => {
+    if (!arr) return;
+    return arr.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;
 
       if (b?.devices?.length === 0 && a?.devices?.length > 0) return -1;
@@ -114,6 +115,7 @@ export function AddAutoTImer() {
         sensitivity: "base",
       });
     });
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
