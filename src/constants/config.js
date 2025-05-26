@@ -11,6 +11,8 @@ export const serverUrl = {
     "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
   a2: "https://a3.alistetechnologies.com",
   deviceApi: "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
+  deviceService:
+    "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
 };
 export const token =
   "Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA=";

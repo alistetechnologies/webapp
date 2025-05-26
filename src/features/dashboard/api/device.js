@@ -39,3 +39,20 @@ export const controlDevice = async (data) => {
     };
   }
 };
+
+export const fetchDeviceDetails = async (data) => {
+  try {
+    const response = await api.post(`${serverUrl.deviceService}/details`, data);
+
+    if (!response.data?.success) {
+      //TODO
+    }
+
+    return response?.data;
+  } catch (error) {
+    return {
+      success: false,
+      data: {},
+    };
+  }
+};
