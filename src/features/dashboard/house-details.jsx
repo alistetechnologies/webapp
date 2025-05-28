@@ -85,7 +85,7 @@ export function HouseDetails() {
       {!loading && (
         <div className="h-[81%] overflow-x-scroll">
           <Table className="w-full bg-white h-[80%]">
-            <TableHeader className="sticky top-0 bg-white z-10">
+            <TableHeader className="sticky top-0 bg-white">
               <MainHeader />
             </TableHeader>
             <TableBody>

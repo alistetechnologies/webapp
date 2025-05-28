@@ -74,7 +74,7 @@ export function ApplianceDetails({
   const deviceConnected = connectedDevices.some(
     (d) => d.deviceId === analysisData?.deviceId
   );
-  console.log("appliance", appliance);
+
   return (
     <TableRow className="">
       <TableCell>{sno}</TableCell>
