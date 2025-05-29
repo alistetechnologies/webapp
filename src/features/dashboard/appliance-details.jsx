@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useUser } from "../auth/api/userStore";
 import useHouseStore from "./houseStore";
 import { format } from "crypto-js";
-import { daysSince } from "@/utils/date";
+import { daysSince, timeSince } from "@/utils/date";
 
 export function ApplianceDetails({
   appliances,
@@ -198,9 +198,10 @@ const OfflineSinceText = ({ deviceId }) => {
   if (loading) {
     return <Spinner />;
   }
+
   return (
     <span title={date ? formatted(date) : "No data to show!!"}>
-      {date ? `${daysSince(date)} days` : "N/A"}
+      {date ? timeSince(date)?.string : "N/A"}
     </span>
   );
 };
