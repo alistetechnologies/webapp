@@ -137,9 +137,6 @@ export function UpdateAutoTimer({ data, deviceId }) {
     }
   };
 
-  console.debug("StartTime", startTime);
-  console.debug("Stop Time", stopTime);
-
   const sorted = (arr) =>
     arr.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;
@@ -280,13 +277,16 @@ export function UpdateAutoTimer({ data, deviceId }) {
                       sorted(houseData.rooms)?.map((room) => {
                         return (
                           <>
-                            <div
-                              className="text-black font-semibold text-lg underline mt-4 pl-2"
-                              key={room._id}
-                            >
-                              {room.roomName}
-                            </div>
-
+                            {room?.devices?.length ? (
+                              <div
+                                className="text-black font-semibold text-lg underline mt-4 pl-2"
+                                key={room._id}
+                              >
+                                {room.roomName}
+                              </div>
+                            ) : (
+                              ""
+                            )}
                             {room.devices.map((device) => {
                               return device.switches.map((swit) => {
                                 if (

@@ -233,12 +233,16 @@ export function AddAutoTImer() {
                       sorted(houseData?.rooms)?.map((room) => {
                         return (
                           <>
-                            <div
-                              className="text-black font-semibold text-lg underline mt-4 pl-2"
-                              key={room._id}
-                            >
-                              {room.roomName}
-                            </div>
+                            {room?.devices?.length ? (
+                              <div
+                                className="text-black font-semibold text-lg underline mt-4 pl-2"
+                                key={room._id}
+                              >
+                                {room.roomName}
+                              </div>
+                            ) : (
+                              ""
+                            )}
 
                             {room.devices.map((device) => {
                               return device.switches.map((swit) => {

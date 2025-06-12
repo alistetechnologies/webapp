@@ -179,9 +179,13 @@ export function AddAutoCut({ update = false, data }) {
                       sorted(house?.rooms).map((room) => {
                         return (
                           <>
-                            <div className="text-black font-semibold text-lg underline mt-4 pl-2">
-                              {room.roomName}
-                            </div>
+                            {room?.devices?.length ? (
+                              <div className="text-black font-semibold text-lg underline mt-4 pl-2">
+                                {room.roomName}
+                              </div>
+                            ) : (
+                              ""
+                            )}
 
                             {room.devices.map((device) => {
                               return device.switches.map((swit) => {
