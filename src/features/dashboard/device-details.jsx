@@ -132,9 +132,8 @@ export function DeviceDetails({
             <span className="text-red-400">No</span>
           )}
         </TableCell>
-        <TableCell>
-          {onAppliances}/{totalAppliances}
-        </TableCell>
+        <TableCell>{totalAppliances}</TableCell>
+        <TableCell>{onAppliances}</TableCell>
         <TableCell>
           {totalAppliances === 0 ? (
             <span className="text-red-600">0 %</span>
