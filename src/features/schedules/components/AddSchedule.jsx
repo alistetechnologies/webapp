@@ -80,7 +80,6 @@ export function AddSchedule({ update = false, data }) {
           .split(",")
           .map((day) => (days[day] = true));
 
-        console.log("[days]", days);
         setDays(days);
       } else {
         const expressionDate = new Date(data.expression);
@@ -220,6 +219,37 @@ export function AddSchedule({ update = false, data }) {
         sensitivity: "base",
       });
     });
+
+  const handleSelectAll = () => {
+    for (const room of house?.rooms) {
+      for (const device of room?.devices) {
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s?.deviceType !== DeviceTypeMap.NA &&
+              `${s?.switchName} ${room?.roomName}`
+                .toLowerCase()
+                .includes(searchText.toLowerCase())
+          )
+          .map((s) => ({
+            action: "Sync/Control",
+            payload: {
+              deviceId: device.deviceId,
+              switchId: s.switchId,
+              command: 0,
+              controllerType: "centralSchedule",
+              controllerId: "centralSchedule",
+              control: true,
+            },
+          }));
+
+        setSelectedDevicesData((prevState) => [
+          ...prevState,
+          ...filteredDevices,
+        ]);
+      }
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -324,7 +354,22 @@ export function AddSchedule({ update = false, data }) {
               placeholder="Search Appliances"
             />
             {/* Appliances Data */}
-            <p className="text-xl">Select Devices:</p>
+
+            <div className="flex justify-between">
+              <p className="text-lg font-bold">Select Devices</p>
+              <div className="flex align-bottom">
+                <Button variant="text" onClick={handleSelectAll}>
+                  Select All
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={() => setSelectedDevicesData([])}
+                >
+                  Un-Select All
+                </Button>
+              </div>
+            </div>
+
             <div className="max-h-64 overflow-y-scroll">
               <Table className="w-full bg-white">
                 <TableHeader>
