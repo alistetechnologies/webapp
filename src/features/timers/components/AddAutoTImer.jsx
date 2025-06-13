@@ -35,8 +35,6 @@ export function AddAutoTImer() {
   const [startTime, setStartTime] = useState("");
   const [stopTime, setStopTime] = useState("");
 
-  console.debug("StartTime, stopTime", startTime, stopTime);
-
   const [onTime, setOnTime] = useState({
     hours: 0,
     minutes: 0,
@@ -115,6 +113,33 @@ export function AddAutoTImer() {
         sensitivity: "base",
       });
     });
+  };
+
+  const handleSelectAll = () => {
+    for (const room of houseData?.rooms) {
+      for (const device of room?.devices) {
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s?.deviceType !== DeviceTypeMap.NA &&
+              `${s?.switchName} ${room?.roomName}`
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) &&
+              !s?.autoTurnOff
+          )
+          .map((s) => ({
+            deviceId: device?.deviceId,
+            switchId: s?.switchId,
+            turnOffAfter: 0,
+            turnOnAfter: 0,
+          }));
+
+        setSelectedAppliances((prevState) => [
+          ...prevState,
+          ...filteredDevices,
+        ]);
+      }
+    }
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -219,7 +244,21 @@ export function AddAutoTImer() {
                 placeholder="Search Appliances"
                 className="mb-4"
               />
-              <p className="text-lg font-bold">Select Devices</p>
+
+              <div className="flex justify-between">
+                <p className="text-lg font-bold">Select Devices</p>
+                <div className="flex align-bottom">
+                  <Button variant="text" onClick={handleSelectAll}>
+                    Select All
+                  </Button>
+                  <Button
+                    variant="text"
+                    onClick={() => setSelectedAppliances([])}
+                  >
+                    Un-Select All
+                  </Button>
+                </div>
+              </div>
               <div className="max-h-80 overflow-y-scroll my-4">
                 <Table className="w-full bg-white ">
                   <TableHeader className="sticky top-0 z-10 bg-white">

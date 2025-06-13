@@ -51,11 +51,10 @@ export function AddAutoCut({ update = false, data }) {
     seconds: "",
   });
   const [loading, setLoading] = useState(false);
-
+  const [selectAll, setSelectAll] = useState(false);
   const [selectedAppliances, setSelectedAppliances] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  console.log("Selected deices", selectedAppliances);
   useEffect(() => {
     if (update) {
       setSelectedAppliances([
@@ -70,9 +69,7 @@ export function AddAutoCut({ update = false, data }) {
     }
   }, [update, data, open]);
 
-  console.log("duration", duration);
   async function handleSubmit() {
-    console.log("ON Sumbit", duration);
     const turnOffAfter = Number(
       Number(duration.hours) * 3600 +
         Number(duration.minutes) * 60 +
@@ -112,6 +109,32 @@ export function AddAutoCut({ update = false, data }) {
       seconds: "",
     });
     setSelectedAppliances([]);
+  }
+
+  function handleSelectAll() {
+    for (const room of house?.rooms) {
+      for (const device of room?.devices) {
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s?.deviceType !== DeviceTypeMap.NA &&
+              `${s.switchName} ${room.roomName}`
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) &&
+              !(data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter)
+          )
+          .map((s) => ({
+            deviceId: device?.deviceId,
+            switchId: s?.switchId,
+            turnOffAfter: 0,
+          }));
+
+        setSelectedAppliances((prevState) => [
+          ...prevState,
+          ...filteredDevices,
+        ]);
+      }
+    }
   }
 
   const sorted = (arr) =>
@@ -164,8 +187,23 @@ export function AddAutoCut({ update = false, data }) {
             />
 
             {/* Appliances Data */}
-            <div className=" relative">
-              <p className="text-lg font-bold">Select Devices</p>
+            <div className="relative">
+              <div className="flex justify-between bg-re-200">
+                <p className="text-lg font-bold">Select Devices</p>
+                <div className="flex align-bottom">
+                  {/* <span>Select All</span> */}
+                  <Button variant="text" onClick={handleSelectAll}>
+                    {/* <span>/</span> */}
+                    Select All
+                  </Button>
+                  <Button
+                    variant="text"
+                    onClick={() => setSelectedAppliances([])}
+                  >
+                    Un-Select All
+                  </Button>
+                </div>
+              </div>
               <div className="max-h-80 overflow-y-scroll my-4">
                 <Table className="w-full bg-white p-2">
                   <TableHeader className="sticky top-0 z-10 bg-white">
