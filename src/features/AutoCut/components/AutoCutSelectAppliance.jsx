@@ -37,9 +37,11 @@ export function AutoCutSelectAppliance({ data, state, updateState }) {
       );
     }
   };
-
+  console.log("Data", data);
   const disabled = Boolean(
-    data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter
+    data.autoTimers?.turnOffAfter ||
+      data.autoTimers?.turnOnAfter ||
+      data?.autoTurnOff
   );
   return (
     <TableRow>
@@ -60,7 +62,9 @@ export function AutoCutSelectAppliance({ data, state, updateState }) {
             checked={isDataInState !== undefined}
             onChange={handleCheckboxChange}
             disabled={
-              data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter
+              data.autoTimers?.turnOffAfter ||
+              data.autoTimers?.turnOnAfter ||
+              data?.autoTurnOff
             }
             className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           />

@@ -39,7 +39,11 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
     }
   };
 
-  const disabled = Boolean(data?.autoTurnOff);
+  const disabled = Boolean(
+    data?.autoTurnOff ||
+      data?.autoTimers?.turnOnAfter ||
+      data?.autoTimers?.turnOffAfter
+  );
 
   return (
     <TableRow>
@@ -66,7 +70,7 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
             type="checkbox"
             checked={isDataInState !== undefined}
             onChange={handleCheckboxChange}
-            disabled={data?.autoTurnOff}
+            disabled={disabled}
             className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           />
         </div>

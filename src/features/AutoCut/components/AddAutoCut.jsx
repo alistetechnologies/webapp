@@ -121,7 +121,11 @@ export function AddAutoCut({ update = false, data }) {
               `${s.switchName} ${room.roomName}`
                 .toLowerCase()
                 .includes(searchText.toLowerCase()) &&
-              !(data.autoTimers?.turnOffAfter || data.autoTimers?.turnOnAfter)
+              !(
+                s.autoTimers?.turnOffAfter ||
+                s.autoTimers?.turnOnAfter ||
+                s.autoTurnOff
+              )
           )
           .map((s) => ({
             deviceId: device?.deviceId,
