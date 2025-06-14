@@ -220,14 +220,53 @@ export function AddSchedule({ update = false, data }) {
       });
     });
 
+  // const handleSelectAll = () => {
+  //   for (const room of house?.rooms) {
+  //     for (const device of room?.devices) {
+  //       const filteredDevices = device.switches
+  //         .filter(
+  //           (s) =>
+  //             s?.deviceType !== DeviceTypeMap.NA &&
+  //             `${s?.switchName} ${room?.roomName}`
+  //               .toLowerCase()
+  //               .includes(searchText.toLowerCase())
+  //         )
+  //         .map((s) => ({
+  //           action: "Sync/Control",
+  //           payload: {
+  //             deviceId: device.deviceId,
+  //             switchId: s.switchId,
+  //             command: 0,
+  //             controllerType: "centralSchedule",
+  //             controllerId: "centralSchedule",
+  //             control: true,
+  //           },
+  //         }));
+
+  //       setSelectedDevicesData((prevState) => [
+  //         ...prevState,
+  //         ...filteredDevices,
+  //       ]);
+  //     }
+  //   }
+  // };
+
   const handleSelectAll = () => {
-    for (const room of house?.rooms) {
+    let allFilteredDevices = [];
+
+    if (!house?.rooms) return;
+
+    for (const room of house.rooms) {
+      if (!room.devices) continue;
+
       for (const device of room?.devices) {
-        const filteredDevices = device.switches
+        if (!device?.switches) continue;
+
+        const filteredDevices = device?.switches
           .filter(
             (s) =>
               s?.deviceType !== DeviceTypeMap.NA &&
-              `${s?.switchName} ${room?.roomName}`
+              `${room?.roomName} ${s?.switchName}`
                 .toLowerCase()
                 .includes(searchText.toLowerCase())
           )
@@ -242,14 +281,60 @@ export function AddSchedule({ update = false, data }) {
               control: true,
             },
           }));
-
-        setSelectedDevicesData((prevState) => [
-          ...prevState,
-          ...filteredDevices,
-        ]);
+        allFilteredDevices = [...allFilteredDevices, ...filteredDevices];
       }
     }
+
+    setSelectedDevicesData(allFilteredDevices);
   };
+  const handleUnSelectAll = () => {
+    let devicesToRemove = [];
+
+    if (!house?.rooms) return;
+
+    for (const room of house?.rooms) {
+      if (!room?.devices) continue;
+
+      for (const device of room.devices) {
+        if (!device.switches) continue;
+
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s.deviceType !== DeviceTypeMap.NA &&
+              `${room?.roomName} ${s.switchName}`
+                .toLowerCase()
+                .includes(searchText)
+          )
+          .map((s) => ({
+            action: "Sync/Control",
+            payload: {
+              deviceId: device.deviceId,
+              switchId: s.switchId,
+              command: 0,
+              controllerType: "centralSchedule",
+              controllerId: "centralSchedule",
+              control: true,
+            },
+          }));
+
+        devicesToRemove = [...devicesToRemove, ...filteredDevices];
+      }
+    }
+
+    setSelectedDevicesData((prevState) => {
+      // Remove devices that match the ones found in devicesToRemove
+      return prevState.filter(
+        (deviceData) =>
+          !devicesToRemove.some(
+            (device) =>
+              device.payload.deviceId === deviceData.payload.deviceId &&
+              device.payload.switchId === deviceData.payload.switchId
+          )
+      );
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -363,10 +448,7 @@ export function AddSchedule({ update = false, data }) {
                 </p>
 
                 <span> / </span>
-                <p
-                  className="cursor-pointer"
-                  onClick={() => setSelectedDevicesData([])}
-                >
+                <p className="cursor-pointer" onClick={handleUnSelectAll}>
                   Un-Select All
                 </p>
               </div>
