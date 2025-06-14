@@ -357,16 +357,18 @@ export function AddSchedule({ update = false, data }) {
 
             <div className="flex justify-between">
               <p className="text-lg font-bold">Select Devices</p>
-              <div className="flex align-bottom">
-                <Button variant="text" onClick={handleSelectAll}>
+              <div className="flex align-bottom text-sm text-muted-foreground gap-1">
+                <p className="cursor-pointer" onClick={handleSelectAll}>
                   Select All
-                </Button>
-                <Button
-                  variant="text"
+                </p>
+
+                <span> / </span>
+                <p
+                  className="cursor-pointer"
                   onClick={() => setSelectedDevicesData([])}
                 >
                   Un-Select All
-                </Button>
+                </p>
               </div>
             </div>
 
@@ -374,9 +376,9 @@ export function AddSchedule({ update = false, data }) {
               <Table className="w-full bg-white">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-black">Appliance</TableHead>
+                    <TableHead className="text-black">Appliance Name</TableHead>
                     <TableHead className="text-black">On/Off State</TableHead>
-                    <TableHead className="text-black">Select</TableHead>
+                    <TableHead className="text-black">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="max-h-64 overflow-y-scroll">
