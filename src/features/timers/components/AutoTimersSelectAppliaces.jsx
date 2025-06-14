@@ -61,7 +61,7 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
           {data?.autoTurnOff
             ? "AutoCut Enabled"
             : data?.autoTimers?.turnOnAfter || data?.autoTimers?.turnOffAfter
-            ? "AutoTimers already set"
+            ? "AutoTimer Enabled"
             : ""}
         </span>
       </TableCell>

@@ -1,5 +1,6 @@
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 export function AutoCutSelectAppliance({ data, state, updateState }) {
@@ -37,7 +38,7 @@ export function AutoCutSelectAppliance({ data, state, updateState }) {
       );
     }
   };
-  console.log("Data", data);
+
   const disabled = Boolean(
     data.autoTimers?.turnOffAfter ||
       data.autoTimers?.turnOnAfter ||
@@ -45,15 +46,25 @@ export function AutoCutSelectAppliance({ data, state, updateState }) {
   );
   return (
     <TableRow>
-      <TableCell className="w-auto text-muted-foreground">
-        {data.switchName} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {disabled ? (
-          <span className="text-muted-foreground">Auto Timers Enabled</span>
-        ) : (
-          ""
+      <TableCell
+        className={cn(
+          "w-auto",
+          disabled && "text-muted-foreground text-opacity-50"
         )}
+      >
+        {data.switchName}
       </TableCell>
-
+      <TableCell className="text-muted-foreground">
+        <span>
+          {data?.autoTimers?.turnOnAfter || data?.autoTimers?.tunOffAfter ? (
+            <span className="text-muted-foreground">Auto Timers Enabled</span>
+          ) : data?.autoTurnOff ? (
+            "AutoCut Enabled"
+          ) : (
+            ""
+          )}
+        </span>
+      </TableCell>
       {/* Checkbox */}
       <TableCell className="w-auto">
         <div className="flex items-center space-x-2">

@@ -194,26 +194,29 @@ export function AddAutoCut({ update = false, data }) {
             <div className="relative">
               <div className="flex justify-between bg-re-200">
                 <p className="text-lg font-bold">Select Devices</p>
-                <div className="flex align-bottom">
-                  {/* <span>Select All</span> */}
-                  <Button variant="text" onClick={handleSelectAll}>
-                    {/* <span>/</span> */}
+                <div className="flex align-bottom text-sm text-muted-foreground gap-1">
+                  <p className="cursor-pointer" onClick={handleSelectAll}>
                     Select All
-                  </Button>
-                  <Button
-                    variant="text"
+                  </p>
+
+                  <span> / </span>
+                  <p
+                    className="cursor-pointer"
                     onClick={() => setSelectedAppliances([])}
                   >
                     Un-Select All
-                  </Button>
+                  </p>
                 </div>
               </div>
               <div className="max-h-80 overflow-y-scroll my-4">
                 <Table className="w-full bg-white p-2">
                   <TableHeader className="sticky top-0 z-10 bg-white">
                     <TableRow className="sticky top-0">
-                      <TableHead className="text-black">Appliance</TableHead>
-                      <TableHead className="text-black">Select</TableHead>
+                      <TableHead className="text-black">
+                        Appliance Name
+                      </TableHead>
+                      <TableHead></TableHead>
+                      <TableHead className="text-black">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">
