@@ -53,16 +53,18 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
           disabled && "text-muted-foreground text-opacity-50"
         )}
       >
-        {data.switchName}{" "}
-        {data?.autoTurnOff ? (
-          <span className="text-muted-foreground">
-            &nbsp;&nbsp;&nbsp;&nbsp;AutoCut Enabled
-          </span>
-        ) : (
-          ""
-        )}
+        {data.switchName}
       </TableCell>
 
+      <TableCell>
+        <span className="text-muted-foreground">
+          {data?.autoTurnOff
+            ? "AutoCut Enabled"
+            : data?.autoTimers?.turnOnAfter || data?.autoTimers?.turnOffAfter
+            ? "AutoTimers already set"
+            : ""}
+        </span>
+      </TableCell>
       {/* Checkbox */}
       <TableCell className="w-auto">
         <div className="flex items-center space-x-2">
