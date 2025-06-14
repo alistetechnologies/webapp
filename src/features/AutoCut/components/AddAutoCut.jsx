@@ -141,6 +141,52 @@ export function AddAutoCut({ update = false, data }) {
     }
   }
 
+  function handleUnSelect() {
+    let devicesToRemove = [];
+
+    if (!house?.rooms) return;
+
+    for (const room of house.rooms) {
+      if (!room?.devices) continue;
+
+      for (const device of room.devices) {
+        if (!device?.switches) continue;
+
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s?.deviceType !== DeviceTypeMap.NA &&
+              `${s.switchName} ${room.roomName}`
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) &&
+              !(
+                s.autoTimers?.turnOffAfter ||
+                s.autoTimers?.turnOnAfter ||
+                s.autoTurnOff
+              )
+          )
+          .map((s) => ({
+            deviceId: device?.deviceId,
+            switchId: s?.switchId,
+            turnOffAfter: 0,
+          }));
+
+        devicesToRemove = [...devicesToRemove, ...filteredDevices];
+      }
+    }
+
+    setSelectedAppliances((prevState) => {
+      return prevState.filter(
+        (deviceData) =>
+          !devicesToRemove.some(
+            (device) =>
+              device.deviceId === deviceData.deviceId &&
+              device.switchId === deviceData.switchId
+          )
+      );
+    });
+  }
+
   const sorted = (arr) =>
     arr.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;
@@ -200,10 +246,7 @@ export function AddAutoCut({ update = false, data }) {
                   </p>
 
                   <span> / </span>
-                  <p
-                    className="cursor-pointer"
-                    onClick={() => setSelectedAppliances([])}
-                  >
+                  <p className="cursor-pointer" onClick={handleUnSelect}>
                     Un-Select All
                   </p>
                 </div>

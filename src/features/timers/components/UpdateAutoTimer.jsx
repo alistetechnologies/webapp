@@ -176,6 +176,51 @@ export function UpdateAutoTimer({ data, deviceId }) {
       }
     }
   };
+  function handleUnSelect() {
+    let devicesToRemove = [];
+
+    if (!houseData?.rooms) return;
+
+    for (const room of houseData.rooms) {
+      if (!room?.devices) continue;
+
+      for (const device of room.devices) {
+        if (!device?.switches) continue;
+
+        const filteredDevices = device.switches
+          .filter(
+            (s) =>
+              s?.deviceType !== DeviceTypeMap.NA &&
+              `${s.switchName} ${room.roomName}`
+                .toLowerCase()
+                .includes(searchText.toLowerCase()) &&
+              !(
+                s.autoTimers?.turnOffAfter ||
+                s.autoTimers?.turnOnAfter ||
+                s.autoTurnOff
+              )
+          )
+          .map((s) => ({
+            deviceId: device?.deviceId,
+            switchId: s?.switchId,
+            turnOffAfter: 0,
+          }));
+
+        devicesToRemove = [...devicesToRemove, ...filteredDevices];
+      }
+    }
+
+    setSelectedAppliances((prevState) => {
+      return prevState.filter(
+        (deviceData) =>
+          !devicesToRemove.some(
+            (device) =>
+              device.deviceId === deviceData.deviceId &&
+              device.switchId === deviceData.switchId
+          )
+      );
+    });
+  }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -292,16 +337,15 @@ export function UpdateAutoTimer({ data, deviceId }) {
               />
               <div className="flex justify-between">
                 <p className="text-lg font-bold">Select Devices</p>
-                <div className="flex align-bottom">
-                  <Button variant="text" onClick={handleSelectAll}>
+                <div className="flex align-bottom text-sm text-muted-foreground gap-1">
+                  <p className="cursor-pointer" onClick={handleSelectAll}>
                     Select All
-                  </Button>
-                  <Button
-                    variant="text"
-                    onClick={() => setSelectedAppliances([])}
-                  >
+                  </p>
+
+                  <span> / </span>
+                  <p className="cursor-pointer" onClick={handleUnSelect}>
                     Un-Select All
-                  </Button>
+                  </p>
                 </div>
               </div>
               <div className="max-h-80 overflow-y-scroll my-4">
