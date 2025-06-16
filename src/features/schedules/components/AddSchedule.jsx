@@ -452,7 +452,7 @@ export function AddSchedule({ update = false, data }) {
 
                 <span> / </span>
                 <p className="cursor-pointer" onClick={handleUnSelectAll}>
-                  Un-Select All
+                  Clear
                 </p>
               </div>
             </div>

@@ -304,7 +304,7 @@ export function AddAutoTImer() {
 
                   <span> / </span>
                   <p className="cursor-pointer" onClick={handleUnSelect}>
-                    Un-Select All
+                    Clear
                   </p>
                 </div>
               </div>
