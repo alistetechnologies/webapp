@@ -281,11 +281,14 @@ export function AddSchedule({ update = false, data }) {
               control: true,
             },
           }));
-        allFilteredDevices = [...allFilteredDevices, ...filteredDevices];
+        allFilteredDevices = [...filteredDevices, ...allFilteredDevices];
       }
     }
 
-    setSelectedDevicesData(allFilteredDevices);
+    setSelectedDevicesData((prevState) => [
+      ...prevState,
+      ...allFilteredDevices,
+    ]);
   };
   const handleUnSelectAll = () => {
     let devicesToRemove = [];
