@@ -1,19 +1,84 @@
-export const serverUrl = {
-  user: "https://services.user.aliste.io",
-  sub: "https://subscriptioncloud.alistetechnologies.com",
-  auth: "https://api.oauth.alistetechnologies.com",
-  analytics: "https://c6qofus8ee.execute-api.ap-south-1.amazonaws.com/default",
-  connection: "https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default",
-  deviceHandler:
-    "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
-  web: "https://web.alistetechnologies.com",
-  lockservice:
-    "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
-  a2: "https://a3.alistetechnologies.com",
-  deviceApi: "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
-  deviceService:
-    "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+// export const serverUrl = {
+//   user: "https://services.user.aliste.io",
+//   sub: "https://subscriptioncloud.alistetechnologies.com",
+//   auth: "https://api.oauth.alistetechnologies.com",
+//   analytics: "https://c6qofus8ee.execute-api.ap-south-1.amazonaws.com/default",
+//   connection: "https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default",
+//   deviceHandler:
+//     "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+//   web: "https://web.alistetechnologies.com",
+//   lockservice:
+//     "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
+//   a2: "https://a3.alistetechnologies.com",
+//   deviceApi: "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
+//   deviceService:
+//     "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+// };
+
+const ENV_MODE = import.meta.env.VITE_MODE || "TEST";
+
+const URLS = {
+  STAGE: {
+    user: "https://services.user.aliste.io",
+    sub: "https://staging.main.aliste.io",
+    auth: "https://staging.oauth.aliste.io",
+    analytics:
+      "https://c6qofus8ee.execute-api.ap-south-1.amazonaws.com/default",
+    connection:
+      "https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default",
+    deviceHandler:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+    web: "https://staging.main.aliste.io",
+    lockservice:
+      "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
+    a2: "https://staging.main.aliste.io",
+    deviceApi:
+      "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
+    deviceService:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+  },
+  PROD: {
+    user: "https://services.user.aliste.io",
+    sub: "https://subscriptioncloud.alistetechnologies.com",
+    auth: "https://api.oauth.alistetechnologies.com",
+    analytics:
+      "https://c6qofus8ee.execute-api.ap-south-1.amazonaws.com/default",
+    connection:
+      "https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default",
+    deviceHandler:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+    web: "https://web.alistetechnologies.com",
+    lockservice:
+      "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
+    a2: "https://a3.alistetechnologies.com",
+    deviceApi:
+      "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
+    deviceService:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+  },
+  TEST: {
+    user: "https://services.user.aliste.io",
+    sub: "https://test.alistetechnologies.com:9443",
+    auth: "https://test.alistetechnologies.com:8443",
+    analytics:
+      "https://c6qofus8ee.execute-api.ap-south-1.amazonaws.com/default",
+    connection:
+      "https://s9lisn1w1b.execute-api.ap-south-1.amazonaws.com/default",
+    deviceHandler:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+    web: "https://test.alistetechnologies.com:9443",
+    lockservice:
+      "https://9qqqknyk98.execute-api.ap-south-1.amazonaws.com/default",
+    a2: "https://test.alistetechnologies.com:9443",
+    deviceApi:
+      "https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default",
+    deviceService:
+      "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
+  },
 };
+
+export const serverUrl = URLS[ENV_MODE];
+
 export const token =
   "Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA=";
 export const DeviceTypeMap = {
