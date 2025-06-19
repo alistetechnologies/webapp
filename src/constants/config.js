@@ -16,7 +16,7 @@
 // };
 
 const ENV_MODE = import.meta.env.VITE_MODE || "TEST";
-
+console.debug("ENV_MODE", ENV_MODE);
 const URLS = {
   STAGE: {
     user: "https://services.user.aliste.io",
