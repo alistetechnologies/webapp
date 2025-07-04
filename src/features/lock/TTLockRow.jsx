@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { adminPasswordApi } from "./api";
+import { adminPasswordApi, syncLock } from "./api";
 import { token } from "@/constants/config";
 import ViewAndUpdateAdminPass from "./ViewAndUpdateAdminPass";
 import toast from "react-hot-toast";
@@ -31,26 +31,46 @@ function TTLockRow({
   const [loading, setLoading] = useState(false);
 
   const clickHandler = async () => {
-		setLoading(true);
-		await fetchPassword();
-		setLoading(false);
-		setModal(true);
-	};
+    setLoading(true);
+    await fetchPassword();
+    setLoading(false);
+    setModal(true);
+  };
 
   const fetchPassword = async () => {
     try {
-      const res = await adminPasswordApi("fetchAdminPasscode", { lockId: lock.lockId }, token);
+      const res = await adminPasswordApi(
+        "fetchAdminPasscode",
+        { lockId: lock.lockId },
+        token
+      );
       if (!res) {
         return;
       }
       setPassword(res?.data?.adminPasscode);
-    }
-    catch (err) {
+    } catch (err) {
       console.log("error in finding password", err.message);
     }
-  }
+  };
 
-  let battery = hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity || null
+  let battery =
+    hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity ||
+    null;
+
+  const syncLockHandler = async () => {
+    setLoading(true);
+
+    const result = await syncLock({ lockIds: [lock.lockId] });
+
+    if (result?.success === false) {
+      toast.error(result.message); // Show error message to the user
+    } else {
+      toast.success("Lock synced successfully!");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <TableRow className="text-lg" key={lock?.lockId}>
       <TableCell className=" text-center">{index + 1}</TableCell>
@@ -62,32 +82,63 @@ function TTLockRow({
           <Tooltip>
             <TooltipTrigger>
               {" "}
-              {hubConneted?.length > 0
-                ? hubConneted?.some((e) => e.lockId === lock.lockId)
-                  ? <span className=" text-green-600">Yes</span>
-                  : <span className=" text-red-600">NO</span>
-                : "---"}
+              {hubConneted?.length > 0 ? (
+                hubConneted?.some((e) => e.lockId === lock.lockId) ? (
+                  <span className=" text-green-600">Yes</span>
+                ) : (
+                  <span className=" text-red-600">NO</span>
+                )
+              ) : (
+                "---"
+              )}
             </TooltipTrigger>
             <TooltipContent>
-              <p>Hub Id : {lockHubId?.[lock?.lockId]??"N.A"}</p>
+              <p>Hub Id : {lockHubId?.[lock?.lockId] ?? "N.A"}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </TableCell>
       <TableCell className=" text-center">
         {hubConneted?.length > 0
-          ? battery!==null && <span className={`${battery<20?"text-red-600":battery<40?" text-orange-300":""}`}>{battery}</span>
+          ? battery !== null && (
+              <span
+                className={`${
+                  battery < 20
+                    ? "text-red-600"
+                    : battery < 40
+                    ? " text-orange-300"
+                    : ""
+                }`}
+              >
+                {battery}
+              </span>
+            )
           : "---"}
       </TableCell>
       <TableCell className=" text-center" style={{ whiteSpace: "nowrap" }}>
         {moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
       </TableCell>
       <TableCell>
-        <div style={{ display: "flex", gap: "5px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "5px",
+            overflowX: "auto", // Allow horizontal scrolling
+            width: "100%", // Full width
+            maxWidth: "600px", // Set a maximum width for the buttons container
+            whiteSpace: "nowrap", // Prevent buttons from breaking into new lines
+          }}
+        >
           <Button
             onClick={() => {
               setLockDetails(lock);
               setUnlockingHistory(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px", // Minimum width to ensure space for text
+              width: "auto", // Let it expand based on content
+              whiteSpace: "normal", // Allow text wrapping if needed
             }}
           >
             Unlocking History
@@ -98,29 +149,69 @@ function TTLockRow({
               setLockDetails(lock);
               setOtpHistory(true);
             }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
           >
             OTP History
           </Button>
+
           <Button
             onClick={() => {
               setTimeSyncHistory(true);
               setLockDetails(lock);
             }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
           >
             Time Sync History
           </Button>
+
           <Button
             disabled={loading}
             className="cursor-pointer"
             onClick={clickHandler}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
           >
             View/Update admin password
           </Button>
+
+          <Button
+            disabled={loading}
+            className="cursor-pointer"
+            onClick={syncLockHandler}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            {loading ? <Spinner animation="border" size="sm" /> : "Sync Lock"}
+          </Button>
         </div>
       </TableCell>
-      {
-        modal && <ViewAndUpdateAdminPass showModal={modal} setShowModal={setModal} password={password} lockId={lock.lockId} />
-      }
+
+      {modal && (
+        <ViewAndUpdateAdminPass
+          showModal={modal}
+          setShowModal={setModal}
+          password={password}
+          lockId={lock.lockId}
+        />
+      )}
     </TableRow>
   );
 }

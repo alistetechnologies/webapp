@@ -17,6 +17,25 @@
 
 const ENV_MODE = import.meta.env.VITE_MODE || "TEST";
 console.debug("ENV_MODE", ENV_MODE);
+
+/**
+ * @typedef {Object} Urls
+ * @property {string} user
+ * @property {string} sub
+ * @property {string} auth
+ * @property {string} analytics
+ * @property {string} connection
+ * @property {string} deviceHandler
+ * @property {string} web
+ * @property {string} lockservice
+ * @property {string} a2
+ * @property {string} deviceApi
+ * @property {string} deviceService
+ */
+
+/**
+ * @type {{ STAGE: Urls, PROD: Urls, TEST: Urls }}
+ */
 const URLS = {
   STAGE: {
     user: "https://services.user.aliste.io",
@@ -77,7 +96,7 @@ const URLS = {
   },
 };
 
-export const serverUrl = URLS[ENV_MODE];
+export const serverUrl = URLS[ENV_MODE] || URLS["STAGE"];
 
 export const token =
   "Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA=";
