@@ -25,6 +25,7 @@ function TTLockRow({
   setTimeSyncHistory,
   hubConneted,
   lockHubId,
+  updateHouse,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -66,6 +67,7 @@ function TTLockRow({
       toast.error(result.message); // Show error message to the user
     } else {
       toast.success("Lock synced successfully!");
+      await updateHouse();
     }
 
     setLoading(false);
@@ -199,7 +201,13 @@ function TTLockRow({
               whiteSpace: "normal",
             }}
           >
-            {loading ? <Spinner animation="border" size="sm" /> : "Sync Lock"}
+            {loading ? (
+              <>
+                Loading... <Spinner size="lg" />
+              </>
+            ) : (
+              "Sync Lock"
+            )}
           </Button>
         </div>
       </TableCell>

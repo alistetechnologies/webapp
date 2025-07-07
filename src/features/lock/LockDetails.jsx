@@ -35,22 +35,21 @@ export function LockDetails() {
     value: user?.selectedHouse || "",
   });
 
-  useEffect(() => {
-    const getUserHouse = async () => {
-      setLoading(true);
-      ("");
-      const houseDetails = await fetchHouse(selectedHouse?.value);
+  const getUserHouse = async () => {
+    setLoading(true);
+    ("");
+    const houseDetails = await fetchHouse(selectedHouse?.value);
 
-      if (!houseDetails.success) {
-        toast.error("Failed to fetch House!!");
-        setLoading(false);
-        return;
-      }
-      setHouse(houseDetails?.data);
+    if (!houseDetails.success) {
+      toast.error("Failed to fetch House!!");
       setLoading(false);
-      useHouseStore.getState().updateHouse(houseDetails?.data);
-    };
-
+      return;
+    }
+    setHouse(houseDetails?.data);
+    setLoading(false);
+    useHouseStore.getState().updateHouse(houseDetails?.data);
+  };
+  useEffect(() => {
     getUserHouse();
   }, [selectedHouse]);
 
@@ -259,6 +258,7 @@ export function LockDetails() {
                         hubConneted={hubConneted}
                         lockHubId={lockHubId}
                         key={lock?.lockId}
+                        updateHouse={getUserHouse}
                       />
                     );
                   })}
