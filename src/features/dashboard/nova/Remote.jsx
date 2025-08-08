@@ -183,8 +183,8 @@ export function Remote({ remoteData, deviceId }) {
                       className="btn-continer"
                       onClick={() => handleButtonClick(b)}
                     >
-                      {name[0][0].toUpperCase()}
-                      {name.length >= 2 ? name[1][0].toUpperCase() : ""}
+                      {name[0][0]?.toUpperCase()}
+                      {name.length >= 2 ? name[1][0]?.toUpperCase() : ""}
                     </div>
                     <div>{b.name}</div>
                   </div>
