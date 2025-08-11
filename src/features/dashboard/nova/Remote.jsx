@@ -176,6 +176,7 @@ export function Remote({ remoteData, deviceId }) {
           {remote.buttons.length !== 0 &&
             remote.buttons.map((b) => {
               if (!data.includes(b.name)) {
+                console.log("b name", b.name);
                 let name = b.name.split(" ");
                 return (
                   <div className="btn-text-container">
@@ -183,8 +184,9 @@ export function Remote({ remoteData, deviceId }) {
                       className="btn-continer"
                       onClick={() => handleButtonClick(b)}
                     >
-                      {name[0][0]?.toUpperCase()}
-                      {name.length >= 2 ? name[1][0]?.toUpperCase() : ""}
+                      {console.log("NSME", name)}
+                      {name[0][0].toUpperCase()}
+                      {name.length >= 2 ? name[1][0].toUpperCase() : ""}
                     </div>
                     <div>{b.name}</div>
                   </div>

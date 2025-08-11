@@ -57,6 +57,8 @@ function TTLockRow({
   let battery =
     hubConneted?.find((e) => e.lockId === lock.lockId)?.electricQuantity ||
     null;
+  let updatedLockData =
+    hubConneted?.find((e) => e.lockId === lock.lockId) || null;
 
   const syncLockHandler = async () => {
     setLoading(true);
@@ -118,7 +120,9 @@ function TTLockRow({
           : "---"}
       </TableCell>
       <TableCell className=" text-center" style={{ whiteSpace: "nowrap" }}>
-        {moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
+        {updatedLockData
+          ? moment(updatedLockData?.updateDate).format("DD MMMM YYYY LT")
+          : moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
       </TableCell>
       <TableCell>
         <div
