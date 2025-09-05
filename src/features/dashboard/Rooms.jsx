@@ -21,17 +21,19 @@ export default function Rooms({
     });
   return (
     <>
-      {sorted(roomsData)?.map((room, sno) => (
-        <DeviceDetails
-          room={room}
-          sno={sno + 1}
-          key={sno}
-          date={date}
-          connectedDevices={connectedDevices}
-          reload={reload}
-          houseId={houseId}
-        />
-      ))}
+      {sorted(roomsData)
+        ?.filter((room) => room.devices.length !== 0)
+        .map((room, sno) => (
+          <DeviceDetails
+            room={room}
+            sno={sno + 1}
+            key={sno}
+            date={date}
+            connectedDevices={connectedDevices}
+            reload={reload}
+            houseId={houseId}
+          />
+        ))}
     </>
   );
 }
