@@ -468,19 +468,25 @@ export function AddSchedule({ update = false, data }) {
                 </TableHeader>
                 <TableBody className="max-h-64 overflow-y-scroll">
                   {house &&
-                    sorted(house.rooms)?.map((room) => {
-                      return (
-                        <>
-                          {room.devices.length ? (
-                            <div className="text-black font-semibold text-lg underline mt-4 pl-2">
-                              {room.roomName}
-                            </div>
-                          ) : (
-                            ""
-                          )}
-
-                          {room.devices.map((device) => {
-                            return device.switches.map((swit) => {
+                    sorted(house.rooms)
+                      .filter((room) =>
+                        room.devices.some((device) =>
+                          device.switches.some(
+                            (swit) =>
+                              swit.deviceType !== DeviceTypeMap.NA &&
+                              `${swit.switchName} ${room.roomName}`
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase())
+                          )
+                        )
+                      )
+                      .map((room) => (
+                        <React.Fragment key={room._id}>
+                          <div className="text-black font-semibold text-lg underline mt-4 pl-2">
+                            {room.roomName}
+                          </div>
+                          {room.devices.map((device) =>
+                            device.switches.map((swit) => {
                               if (
                                 swit.deviceType !== DeviceTypeMap.NA &&
                                 `${swit.switchName} ${room.roomName}`
@@ -488,23 +494,22 @@ export function AddSchedule({ update = false, data }) {
                                   .includes(searchText.toLowerCase())
                               ) {
                                 return (
-                                  <>
-                                    <SelectAppliance
-                                      data={{
-                                        ...swit,
-                                        deviceId: device.deviceId,
-                                      }}
-                                      state={selectedDevicesData}
-                                      updateState={setSelectedDevicesData}
-                                    />
-                                  </>
+                                  <SelectAppliance
+                                    key={swit.switchId}
+                                    data={{
+                                      ...swit,
+                                      deviceId: device.deviceId,
+                                    }}
+                                    state={selectedDevicesData}
+                                    updateState={setSelectedDevicesData}
+                                  />
                                 );
                               }
-                            });
-                          })}
-                        </>
-                      );
-                    })}
+                              return null;
+                            })
+                          )}
+                        </React.Fragment>
+                      ))}
                 </TableBody>
               </Table>
             </div>
