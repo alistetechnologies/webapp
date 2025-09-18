@@ -62,10 +62,9 @@ export function AddSchedule({ update = false, data }) {
 
       if (data.type === "cron") {
         const cronDestructuredExpression = data.expression.split(" ");
-        //
-        setTime(
-          `${cronDestructuredExpression[1]}:${cronDestructuredExpression[0]}`
-        );
+        const minute = cronDestructuredExpression[0].padStart(2, "0");
+        const hour = cronDestructuredExpression[1].padStart(2, "0");
+        setTime(`${hour}:${minute}`);
 
         const days = {
           1: false,
@@ -123,12 +122,13 @@ export function AddSchedule({ update = false, data }) {
     setAppliances(appliances);
   }, [house]);
   function createCronExpression(timeStr, weekdays) {
-    const [hour, minute] = timeStr.split(":").map(Number);
+    const [hour, minute] = timeStr.split(":").map((v) =>
+      v.toString().padStart(2, "0")
+    );
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       throw new Error("Invalid time format");
     }
-    const cronWeekdays = weekdays.join(",");
-    return `${minute} ${hour} ? * ${cronWeekdays} *`;
+    return `${minute} ${hour} ? * ${weekdays.join(",")} *`;
   }
 
   const daysOfWeek = [
@@ -148,7 +148,7 @@ export function AddSchedule({ update = false, data }) {
     }
 
     if (time === "" || !time) {
-      toast.error("Select Valid TIme");
+      toast.error("Select Valid Time");
       return;
     }
 
@@ -168,7 +168,7 @@ export function AddSchedule({ update = false, data }) {
       });
 
       if (day.length === 0) {
-        toast("Please select at least one day.");
+        toast.error("Please select at least one day.");
         return;
       }
 
@@ -389,7 +389,7 @@ export function AddSchedule({ update = false, data }) {
               />
 
               <RadioGroup
-                defaultValue="option-one"
+                defaultValue="cron"
                 value={frequency}
                 onValueChange={setFrequency}
               >
@@ -405,31 +405,57 @@ export function AddSchedule({ update = false, data }) {
                 </div>
               </RadioGroup>
 
-              {/* Date */}
-              {frequency === "at" && (
-                <Input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              )}
+              {/* Day selector or Date selector */}
+              <div className="flex flex-col gap-2">
+                {frequency === "cron" && (
+                  <>
+                    <div className="flex justify-between">
+                      {daysOfWeek.map((day, index) => {
+                        const isSelected = days[index + 1];
+                        const selectedCount = Object.values(days).filter(Boolean)
+                          .length;
+                        return (
+                          <Button
+                            key={index}
+                            onClick={() => {
+                              if (isSelected && selectedCount === 1) {
+                                toast.error(
+                                  "At least one day must remain selected"
+                                );
+                                return;
+                              }
+                              setDays({ ...days, [index + 1]: !isSelected });
+                            }}
+                            variant={isSelected ? "" : "outline"}
+                          >
+                            {day.slice(0, 3)}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-2">
+                      <strong>Every - </strong>
+                      {Object.entries(days)
+                        .filter(([_, val]) => val)
+                        .map(([key]) => daysOfWeek[key - 1].slice(0, 3))
+                        .join(", ")}
+                    </div>
+                  </>
+                )}
 
-              {/* Day selector */}
-              <div className="flex justify-between">
-                {frequency === "cron" &&
-                  daysOfWeek.map((day, index) => {
-                    return (
-                      <Button
-                        key={index}
-                        onClick={() =>
-                          setDays({ ...days, [index + 1]: !days[index + 1] })
-                        }
-                        variant={days[index + 1] === false ? "outlined" : ""}
-                      >
-                        {day.slice(0, 3)}
-                      </Button>
-                    );
-                  })}
+                {frequency === "at" && (
+                  <>
+                    <Input
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                    />
+                    <div className="text-sm text-muted-foreground mt-2">
+                      <strong>Once - </strong>
+                      {moment(date).format("DD/MM/YYYY")}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

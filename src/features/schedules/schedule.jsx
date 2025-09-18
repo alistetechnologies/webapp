@@ -43,13 +43,17 @@ export default function Schedule() {
 
     // Extract relevant components
     const minute = cronParts[0]; // Minute
-    const hour24 = parseInt(cronParts[1]); // 24-hour format hour
+    const hour24 = parseInt(cronParts[1], 10); // 24-hour format hour
     const weekdayNumbers = cronParts[4].split(","); // Weekdays (1-7)
 
     // Convert hour to 12-hour format
     const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12; // Convert to 12-hour format
     const ampm = hour24 >= 12 ? "PM" : "AM"; // AM/PM
-    const formattedTime = `${hour12}:${minute} ${ampm}`;
+
+    const formattedHour = hour12.toString().padStart(2, "0");
+    const formattedMinute = minute.toString().padStart(2, "0");
+
+    const formattedTime = `${formattedHour}:${formattedMinute} ${ampm}`;
 
     // Map weekdays to abbreviated names (Mon, Tue, etc.)
     const weekdayMap = {
@@ -89,13 +93,13 @@ export default function Schedule() {
                 </TableCell>
                 <TableCell>
                   {sch.type === "at" ? (
-                    moment(sch.expression).format("DD/MM/YYYY")
+                    <div>
+                      <div>Once - {moment(sch.expression).format("DD/MM/YYYY")}</div>
+                    </div>
                   ) : (
                     <div>
                       <div>
-                        {/* {convertCronTo12HourFormat(sch.expression).time} */}
-                      </div>
-                      <div>
+                        Every -{" "}
                         {convertCronTo12HourFormat(
                           sch.expression
                         ).weekdays.join(", ")}
