@@ -108,9 +108,9 @@ export function AddSchedule({ update = false, data }) {
 
   useEffect(() => {
     const appliances = [];
-    for (const room of house.rooms) {
-      for (let d of room.devices) {
-        for (let s of d.switches) {
+    for (const room of house?.rooms) {
+      for (let d of room?.devices) {
+        for (let s of d?.switches) {
           if (s.deviceType !== DeviceTypeMap.NA) {
             appliances.push({ ...s, deviceId: d.deviceid });
           }
@@ -122,9 +122,10 @@ export function AddSchedule({ update = false, data }) {
     setAppliances(appliances);
   }, [house]);
   function createCronExpression(timeStr, weekdays) {
-    const [hour, minute] = timeStr.split(":").map((v) =>
-      v.toString().padStart(2, "0")
-    );
+    console.log("WeekDays", weekdays);
+    const [hour, minute] = timeStr
+      .split(":")
+      .map((v) => v.toString().padStart(2, "0"));
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       throw new Error("Invalid time format");
     }
@@ -207,8 +208,11 @@ export function AddSchedule({ update = false, data }) {
     setOpen(false);
   }
 
-  const sorted = (arr) =>
-    arr.sort((a, b) => {
+  const sorted = (arr) => {
+    console.debug("ARR", arr);
+    if (arr === undefined || arr === null) return [];
+
+    return arr?.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;
 
       if (b?.devices?.length === 0 && a?.devices?.length > 0) return -1;
@@ -219,6 +223,7 @@ export function AddSchedule({ update = false, data }) {
         sensitivity: "base",
       });
     });
+  };
 
   // const handleSelectAll = () => {
   //   for (const room of house?.rooms) {
@@ -412,8 +417,8 @@ export function AddSchedule({ update = false, data }) {
                     <div className="flex justify-between">
                       {daysOfWeek.map((day, index) => {
                         const isSelected = days[index + 1];
-                        const selectedCount = Object.values(days).filter(Boolean)
-                          .length;
+                        const selectedCount =
+                          Object.values(days).filter(Boolean).length;
                         return (
                           <Button
                             key={index}
