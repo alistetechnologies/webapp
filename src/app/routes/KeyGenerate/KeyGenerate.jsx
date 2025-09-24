@@ -70,7 +70,7 @@ export function KeyGenerate() {
     setLoading(true);
     try {
       const response = await axios.post(`${serverUrl.sub}/v3/key/getKeys`, {
-        userId: user._id,
+        userId: user?._id,
       });
       setKeys(
         Array.isArray(response.data.data.keys) ? response.data.data.keys : []
@@ -188,8 +188,7 @@ export function KeyGenerate() {
           Object.keys(updatedPermissions[category]).forEach((permission) => {
             if (updatedPermissions[category][permission]) {
               roles.push(
-                `${category}:${
-                  permission.charAt(0).toUpperCase() + permission.slice(1)
+                `${category}:${permission.charAt(0).toUpperCase() + permission.slice(1)
                 }`
               );
             }

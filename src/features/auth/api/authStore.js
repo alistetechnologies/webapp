@@ -3,9 +3,11 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 export const useAuth = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       auth: {
         number: '',
+        accessToken: null,
+        refreshToken: null,
       },
       addNumber: (number) => {
         set((state) => ({
@@ -24,10 +26,14 @@ export const useAuth = create(
           },
         }));
       },
-      delete: () => {
+      logout: () => {
         set(() => ({
-          auth: { number: '' },
+          auth: { number: '', accessToken: null, refreshToken: null },
         }));
+      },
+      isLoggedIn: () => {
+        const { auth } = get();
+        return Boolean(auth?.accessToken);
       },
     }),
     {

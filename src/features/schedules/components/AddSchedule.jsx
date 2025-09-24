@@ -107,30 +107,36 @@ export function AddSchedule({ update = false, data }) {
   }, [open]);
 
   useEffect(() => {
-    const appliances = [];
-    for (const room of house?.rooms) {
-      for (let d of room?.devices) {
-        for (let s of d?.switches) {
-          if (s.deviceType !== DeviceTypeMap.NA) {
-            appliances.push({ ...s, deviceId: d.deviceid });
+    if (house && Array.isArray(house.rooms)) {
+      const appliances = [];
+      for (const room of house.rooms) {
+        if (Array.isArray(room?.devices)) {
+          for (let d of room.devices) {
+            if (Array.isArray(d?.switches)) {
+              for (let s of d.switches) {
+                if (s.deviceType !== DeviceTypeMap.NA) {
+                  appliances.push({ ...s, deviceId: d.deviceid });
+                }
+              }
+            }
           }
-          continue;
         }
       }
+      setAppliances(appliances);
     }
-
-    setAppliances(appliances);
   }, [house]);
+
   function createCronExpression(timeStr, weekdays) {
-    console.log("WeekDays", weekdays);
-    const [hour, minute] = timeStr
-      .split(":")
-      .map((v) => v.toString().padStart(2, "0"));
+    if (!Array.isArray(weekdays)) {
+      throw new Error("Weekdays should be an array.");
+    }
+    const [hour, minute] = timeStr.split(":").map((v) => v.toString().padStart(2, "0"));
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       throw new Error("Invalid time format");
     }
     return `${minute} ${hour} ? * ${weekdays.join(",")} *`;
   }
+
 
   const daysOfWeek = [
     "Monday",
@@ -209,7 +215,6 @@ export function AddSchedule({ update = false, data }) {
   }
 
   const sorted = (arr) => {
-    console.debug("ARR", arr);
     if (arr === undefined || arr === null) return [];
 
     return arr?.sort((a, b) => {
@@ -499,7 +504,7 @@ export function AddSchedule({ update = false, data }) {
                 </TableHeader>
                 <TableBody className="max-h-64 overflow-y-scroll">
                   {house &&
-                    sorted(house.rooms)
+                    sorted(house?.rooms)
                       .filter((room) =>
                         room.devices.some((device) =>
                           device.switches.some(

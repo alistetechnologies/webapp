@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const user = useUser.getState().user;
+  const user = useUser.getState()?.user;
 
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export default function Navbar() {
       <MobileSidebar />
       <div className="flex w-full items-center justify-end md:justify-between">
         <p className="text-lg md:text-2xl font-bold hidden md:flex">
-          Hello, {user.first_name}
+          Hello, {user?.first_name}
         </p>
         {/* <div className="h-8 w-8 bg-slate-700 rounded-full flex justify-center items-center">
           A
@@ -53,7 +53,7 @@ export default function Navbar() {
               <AvatarImage src="" />
               <AvatarFallback>{user?.first_name[0]}</AvatarFallback>
             </Avatar>
-            <p className="text-xl font-medium ">{user.first_name}</p>
+            <p className="text-xl font-medium ">{user?.first_name}</p>
           </div>
         </div>
       </div>
