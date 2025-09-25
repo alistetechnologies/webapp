@@ -122,7 +122,7 @@ export function AddSchedule({ update = false, data }) {
     setAppliances(appliances);
   }, [house]);
   function createCronExpression(timeStr, weekdays) {
-    console.log("WeekDays", weekdays);
+    console.log("WeekDays", weekdays, timeStr);
     const [hour, minute] = timeStr
       .split(":")
       .map((v) => v.toString().padStart(2, "0"));
@@ -157,7 +157,7 @@ export function AddSchedule({ update = false, data }) {
       toast.error("No appliance selected");
       return;
     }
-
+    console.log({ time });
     let expression = "";
 
     if (frequency === "cron") {
@@ -188,6 +188,8 @@ export function AddSchedule({ update = false, data }) {
       tags: [new Date().getTime()],
     };
 
+    console.log({ payload });
+    return;
     setLoading(true);
 
     let response;
@@ -209,7 +211,6 @@ export function AddSchedule({ update = false, data }) {
   }
 
   const sorted = (arr) => {
-    console.debug("ARR", arr);
     if (arr === undefined || arr === null) return [];
 
     return arr?.sort((a, b) => {
