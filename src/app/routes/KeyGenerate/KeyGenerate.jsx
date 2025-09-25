@@ -13,6 +13,7 @@ import KeyGenerateForm from "@/features/KeyGenerate/KeyGenerateForm";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(updateLocale);
@@ -35,6 +36,7 @@ const allowedPermissions = [
 
 export function KeyGenerate() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = useState({
     value: user?.selectedKey || "",
   });
@@ -65,6 +67,13 @@ export function KeyGenerate() {
     },
     role: [],
   });
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const getApiKeys = async () => {
     setLoading(true);
@@ -84,8 +93,10 @@ export function KeyGenerate() {
   };
 
   useEffect(() => {
-    getApiKeys();
-  }, []);
+    if (user?._id) {
+      getApiKeys();
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

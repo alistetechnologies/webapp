@@ -12,14 +12,24 @@ import useHouseStore from "@/features/dashboard/houseStore";
 import House from "@/features/lock/House";
 import { Download } from "lucide-react";
 import { CSVLink } from "react-csv";
+import { useNavigate } from "react-router-dom";
 
 export function Lock() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
+
   const [houses, setHouses] = useState([]);
   const [search, setSearch] = useState("");
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [CSVData, setCsvData] = useState([]);
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const getDashboardCsv = async () => {
     try {
@@ -78,8 +88,9 @@ export function Lock() {
       }));
       setHouses(options);
     };
-    getUserHouses();
-    // getDashboardCsv()
+    if (user?.email) {
+      getUserHouses();
+    }
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">

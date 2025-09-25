@@ -8,16 +8,26 @@ import Filter from "@/features/dashboard/filter";
 import useHouseStore from "@/features/dashboard/houseStore";
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function AutoCut() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const getUserHouse = async () => {
     setLoading(true);
@@ -35,7 +45,9 @@ export function AutoCut() {
   };
 
   useEffect(() => {
-    getUserHouse();
+    if (selectedHouse?.value) {
+      getUserHouse();
+    }
   }, [selectedHouse?.value]);
 
   return (

@@ -9,15 +9,24 @@ import { ShareAccessChild } from "@/features/shareAccess/ShareAccessChild";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export function ShareAccess() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const getUserHouse = async () => {
     setLoading(true);
@@ -35,7 +44,9 @@ export function ShareAccess() {
   };
 
   useEffect(() => {
-    getUserHouse();
+    if (selectedHouse?.value) {
+      getUserHouse();
+    }
   }, [selectedHouse?.value]);
 
   // if (loading) {

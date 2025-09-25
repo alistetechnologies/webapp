@@ -9,10 +9,11 @@ export function LoginRoute() {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
-  // 🚀 On mount, if user already logged in → go to /app
   useEffect(() => {
     if (isLoggedIn()) {
-      navigate('/app', { replace: true });
+      navigate("/app", { replace: true });
+    } else {
+      navigate("/", { replace: true });
     }
   }, [isLoggedIn, navigate]);
 

@@ -15,28 +15,47 @@ import { MainHeader } from "@/features/dashboard/MainHeader";
 import NoRooms from "@/features/dashboard/no-rooms";
 import Rooms from "@/features/dashboard/Rooms";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function Dashboard() {
   const user = useUser((state) => state.user);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [houses, setHouses] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
+
   const getUserHouses = async () => {
-    const response = await fetchUserHouses(user?.email);
+    try {
+      setLoading(true);
+      const response = await fetchUserHouses(user?.email);
 
-    const options = response?.masterOf?.map((h) => ({
-      label: h?.houseName,
-      value: h?.houseAccessCode,
-    }));
+      const options = response?.masterOf?.map((h) => ({
+        label: h?.houseName,
+        value: h?.houseAccessCode,
+      }));
 
-    setHouses(options);
+      setHouses(options);
+    } catch (err) {
+      toast.error("Failed to fetch houses");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    getUserHouses();
+    if (user?.email) {
+      getUserHouses();
+    }
   }, [user]);
 
   // if (loading) {

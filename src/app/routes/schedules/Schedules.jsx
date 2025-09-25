@@ -8,15 +8,25 @@ import { fetchAllSchedulesForHouse } from "@/features/schedules/api/schedules";
 import Schedule from "@/features/schedules/schedule";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export function Schedules() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
+
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    if (!user?.email) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/app", { replace: true });
+    }
+  }, [user, navigate]);
 
   const getUserHouse = async () => {
     setLoading(true);
@@ -34,11 +44,14 @@ export function Schedules() {
   };
 
   useEffect(() => {
-    getUserHouse();
+    if (selectedHouse?.value) {
+      getUserHouse();
+    }
   }, [selectedHouse?.value]);
 
   useEffect(() => {
     async function fetchData() {
+      if (!selectedHouse?.value) return;
       const response = await fetchAllSchedulesForHouse(selectedHouse?.value);
       if (!response.success) {
         toast.error(response.message);
