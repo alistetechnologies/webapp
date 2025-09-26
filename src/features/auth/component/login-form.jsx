@@ -16,7 +16,7 @@ export default function LoginForm({ setOtpSent }) {
 
   async function requestOtp() {
     if (number.length !== 10) {
-      toast.error('Number should be of 10 digits');
+      toast.error('Number should be of 10 characters');
       return;
     }
     setLoading(true);

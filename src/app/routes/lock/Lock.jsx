@@ -2,6 +2,7 @@ import { Spinner } from "@/components/ui/spinner";
 import Filter from "@/features/dashboard/filter";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/features/auth/api/userStore";
+import { useAuth } from "@/features/auth/api/authStore";
 import { fetchHouse, fetchUserHouses } from "@/features/dashboard/api/house";
 import Rooms from "@/features/dashboard/Rooms";
 import NoRooms from "@/features/dashboard/no-rooms";
@@ -16,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 export function Lock() {
   const user = useUser.getState().user;
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const [houses, setHouses] = useState([]);
@@ -24,12 +26,10 @@ export function Lock() {
   const [loading, setLoading] = useState(false);
   const [CSVData, setCsvData] = useState([]);
   useEffect(() => {
-    if (!user?.email) {
+    if (!isLoggedIn()) {
       navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
     }
-  }, [user, navigate]);
+  }, [isLoggedIn, navigate]);
 
   const getDashboardCsv = async () => {
     try {
@@ -81,16 +81,13 @@ export function Lock() {
   useEffect(() => {
     const getUserHouses = async () => {
       const response = await fetchUserHouses(user?.email);
-
       const options = response?.masterOf?.map((h) => ({
         label: h?.houseName,
         value: h?.houseAccessCode,
       }));
       setHouses(options);
     };
-    if (user?.email) {
-      getUserHouses();
-    }
+    getUserHouses();
   }, [user]);
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">

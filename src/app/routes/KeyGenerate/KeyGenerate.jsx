@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/features/auth/api/authStore";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(updateLocale);
@@ -37,6 +38,7 @@ const allowedPermissions = [
 export function KeyGenerate() {
   const user = useUser.getState().user;
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [selectedKey, setSelectedKey] = useState({
     value: user?.selectedKey || "",
   });
@@ -67,13 +69,6 @@ export function KeyGenerate() {
     },
     role: [],
   });
-  useEffect(() => {
-    if (!user?.email) {
-      navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
-    }
-  }, [user, navigate]);
 
   const getApiKeys = async () => {
     setLoading(true);
@@ -93,10 +88,12 @@ export function KeyGenerate() {
   };
 
   useEffect(() => {
-    if (user?._id) {
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    } else {
       getApiKeys();
     }
-  }, [user]);
+  }, [isLoggedIn, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

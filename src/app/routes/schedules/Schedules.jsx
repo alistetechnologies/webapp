@@ -1,5 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { useUser } from "@/features/auth/api/userStore";
+import { useAuth } from "@/features/auth/api/authStore";
+import { useNavigate } from "react-router-dom";
 
 import { fetchHouse } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
@@ -8,10 +10,10 @@ import { fetchAllSchedulesForHouse } from "@/features/schedules/api/schedules";
 import Schedule from "@/features/schedules/schedule";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 export function Schedules() {
   const user = useUser.getState().user;
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const [selectedHouse, setSelectedHouse] = useState({
@@ -21,12 +23,10 @@ export function Schedules() {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   useEffect(() => {
-    if (!user?.email) {
+    if (!isLoggedIn()) {
       navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
     }
-  }, [user, navigate]);
+  }, [isLoggedIn, navigate]);
 
   const getUserHouse = async () => {
     setLoading(true);
@@ -44,14 +44,11 @@ export function Schedules() {
   };
 
   useEffect(() => {
-    if (selectedHouse?.value) {
-      getUserHouse();
-    }
+    getUserHouse();
   }, [selectedHouse?.value]);
 
   useEffect(() => {
     async function fetchData() {
-      if (!selectedHouse?.value) return;
       const response = await fetchAllSchedulesForHouse(selectedHouse?.value);
       if (!response.success) {
         toast.error(response.message);

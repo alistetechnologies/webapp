@@ -1,19 +1,17 @@
 import { Button } from "@/components/ui/button";
 import ReportsModel from "@/components/ui/common/ReportsModel";
 import React, { useEffect } from "react";
-import { useUser } from "@/features/auth/api/userStore";
+import { useAuth } from "@/features/auth/api/authStore";
 import { useNavigate } from "react-router-dom";
 
 export function Reports() {
-  const user = useUser((state) => state.user);
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if (!user?.email) {
+    if (!isLoggedIn()) {
       navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
     }
-  }, [user, navigate]);
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="bg-[#f7f7f7] p-4 w-full h-full">

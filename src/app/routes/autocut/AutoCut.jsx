@@ -1,18 +1,19 @@
 import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import { useUser } from "@/features/auth/api/userStore";
+import { useAuth } from "@/features/auth/api/authStore";
+import { useNavigate } from "react-router-dom";
 import { AutoCuts } from "@/features/AutoCut/AutoCuts";
 
 import { fetchHouse } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
 import useHouseStore from "@/features/dashboard/houseStore";
-
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function AutoCut() {
   const user = useUser.getState().user;
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
@@ -22,12 +23,10 @@ export function AutoCut() {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
-    if (!user?.email) {
+    if (!isLoggedIn()) {
       navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
     }
-  }, [user, navigate]);
+  }, [isLoggedIn, navigate]);
 
   const getUserHouse = async () => {
     setLoading(true);
@@ -45,9 +44,7 @@ export function AutoCut() {
   };
 
   useEffect(() => {
-    if (selectedHouse?.value) {
-      getUserHouse();
-    }
+    getUserHouse();
   }, [selectedHouse?.value]);
 
   return (

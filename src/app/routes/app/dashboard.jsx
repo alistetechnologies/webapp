@@ -14,25 +14,19 @@ import useHouseStore from "@/features/dashboard/houseStore";
 import { MainHeader } from "@/features/dashboard/MainHeader";
 import NoRooms from "@/features/dashboard/no-rooms";
 import Rooms from "@/features/dashboard/Rooms";
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useAuth } from "@/features/auth/api/authStore";
 
 export function Dashboard() {
   const user = useUser((state) => state.user);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [houses, setHouses] = useState([]);
   const [searchText, setSearchText] = useState("");
-
-  useEffect(() => {
-    if (!user?.email) {
-      navigate("/", { replace: true });
-    } else {
-      navigate("/app", { replace: true });
-    }
-  }, [user, navigate]);
 
   const getUserHouses = async () => {
     try {
@@ -53,11 +47,12 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    if (user?.email) {
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    } else {
       getUserHouses();
     }
-  }, [user]);
-
+  }, [isLoggedIn, user, navigate]);
   // if (loading) {
   //   return (
   //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>

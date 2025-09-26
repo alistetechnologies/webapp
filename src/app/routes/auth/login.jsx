@@ -11,9 +11,9 @@ export function LoginRoute() {
 
   useEffect(() => {
     if (isLoggedIn()) {
-      navigate("/app", { replace: true });
+      navigate('/app', { replace: true });
     } else {
-      navigate("/", { replace: true });
+      navigate('/', { replace: true });
     }
   }, [isLoggedIn, navigate]);
 
