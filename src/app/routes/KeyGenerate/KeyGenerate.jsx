@@ -13,6 +13,8 @@ import KeyGenerateForm from "@/features/KeyGenerate/KeyGenerateForm";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import updateLocale from "dayjs/plugin/updateLocale";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/features/auth/api/authStore";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(updateLocale);
@@ -35,6 +37,8 @@ const allowedPermissions = [
 
 export function KeyGenerate() {
   const user = useUser.getState().user;
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const [selectedKey, setSelectedKey] = useState({
     value: user?.selectedKey || "",
   });
@@ -70,7 +74,7 @@ export function KeyGenerate() {
     setLoading(true);
     try {
       const response = await axios.post(`${serverUrl.sub}/v3/key/getKeys`, {
-        userId: user._id,
+        userId: user?._id,
       });
       setKeys(
         Array.isArray(response.data.data.keys) ? response.data.data.keys : []
@@ -84,8 +88,12 @@ export function KeyGenerate() {
   };
 
   useEffect(() => {
-    getApiKeys();
-  }, []);
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    } else {
+      getApiKeys();
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -188,8 +196,7 @@ export function KeyGenerate() {
           Object.keys(updatedPermissions[category]).forEach((permission) => {
             if (updatedPermissions[category][permission]) {
               roles.push(
-                `${category}:${
-                  permission.charAt(0).toUpperCase() + permission.slice(1)
+                `${category}:${permission.charAt(0).toUpperCase() + permission.slice(1)
                 }`
               );
             }

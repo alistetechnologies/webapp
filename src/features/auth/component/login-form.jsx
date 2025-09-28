@@ -52,7 +52,17 @@ export default function LoginForm({ setOtpSent }) {
   }
 
   if (passwordLogin) {
-    return <LoginWithPassword setPasswordLogin={setPasswordLogin} />;
+    return (
+      <div className="w-[20rem] space-y-4">
+        <LoginWithPassword setPasswordLogin={setPasswordLogin} />
+        <p
+          className="text-sm hover:underline mt-0 cursor-pointer"
+          onClick={() => setPasswordLogin(false)}
+        >
+          Use OTP
+        </p>
+      </div>
+    );
   }
   return (
     <form className='w-[20rem] space-y-4' onSubmit={onSubmit}>

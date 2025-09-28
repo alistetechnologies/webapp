@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
 import ReportsModel from "@/components/ui/common/ReportsModel";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "@/features/auth/api/authStore";
+import { useNavigate } from "react-router-dom";
 
 export function Reports() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <div className="bg-[#f7f7f7] p-4 w-full h-full">
       <h1 className="text-2xl font-bold text-gray-800 mb-4 p-2">Reports</h1>

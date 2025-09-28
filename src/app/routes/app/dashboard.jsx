@@ -2,50 +2,49 @@ import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import { useUser } from "@/features/auth/api/userStore";
 
-import {
-  fetchHouse,
-  fetchConnectedDevices,
-  fetchUserHouses,
-} from "@/features/dashboard/api/house";
-import Filter from "@/features/dashboard/filter";
-import Houses from "@/features/dashboard/houses";
-import useHouseStore from "@/features/dashboard/houseStore";
+import { fetchUserHouses } from "@/features/dashboard/api/house";
 
-import { MainHeader } from "@/features/dashboard/MainHeader";
-import NoRooms from "@/features/dashboard/no-rooms";
-import Rooms from "@/features/dashboard/Rooms";
-import { useEffect, useState } from "react";
+import Houses from "@/features/dashboard/houses";
+
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/features/auth/api/authStore";
 
 export function Dashboard() {
   const user = useUser((state) => state.user);
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [houses, setHouses] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   const getUserHouses = async () => {
-    const response = await fetchUserHouses(user?.email);
+    try {
+      setLoading(true);
+      const response = await fetchUserHouses(user?.email);
 
-    const options = response?.masterOf?.map((h) => ({
-      label: h?.houseName,
-      value: h?.houseAccessCode,
-    }));
+      const options = response?.masterOf?.map((h) => ({
+        label: h?.houseName,
+        value: h?.houseAccessCode,
+      }));
 
-    setHouses(options);
+      setHouses(options);
+    } catch (err) {
+      toast.error("Failed to fetch houses");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    getUserHouses();
-  }, [user]);
-
-  // if (loading) {
-  //   return (
-  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   );
-  // }
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    } else {
+      getUserHouses();
+    }
+  }, [isLoggedIn, user, navigate]);
 
   return (
     <div className="w-full h-full p-8 pt-0 overflow-y-scroll bg-[#EAEBF0] ">

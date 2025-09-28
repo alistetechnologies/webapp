@@ -72,8 +72,8 @@ export function AddAutoCut({ update = false, data }) {
   async function handleSubmit() {
     const turnOffAfter = Number(
       Number(duration.hours) * 3600 +
-        Number(duration.minutes) * 60 +
-        Number(duration.seconds)
+      Number(duration.minutes) * 60 +
+      Number(duration.seconds)
     );
 
     if (turnOffAfter <= 0) {
@@ -188,7 +188,7 @@ export function AddAutoCut({ update = false, data }) {
   }
 
   const sorted = (arr) =>
-    arr.sort((a, b) => {
+    arr?.sort((a, b) => {
       if (a?.devices?.length === 0 && b?.devices?.length > 0) return 1;
 
       if (b?.devices?.length === 0 && a?.devices?.length > 0) return -1;
@@ -264,7 +264,7 @@ export function AddAutoCut({ update = false, data }) {
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">
                     {house &&
-                      sorted(house?.rooms).map((room) => {
+                      sorted(house?.rooms)?.map((room) => {
                         return (
                           <>
                             {room?.devices?.length ? (

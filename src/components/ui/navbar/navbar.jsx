@@ -2,20 +2,26 @@ import { Bell, ChevronDown, MessageSquareMore } from "lucide-react";
 import { MobileSidebar } from "../sidebar/mobile-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar/avatar";
 import { useUser } from "@/features/auth/api/userStore";
+import { useAuth } from "@/features/auth/api/authStore";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const user = useUser.getState().user;
-
+  const user = useUser.getState()?.user;
+  const { logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
 
   return (
     <div className="flex items-center p-6 py-4 h-[10%]">
       <MobileSidebar />
       <div className="flex w-full items-center justify-end md:justify-between">
         <p className="text-lg md:text-2xl font-bold hidden md:flex">
-          Hello, {user.first_name}
+          Hello, {user?.first_name}
         </p>
         {/* <div className="h-8 w-8 bg-slate-700 rounded-full flex justify-center items-center">
           A
@@ -42,7 +48,7 @@ export default function Navbar() {
                 <div className="flex flex-col">
                   <div
                     className="p-4 hover:bg-neutral-200 border border-b-1 cursor-pointer font-semibold"
-                    onClick={() => navigate("/")}
+                    onClick={handleLogout}
                   >
                     Logout
                   </div>
@@ -53,7 +59,7 @@ export default function Navbar() {
               <AvatarImage src="" />
               <AvatarFallback>{user?.first_name[0]}</AvatarFallback>
             </Avatar>
-            <p className="text-xl font-medium ">{user.first_name}</p>
+            <p className="text-xl font-medium ">{user?.first_name}</p>
           </div>
         </div>
       </div>
