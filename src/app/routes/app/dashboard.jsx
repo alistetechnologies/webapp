@@ -2,18 +2,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableHeader } from "@/components/ui/table";
 import { useUser } from "@/features/auth/api/userStore";
 
-import {
-  fetchHouse,
-  fetchConnectedDevices,
-  fetchUserHouses,
-} from "@/features/dashboard/api/house";
-import Filter from "@/features/dashboard/filter";
-import Houses from "@/features/dashboard/houses";
-import useHouseStore from "@/features/dashboard/houseStore";
+import { fetchUserHouses } from "@/features/dashboard/api/house";
 
-import { MainHeader } from "@/features/dashboard/MainHeader";
-import NoRooms from "@/features/dashboard/no-rooms";
-import Rooms from "@/features/dashboard/Rooms";
+import Houses from "@/features/dashboard/houses";
+
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -53,13 +45,6 @@ export function Dashboard() {
       getUserHouses();
     }
   }, [isLoggedIn, user, navigate]);
-  // if (loading) {
-  //   return (
-  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="w-full h-full p-8 pt-0 overflow-y-scroll bg-[#EAEBF0] ">
