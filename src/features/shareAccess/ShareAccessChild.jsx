@@ -18,19 +18,14 @@ export function ShareAccessChild() {
   const house = useHouseStore((state) => state.house);
   const authUser = useAuth((state) => state.auth);
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
-
   const [data, setData] = useState({});
   const [error, setError] = useState("");
 
   const [userLookup, setUserLookup] = useState({});
-
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     try {
-      if (!isLoggedIn()) return;
-
       const response = await fetchHouseUserDetails(house._id, authUser.number);
 
       if (!response.success) {
