@@ -28,6 +28,7 @@ export function ShareAccess() {
   }, [isLoggedIn, navigate]);
 
   const getUserHouse = async () => {
+    if (!isLoggedIn()) return;
     setLoading(true);
     const houseDetails = await fetchHouse(selectedHouse?.value);
 
@@ -43,8 +44,9 @@ export function ShareAccess() {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) return;
     getUserHouse();
-  }, [selectedHouse?.value]);
+  }, [selectedHouse?.value, isLoggedIn]);
 
   // if (loading) {
   //   return (
@@ -61,7 +63,7 @@ export function ShareAccess() {
         date={date}
         setDate={setDate}
         dateShow={false}
-        onClick={() => getUserHouse()}
+        onClick={getUserHouse}
       />
 
       {loading && (

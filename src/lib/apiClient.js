@@ -12,8 +12,6 @@ function authRequestInterceptor(config) {
 
 export const api = Axios.create();
 
-// api.interceptors.request.use(authRequestInterceptor);
-
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -23,12 +21,9 @@ api.interceptors.response.use(
       error?.response?.data?.message ||
       error?.response?.data?.error ||
       error?.message;
-
-    // Add notification
-
     toast.error(message);
-    // Add 401
-
     return Promise.reject(error);
   }
 );
+
+export default api;

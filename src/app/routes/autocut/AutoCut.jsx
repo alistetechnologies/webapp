@@ -21,6 +21,11 @@ export function AutoCut() {
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate("/", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -29,6 +34,7 @@ export function AutoCut() {
   }, [isLoggedIn, navigate]);
 
   const getUserHouse = async () => {
+    if (!isLoggedIn()) return;
     setLoading(true);
     const houseDetails = await fetchHouse(selectedHouse?.value);
 
@@ -44,8 +50,9 @@ export function AutoCut() {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) return;
     getUserHouse();
-  }, [selectedHouse?.value]);
+  }, [selectedHouse?.value, isLoggedIn]);
 
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">

@@ -9,6 +9,7 @@ import { useUser } from "../auth/api/userStore";
 import useHouseStore from "./houseStore";
 import { format } from "crypto-js";
 import { daysSince, timeSince } from "@/utils/date";
+import LogsModal from "./LogsModal";
 
 export function ApplianceDetails({
   appliances,
@@ -19,7 +20,7 @@ export function ApplianceDetails({
   const user = useUser((state) => state.user);
   const house = useHouseStore((state) => state.house);
   const updateState = useHouseStore((state) => state.updateState);
-
+  const [logsOpen, setLogsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const onTime = convertMilliseconds(analysisData?.totalOnTime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
@@ -62,13 +63,7 @@ export function ApplianceDetails({
     });
 
     updateState(appliance.deviceId, appliance.switchId, command);
-
-    // console.log("control response", resp);
     setLoading(false);
-
-    // if (!resp.success) {
-    //   toast.error(resp.message);
-    // }
   };
 
   const deviceConnected = connectedDevices.some(
@@ -87,15 +82,15 @@ export function ApplianceDetails({
       <TableCell className="text-lg text-center">
         {onTime?.hours && onTime?.seconds && onTime?.minutes
           ? `${String(onTime?.hours).padStart(2, "0")} hr ${String(
-              onTime?.minutes
-            ).padStart(2, "0")} min`
+            onTime?.minutes
+          ).padStart(2, "0")} min`
           : "--"}
       </TableCell>
       <TableCell className="text-lg text-center">
         {onTime?.hours && onTime?.seconds && onTime?.minutes
           ? `${String(onlineTime?.hours).padStart(2, "0")} hr ${String(
-              onlineTime?.minutes
-            ).padStart(2, "0")} min`
+            onlineTime?.minutes
+          ).padStart(2, "0")} min`
           : "--"}
       </TableCell>
       <TableCell className="text-lg text-center">
@@ -162,6 +157,23 @@ export function ApplianceDetails({
             <OfflineSinceText deviceId={appliance.deviceId} />
           </div>
         )}
+      </TableCell>
+
+      {/* Actions */}
+      <TableCell>
+        <button
+          className="px-4 py-2 bg-[#0F172A] text-white rounded-md hover:bg-[#1E293B] transition whitespace-nowrap"
+          onClick={() => setLogsOpen(true)}
+        >
+          View Logs
+        </button>
+        <LogsModal
+          open={logsOpen}
+          onClose={() => setLogsOpen(false)}
+          deviceId={analysisData?.deviceId}
+          switchId={analysisData?.switchId}
+          applianceName={appliance?.switchName}
+        />
       </TableCell>
     </TableRow>
   );

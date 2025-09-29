@@ -15,7 +15,6 @@ export function Schedules() {
   const user = useUser.getState().user;
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
   });
@@ -29,6 +28,7 @@ export function Schedules() {
   }, [isLoggedIn, navigate]);
 
   const getUserHouse = async () => {
+    if (!isLoggedIn()) return;
     setLoading(true);
     const houseDetails = await fetchHouse(selectedHouse?.value);
 
@@ -44,10 +44,12 @@ export function Schedules() {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) return;
     getUserHouse();
-  }, [selectedHouse?.value]);
+  }, [selectedHouse?.value, isLoggedIn]);
 
   useEffect(() => {
+    if (!isLoggedIn()) return;
     async function fetchData() {
       const response = await fetchAllSchedulesForHouse(selectedHouse?.value);
       if (!response.success) {
@@ -56,7 +58,7 @@ export function Schedules() {
     }
 
     fetchData();
-  }, [selectedHouse?.value]);
+  }, [selectedHouse?.value, isLoggedIn]);
 
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">

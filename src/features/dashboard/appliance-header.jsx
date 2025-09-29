@@ -13,6 +13,7 @@ export function ApplianceHeader() {
       <TableHead className="text-black">State</TableHead>
       <TableHead className="text-black">Status</TableHead>
       <TableHead className="text-black">Offline Since</TableHead>
+      <TableHead className="text-black">Actions</TableHead>
     </TableRow>
   );
   return (
@@ -52,6 +53,9 @@ export function ApplianceHeader() {
 
       <div className="col-span-1 p-4 flex items-center justify-center">
         Status
+      </div>
+      <div className="col-span-1 p-4 flex items-center justify-center">
+        Actions
       </div>
     </div>
   );
