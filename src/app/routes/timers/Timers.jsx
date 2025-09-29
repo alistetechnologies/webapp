@@ -44,6 +44,9 @@ export function Timers() {
   };
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      return;
+    }
     getUserHouse();
   }, [selectedHouse?.value]);
 
