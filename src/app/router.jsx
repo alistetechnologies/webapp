@@ -2,16 +2,19 @@ import { useMemo } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { LoginRoute } from "./routes/auth/login";
 import AppRoot from "./routes/app/root";
+import { LazyLoadingErrorBoundary } from "./routes/LazyLoadingErrorBoundary";
 
 const createAppRouter = () =>
   createBrowserRouter([
     {
       path: "/",
       element: <LoginRoute />,
+      errorElement: <LazyLoadingErrorBoundary />,
     },
     {
       path: "/app",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -25,6 +28,7 @@ const createAppRouter = () =>
     {
       path: "/app/house",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -41,6 +45,7 @@ const createAppRouter = () =>
     {
       path: "/autoTimers",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -54,6 +59,7 @@ const createAppRouter = () =>
     {
       path: "/schedules",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -67,6 +73,7 @@ const createAppRouter = () =>
     {
       path: "/autocut",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -80,6 +87,7 @@ const createAppRouter = () =>
     {
       path: "/lock",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -93,6 +101,7 @@ const createAppRouter = () =>
     {
       path: "/lock/house",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -117,6 +126,7 @@ const createAppRouter = () =>
     {
       path: "/shareAccess",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -133,6 +143,7 @@ const createAppRouter = () =>
     {
       path: "/keyGenerate",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
@@ -148,6 +159,7 @@ const createAppRouter = () =>
     {
       path: "/reports",
       element: <AppRoot />,
+      errorElement: <LazyLoadingErrorBoundary />,
       children: [
         {
           path: "",
