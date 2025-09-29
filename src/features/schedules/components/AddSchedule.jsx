@@ -164,7 +164,7 @@ export function AddSchedule({ update = false, data }) {
       toast.error("No appliance selected");
       return;
     }
-    console.log({ time });
+
     let expression = "";
 
     if (frequency === "cron") {
@@ -195,8 +195,6 @@ export function AddSchedule({ update = false, data }) {
       tags: [new Date().getTime()],
     };
 
-    console.log({ payload });
-    return;
     setLoading(true);
 
     let response;
