@@ -73,7 +73,7 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>
-                Appliance Name — {applianceName || `${deviceId}_${switchId}`}
+                View Logs For — {applianceName ? <strong>{applianceName}</strong> : `${deviceId}_${switchId}`}
             </DialogTitle>
 
             <DialogContent dividers>
