@@ -93,7 +93,7 @@ function TTLockRow({
                   <span className=" text-red-600">NO</span>
                 )
               ) : (
-                "---"
+                <span className=" text-red-600">NO</span>
               )}
             </TooltipTrigger>
             <TooltipContent>
