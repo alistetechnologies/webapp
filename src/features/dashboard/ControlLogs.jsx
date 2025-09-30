@@ -1,14 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-    Box,
-    Typography,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Paper,
-} from "@mui/material";
 
 const isValidDate = (date) => {
     const dateToTest = new Date(date);
@@ -16,7 +6,7 @@ const isValidDate = (date) => {
 };
 
 const ControlLogs = ({ data = [], appliance, selectedDate }) => {
-    const [applianceAnalysis, setApplianceAnalysis] = useState(null);
+    const [applianceAnalysis, setApplianceAnalysis] = useState([]);
 
     useEffect(() => {
         const applianceData =
@@ -24,85 +14,90 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
         setApplianceAnalysis(applianceData);
     }, [data, appliance]);
 
-    const filteredLogs =
-        applianceAnalysis
-            ?.filter((log) => {
-                const logDate = new Date(log.timestamp);
-                const selected = new Date(selectedDate);
-                if (!(logDate instanceof Date) || isNaN(logDate.getTime())) return false;
-                return logDate.getTime() > selected.getTime();
-            })
-            ?.sort((a, b) => b.timestamp - a.timestamp) || [];
-
+    const filteredLogs = (applianceAnalysis || [])
+        .filter((log) => {
+            const logDate = isValidDate(log.originalTimestamp)
+                ? new Date(log.originalTimestamp)
+                : isValidDate(log.timestamp)
+                    ? new Date(log.timestamp)
+                    : null;
+            if (!logDate) return true;
+            const selected = new Date(selectedDate);
+            selected.setHours(0, 0, 0, 0);
+            return logDate.getTime() >= selected.getTime();
+        })
+        .sort((a, b) => {
+            const aTime = isValidDate(a.timestamp)
+                ? new Date(a.timestamp).getTime()
+                : isValidDate(a.originalTimestamp)
+                    ? new Date(a.originalTimestamp).getTime()
+                    : 0;
+            const bTime = isValidDate(b.timestamp)
+                ? new Date(b.timestamp).getTime()
+                : isValidDate(b.originalTimestamp)
+                    ? new Date(b.originalTimestamp).getTime()
+                    : 0;
+            return bTime - aTime;
+        });
     return (
-        <Box sx={{ mt: 2 }}>
+        <div className="mt-4">
             {filteredLogs.length === 0 ? (
-                <Box sx={{ p: 4, textAlign: "center" }}>
-                    <Typography variant="body1" color="text.disabled">
+                <div className="p-8 text-center">
+                    <p className="text-gray-400">
                         No Logs Available
-                    </Typography>
-                </Box>
+                    </p>
+                </div>
             ) : (
                 <>
-                    <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+                    <p className="text-gray-600 mb-4 font-semibold">
                         Logs
-                    </Typography>
-                    <Paper elevation={2} sx={{ borderRadius: 2, overflow: "hidden" }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Medium</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
-                                        State
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", textAlign: "center" }}>
-                                        Time
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {filteredLogs.map((item, index) => {
-                                    const rowColor = item.command === 0 ? "#D32F2F" : "#388E3C";
-
-                                    return (
-                                        <TableRow key={`${item.controllerId}-${index}`}>
-                                            <TableCell>
-                                                {item.controllerType.charAt(0).toUpperCase() +
-                                                    item.controllerType.slice(1)}{" "}
-                                                {item.controllerType === "app"
-                                                    ? item.controllerId.split("(")[0]
-                                                    : ""}
-                                            </TableCell>
-                                            <TableCell sx={{ color: rowColor, textAlign: "center" }}>
-                                                {item.command === 0 ? "OFF" : "ON"}
-                                            </TableCell>
-                                            <TableCell sx={{ textAlign: "center", color: "#444" }}>
-                                                {isValidDate(item.originalTimestamp)
-                                                    ? new Date(item.originalTimestamp).toLocaleTimeString(
-                                                        "en-IN",
-                                                        {
-                                                            hour: "numeric",
-                                                            minute: "2-digit",
-                                                            hour12: true,
-                                                        }
-                                                    )
-                                                    : isValidDate(item.timestamp)
-                                                        ? new Date(item.timestamp).toLocaleTimeString("en-IN", {
-                                                            hour: "numeric",
-                                                            minute: "2-digit",
-                                                            hour12: true,
-                                                        })
-                                                        : "-"}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </Paper>
+                    </p>
+                    <table className="w-full border-collapse">
+                        <thead>
+                            <tr className="bg-gray-100">
+                                <th className="text-left font-bold px-4 py-2">Medium</th>
+                                <th className="text-center font-bold px-4 py-2">State</th>
+                                <th className="text-center font-bold px-4 py-2">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredLogs.map((item, index) => {
+                                const rowColor = item.command === 0 ? "text-red-600" : "text-green-700";
+                                return (
+                                    <tr key={`${item.controllerId}-${index}`} className="border-b last:border-b-0">
+                                        <td className="px-4 py-2">
+                                            {(item.controllerType || "").charAt(0).toUpperCase() +
+                                                (item.controllerType || "").slice(1)}{" "}
+                                            {item.controllerType === "app"
+                                                ? (item.controllerId || "").split("(")[0]
+                                                : ""}
+                                        </td>
+                                        <td className={`text-center px-4 py-2 ${rowColor}`}>
+                                            {item.command === 0 ? "OFF" : "ON"}
+                                        </td>
+                                        <td className="text-center px-4 py-2 text-gray-700">
+                                            {isValidDate(item.originalTimestamp)
+                                                ? new Date(item.originalTimestamp).toLocaleTimeString("en-IN", {
+                                                    hour: "numeric",
+                                                    minute: "2-digit",
+                                                    hour12: true,
+                                                })
+                                                : isValidDate(item.timestamp)
+                                                    ? new Date(item.timestamp).toLocaleTimeString("en-IN", {
+                                                        hour: "numeric",
+                                                        minute: "2-digit",
+                                                        hour12: true,
+                                                    })
+                                                    : "-"}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </>
             )}
-        </Box>
+        </div>
     );
 };
 
