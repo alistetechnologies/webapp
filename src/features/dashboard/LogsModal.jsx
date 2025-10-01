@@ -1,36 +1,27 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Box,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
 import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import toast from "react-hot-toast";
 import { fetchDayAnalysis } from "./apis";
 import ControlLogs from "./ControlLogs";
-import toast from "react-hot-toast";
 
-export default function LogsModal({
-  open,
-  onClose,
-  deviceId,
-  switchId,
-  applianceName,
-}) {
-  const [date, setDate] = useState(dayjs());
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+
+export default function LogsModal({ open, onClose, deviceId, switchId, applianceName }) {
+  const [date, setDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
 
   useEffect(() => {
     if (!open) {
-      setDate(dayjs());
+      setDate(dayjs().format("YYYY-MM-DD"));
       setAnalysisData(null);
       setLoading(false);
     }
@@ -45,7 +36,7 @@ export default function LogsModal({
     setLoading(true);
     const resp = await fetchDayAnalysis({
       deviceId,
-      day: date.startOf("day").valueOf(),
+      day: dayjs(date).startOf("day").valueOf(),
     });
     setLoading(false);
 
@@ -76,83 +67,58 @@ export default function LogsModal({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        View Logs For —{" "}
-        {applianceName ? (
-          <strong>{applianceName}</strong>
-        ) : (
-          `${deviceId}_${switchId}`
-        )}
-      </DialogTitle>
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-4xl p-6 rounded-2xl shadow-lg">
+        <DialogHeader>
+          <DialogTitle className="text-xl">
+            View Logs For - <strong>{applianceName || `${deviceId}_${switchId}`}</strong>
+          </DialogTitle>
+        </DialogHeader>
 
-      <DialogContent dividers>
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Select Date"
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4 my-4">
+          <div className="flex-1">
+            <Label htmlFor="log-date" className="text-sm font-medium text-gray-700">
+              Select Date
+            </Label>
+            <Input
+              id="log-date"
+              type="date"
               value={date}
-              onChange={(newVal) => setDate(newVal)}
-              maxDate={dayjs()}
-              format="DD/MM/YYYY"
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-          </LocalizationProvider>
-
-          <Box>
-            <Button
-              onClick={handleViewLogs}
-              disabled={loading}
-              sx={{
-                backgroundColor: "#0F172A",
-                color: "#fff",
-                px: 3,
-                py: 1,
-                borderRadius: "8px",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#1E293B",
-                },
+              max={dayjs().format("YYYY-MM-DD")}
+              onChange={(e) => {
+                setDate(e.target.value);
+                setAnalysisData(null);
               }}
-            >
-              {loading ? (
-                <CircularProgress size={20} sx={{ color: "#fff" }} />
-              ) : (
-                "View Logs"
-              )}
-            </Button>
-          </Box>
-        </Box>
+              className="mt-2"
+            />
+          </div>
+
+          <Button
+            onClick={handleViewLogs}
+            disabled={loading}
+            className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Loading...
+              </span>
+            ) : (
+              "View Logs"
+            )}
+          </Button>
+        </div>
 
         {analysisData && (
-          <Box sx={{ mt: 2 }}>
+          <div className=" max-h-[500px] overflow-y-auto border rounded-lg p-4 bg-gray-50">
             <ControlLogs
-              selectedDate={date.toDate()}
+              selectedDate={new Date(date)}
               data={analysisData}
               appliance={`${deviceId}_${switchId}`}
             />
-          </Box>
+          </div>
         )}
       </DialogContent>
-
-      <DialogActions>
-        <Button
-          onClick={onClose}
-          sx={{
-            backgroundColor: "#0F172A",
-            color: "#fff",
-            px: 3,
-            py: 1,
-            borderRadius: "8px",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "#1E293B",
-            },
-          }}
-        >
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }

@@ -1,26 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  Box,
-  Typography,
-  Select,
-  MenuItem,
-  Button,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import toast from "react-hot-toast";
 
-import { setAppLoading, showToast } from "../../actions";
 import { fetchDayAnalysis } from "./apis";
-
 import ControlLogs from "./components/ControlLogs";
 import CommandStats from "./components/CommandStats";
 import TotalOnTime from "./components/TotalOnTime";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function AnalyticsV3() {
   const themes = useSelector((state) => state.color);
@@ -87,7 +79,7 @@ export default function AnalyticsV3() {
 
   const handleSubmit = async () => {
     if (!selectedAppliance) {
-      showToast("Select an appliance!");
+      toast.error("Select an appliance!");
       return;
     }
     const formData = {
@@ -98,114 +90,86 @@ export default function AnalyticsV3() {
     const response = await fetchDayAnalysis(formData);
     setLoading(false);
     if (!response.success) {
-      showToast(response.message);
+      toast.error(response.message);
+    } else {
+      setAnalysisData(response.data);
     }
-    setAnalysisData(response.data);
   };
 
   return (
-    <Box sx={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
-
-      {/* Header */}
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Button variant="outlined" onClick={() => navigate(-1)}>
+    <div className="p-5 max-w-xl mx-auto">
+      <div className="flex items-center mb-4">
+        <Button onClick={() => navigate(-1)} variant="outline">
           Back
         </Button>
-        <Typography variant="h5" sx={{ flex: 1, textAlign: "center" }}>
-          Analytics
-        </Typography>
-      </Box>
-
-      {/* Form */}
-      <Box
-        sx={{
-          backgroundColor: "#fff",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: 2,
-          mb: 3,
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
-          Select
-        </Typography>
-
-        {/* Room Select */}
-        <Select
-          value={selectedRoom}
-          onChange={(e) => setSelectedRoom(e.target.value)}
-          displayEmpty
-          fullWidth
-          sx={{ mb: 2 }}
-        >
-          <MenuItem value="" disabled>
-            Select Room
-          </MenuItem>
-          {roomsData.map((room) => (
-            <MenuItem key={room.value} value={room.value}>
-              {room.label}
-            </MenuItem>
-          ))}
-        </Select>
-
-        {/* Appliance Select */}
-        <Select
-          value={selectedAppliance}
-          onChange={(e) => setSelectedAppliance(e.target.value)}
-          displayEmpty
-          fullWidth
-          sx={{ mb: 2 }}
-        >
-          <MenuItem value="" disabled>
-            Select Appliance
-          </MenuItem>
-          {appliancesData.map((app) => (
-            <MenuItem key={app.value} value={app.value}>
-              {app.label}
-            </MenuItem>
-          ))}
-        </Select>
-
-        {/* Date Picker */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Select Date"
-            value={selectedDate}
-            onChange={(newValue) => setSelectedDate(newValue)}
-            maxDate={dayjs()}
-            format="DD/MM/YYYY"
-            renderInput={(params) => (
-              <TextField fullWidth sx={{ mb: 2 }} {...params} />
-            )}
+        <h2 className="text-xl font-semibold flex-1 text-center">Analytics</h2>
+      </div>
+      <div className="bg-white p-5 rounded-xl shadow mb-5">
+        <h3 className="text-lg font-semibold mb-4 text-center">Select</h3>
+        <div className="mb-4">
+          <Label>Room</Label>
+          <Select value={selectedRoom} onValueChange={(val) => setSelectedRoom(val)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Room" />
+            </SelectTrigger>
+            <SelectContent>
+              {roomsData.map((room) => (
+                <SelectItem key={room.value} value={room.value}>
+                  {room.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="mb-4">
+          <Label>Appliance</Label>
+          <Select value={selectedAppliance} onValueChange={(val) => setSelectedAppliance(val)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Appliance" />
+            </SelectTrigger>
+            <SelectContent>
+              {appliancesData.map((app) => (
+                <SelectItem key={app.value} value={app.value}>
+                  {app.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="mb-4">
+          <Label>Date</Label>
+          <Calendar
+            mode="single"
+            selected={selectedDate.toDate()}
+            onSelect={(date) => setSelectedDate(dayjs(date))}
+            className="w-full border rounded"
           />
-        </LocalizationProvider>
-
-        {/* Submit */}
+        </div>
         <Button
-          fullWidth
-          variant="contained"
-          color="primary"
+          className="w-full mt-2"
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : "Get Data"}
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          ) : (
+            "Get Data"
+          )}
         </Button>
-      </Box>
-
-      {/* Analysis Data */}
+      </div>
       {analysisData && (
         <>
           <CommandStats data={analysisData} appliance={selectedAppliance} />
           <TotalOnTime data={analysisData} appliance={selectedAppliance} />
-          <Box sx={{ mb: 5 }}>
+          <div className="mb-5">
             <ControlLogs
               selectedDate={selectedDate}
               data={analysisData}
               appliance={selectedAppliance}
             />
-          </Box>
+          </div>
         </>
       )}
-    </Box>
+    </div>
   );
 }

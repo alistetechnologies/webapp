@@ -15,10 +15,8 @@ export function ShareAccess() {
   const user = useUser.getState().user;
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const [selectedHouse, setSelectedHouse] = useState({
-    value: user?.selectedHouse || "",
-  });
-  const [house, setHouse] = useState({});
+  const [selectedHouse, setSelectedHouse] = useState(null);
+  const [house, setHouse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   useEffect(() => {
@@ -26,35 +24,46 @@ export function ShareAccess() {
       navigate("/", { replace: true });
     }
   }, [isLoggedIn, navigate]);
+  useEffect(() => {
+    if (user?.selectedHouse) {
+      setSelectedHouse({ value: user.selectedHouse });
+    } else {
+      setSelectedHouse(null);
+    }
+  }, [user]);
 
   const getUserHouse = async () => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn() || !selectedHouse?.value) return;
     setLoading(true);
-    const houseDetails = await fetchHouse(selectedHouse?.value);
+    try {
+      const houseDetails = await fetchHouse(selectedHouse.value);
 
-    if (!houseDetails.success) {
-      toast.error("Failed to fetch House!!");
+      if (!houseDetails.success) {
+        toast.error("Failed to fetch House!");
+        setLoading(false);
+        return;
+      }
+
+      setHouse(houseDetails.data);
+      useHouseStore.getState().updateHouse(houseDetails.data);
+    } catch (error) {
+      toast.error("Error fetching house data!");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setHouse(houseDetails?.data);
-    setLoading(false);
-    useHouseStore.getState().updateHouse(houseDetails?.data);
   };
-
   useEffect(() => {
-    if (!isLoggedIn()) return;
-    getUserHouse();
+    if (isLoggedIn() && selectedHouse?.value) {
+      getUserHouse();
+    }
   }, [selectedHouse?.value, isLoggedIn]);
-
-  // if (loading) {
-  //   return (
-  //     <div className='flex justify-center items-center h-full w-full bg-[#EAEBF0]'>
-  //       <Spinner size='lg' />
-  //     </div>
-  //   );
-  // }
+  if (!selectedHouse) {
+    return (
+      <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <Filter
@@ -72,7 +81,7 @@ export function ShareAccess() {
         </div>
       )}
 
-      {!loading && <ShareAccessChild />}
+      {!loading && house && <ShareAccessChild />}
     </div>
   );
 }
