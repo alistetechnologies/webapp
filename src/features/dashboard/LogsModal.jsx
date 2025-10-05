@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
-import { fetchDayAnalysis } from "./apis";
+import { fetchDayAnalysis } from "./api/apis";
 import ControlLogs from "./ControlLogs";
 
 import { Button } from "@/components/ui/button";
