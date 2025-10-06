@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import dayjs from "dayjs";
+import moment from "moment";
 import toast from "react-hot-toast";
 import { fetchDayAnalysis } from "./api/apis";
 import ControlLogs from "./ControlLogs";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -15,19 +14,31 @@ import {
 import { Label } from "@/components/ui/label";
 
 export default function LogsModal({ open, onClose, deviceId, switchId, applianceName }) {
-  const [date, setDate] = useState(dayjs().format("YYYY-MM-DD"));
+  const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
 
   useEffect(() => {
     if (!open) {
-      setDate(dayjs().format("YYYY-MM-DD"));
+      setDate(moment().format("YYYY-MM-DD"));
       setAnalysisData(null);
       setLoading(false);
     }
   }, [open]);
 
-  const handleViewLogs = async () => {
+  useEffect(() => {
+    if (open) {
+      handleViewLogs(date);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (open && deviceId) {
+      handleViewLogs(date);
+    }
+  }, [date]);
+
+  const handleViewLogs = async (selectedDate) => {
     if (!deviceId) {
       toast.error("Device id missing");
       return;
@@ -36,7 +47,7 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
     setLoading(true);
     const resp = await fetchDayAnalysis({
       deviceId,
-      day: dayjs(date).startOf("day").valueOf(),
+      day: moment(selectedDate).startOf("day").valueOf(),
     });
     setLoading(false);
 
@@ -84,33 +95,23 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
               id="log-date"
               type="date"
               value={date}
-              max={dayjs().format("YYYY-MM-DD")}
-              onChange={(e) => {
-                setDate(e.target.value);
-                setAnalysisData(null);
-              }}
+              max={moment().format("YYYY-MM-DD")}
+              onChange={(e) => setDate(e.target.value)}
+              disabled={loading}
               className="mt-2"
             />
           </div>
-
-          <Button
-            onClick={handleViewLogs}
-            disabled={loading}
-            className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
-          >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Loading...
-              </span>
-            ) : (
-              "View Logs"
-            )}
-          </Button>
         </div>
 
-        {analysisData && (
-          <div className=" max-h-[500px] overflow-y-auto border rounded-lg p-4 bg-gray-50">
+        {loading && (
+          <div className="flex justify-center items-center py-6 text-gray-600">
+            <span className="h-5 w-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin mr-2"></span>
+            Loading logs...
+          </div>
+        )}
+
+        {!loading && analysisData && (
+          <div className="max-h-[500px] overflow-y-auto border rounded-lg p-4 bg-gray-50">
             <ControlLogs
               selectedDate={new Date(date)}
               data={analysisData}

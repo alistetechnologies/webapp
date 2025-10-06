@@ -8,37 +8,69 @@ const isValidDate = (date) => {
 const ControlLogs = ({ data = [], appliance, selectedDate }) => {
     const [applianceAnalysis, setApplianceAnalysis] = useState([]);
 
+
     useEffect(() => {
         const applianceData =
             data?.snapshot?.appliances?.[appliance?.split("_")[1]]?.controlLogs || [];
         setApplianceAnalysis(applianceData);
     }, [data, appliance]);
-
     const filteredLogs = (applianceAnalysis || [])
-        .filter((log) => {
-            const logDate = isValidDate(log.originalTimestamp)
-                ? new Date(log.originalTimestamp)
-                : isValidDate(log.timestamp)
-                    ? new Date(log.timestamp)
-                    : null;
-            if (!logDate) return true;
+        ?.filter((log) => {
+            if (!log?.timestamp || !selectedDate) return false;
+            const logDate = new Date(log.timestamp);
             const selected = new Date(selectedDate);
-            selected.setHours(0, 0, 0, 0);
-            return logDate.getTime() >= selected.getTime();
+            if (isNaN(logDate.getTime()) || isNaN(selected.getTime())) return false;
+            return logDate.getTime() > selected.getTime();
         })
-        .sort((a, b) => {
-            const aTime = isValidDate(a.timestamp)
-                ? new Date(a.timestamp).getTime()
-                : isValidDate(a.originalTimestamp)
-                    ? new Date(a.originalTimestamp).getTime()
-                    : 0;
-            const bTime = isValidDate(b.timestamp)
-                ? new Date(b.timestamp).getTime()
-                : isValidDate(b.originalTimestamp)
-                    ? new Date(b.originalTimestamp).getTime()
-                    : 0;
-            return bTime - aTime;
-        });
+        ?.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+
+    // useEffect(() => {
+    //     const applianceData =
+    //         data?.snapshot?.appliances?.[appliance?.split("_")[1]]?.controlLogs || [];
+    //     setApplianceAnalysis(applianceData);
+    // }, [data, appliance]);
+    // console.log(applianceAnalysis)
+    // const filteredLogs = (applianceAnalysis || [])
+    //     .filter((log) => {
+    //         const logDate = new Date(log?.timestamp);
+    //         const selectedDateObject = new Date(new Date(selectedDate).setHours(0, 0, 0, 0));
+    //         if (!(logDate instanceof Date) || isNaN(logDate)) {
+    //             return false;
+    //         }
+    //         console.log("logDate", logDate.getTime(), selectedDateObject.getTime(), logDate.getTime() >= selectedDateObject.getTime(), logDate, selectedDate)
+    //         return logDate.getTime() >= selectedDateObject.getTime()
+
+    //     }).sort((a, b) => b.timestamp - a.timestamp)
+
+
+    // .filter((log) => {
+    //     const logDate = isValidDate(log.originalTimestamp)
+    //         ? new Date(log.originalTimestamp)
+    //         : isValidDate(log.timestamp)
+    //             ? new Date(log.timestamp)
+    //             : null;
+    //             console.log(logDate)
+    //             console.log(first)
+    //     if (!logDate) return false;
+    //     const selected = new Date(selectedDate);
+    //     selected.setHours(0, 0, 0, 0);
+    //     return logDate.getTime() > selected.getTime();
+    // })
+    // .sort((a, b) => {
+    //     const aTime = isValidDate(a.timestamp)
+    //         ? new Date(a.timestamp).getTime()
+    //         : isValidDate(a.originalTimestamp)
+    //             ? new Date(a.originalTimestamp).getTime()
+    //             : 0;
+    //     const bTime = isValidDate(b.timestamp)
+    //         ? new Date(b.timestamp).getTime()
+    //         : isValidDate(b.originalTimestamp)
+    //             ? new Date(b.originalTimestamp).getTime()
+    //             : 0;
+    //     return bTime - aTime;
+    // });
+    console.log("filteredData", filteredLogs)
     return (
         <div className="mt-4">
             {filteredLogs.length === 0 ? (
