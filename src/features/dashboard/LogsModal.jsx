@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import toast from "react-hot-toast";
-import { fetchDayAnalysis } from "./api/apis";
+import { fetchDayAnalysis } from "./api/device";
 import ControlLogs from "./ControlLogs";
 
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
   const [analysisData, setAnalysisData] = useState(null);
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
       setDate(moment().format("YYYY-MM-DD"));
       setAnalysisData(null);
       setLoading(false);
@@ -30,13 +30,7 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
     if (open) {
       handleViewLogs(date);
     }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && deviceId) {
-      handleViewLogs(date);
-    }
-  }, [date]);
+  }, [open, date]);
 
   const handleViewLogs = async (selectedDate) => {
     if (!deviceId) {
@@ -57,24 +51,7 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
     }
 
     const data = resp.data;
-    if (!data?.snapshot?.appliances && data?.controlLogs) {
-      const wrapped = {
-        ...data,
-        snapshot: {
-          ...data.snapshot,
-          appliances: {
-            [String(switchId)]: {
-              controlLogs: data.controlLogs.filter(
-                (l) => !l.switchId || String(l.switchId) === String(switchId)
-              ),
-            },
-          },
-        },
-      };
-      setAnalysisData(wrapped);
-    } else {
-      setAnalysisData(data);
-    }
+    setAnalysisData(data);
   };
 
   return (

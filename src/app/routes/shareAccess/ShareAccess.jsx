@@ -2,12 +2,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { useUser } from "@/features/auth/api/userStore";
 import { useAuth } from "@/features/auth/api/authStore";
 import { useNavigate } from "react-router-dom";
-
 import { fetchHouse } from "@/features/dashboard/api/house";
 import Filter from "@/features/dashboard/filter";
 import useHouseStore from "@/features/dashboard/houseStore";
 import { ShareAccessChild } from "@/features/shareAccess/ShareAccessChild";
-
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -19,6 +17,8 @@ export function ShareAccess() {
   const [house, setHouse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [error, setError] = useState("");
+
   useEffect(() => {
     if (!isLoggedIn()) {
       navigate("/", { replace: true });
@@ -35,12 +35,14 @@ export function ShareAccess() {
   const getUserHouse = async () => {
     if (!isLoggedIn() || !selectedHouse?.value) return;
     setLoading(true);
+    setError("");
     try {
       const houseDetails = await fetchHouse(selectedHouse.value);
 
       if (!houseDetails.success) {
         toast.error("Failed to fetch House!");
-        setLoading(false);
+        setError("Failed to fetch house details.");
+        setHouse(null);
         return;
       }
 
@@ -48,6 +50,7 @@ export function ShareAccess() {
       useHouseStore.getState().updateHouse(houseDetails.data);
     } catch (error) {
       toast.error("Error fetching house data!");
+      setError("An error occurred while fetching house data.");
     } finally {
       setLoading(false);
     }
@@ -57,10 +60,24 @@ export function ShareAccess() {
       getUserHouse();
     }
   }, [selectedHouse?.value, isLoggedIn]);
-  if (!selectedHouse) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
         <Spinner size="lg" />
+      </div>
+    );
+  }
+  if (!selectedHouse) {
+    return (
+      <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0] text-red-500">
+        <p>No house selected or available.</p>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0] text-red-500">
+        <p>{error}</p>
       </div>
     );
   }
@@ -75,13 +92,13 @@ export function ShareAccess() {
         onClick={getUserHouse}
       />
 
-      {loading && (
-        <div className="flex justify-center items-center h-full w-full bg-[#EAEBF0]">
-          <Spinner size="lg" />
+      {house ? (
+        <ShareAccessChild />
+      ) : (
+        <div className="flex justify-center items-center h-full w-full text-gray-500">
+          <p>Select a house to view access details.</p>
         </div>
       )}
-
-      {!loading && house && <ShareAccessChild />}
     </div>
   );
 }

@@ -20,7 +20,7 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
             const logDate = new Date(log.timestamp);
             const selected = new Date(selectedDate);
             if (isNaN(logDate.getTime()) || isNaN(selected.getTime())) return false;
-            return logDate.getTime() > selected.getTime();
+            return logDate.getTime() >= selected.getTime();
         })
         ?.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
@@ -70,7 +70,7 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
     //             : 0;
     //     return bTime - aTime;
     // });
-    console.log("filteredData", filteredLogs)
+    // console.log("filteredData", filteredLogs)
     return (
         <div className="mt-4">
             {filteredLogs.length === 0 ? (

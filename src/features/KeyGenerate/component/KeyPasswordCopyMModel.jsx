@@ -1,9 +1,8 @@
-import { Copy, PencilSquare } from "react-bootstrap-icons";
-import { Col, Form, Row, Table } from "react-bootstrap";
-import { FaFileDownload } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
-import { Alert } from "react-bootstrap";
+import { FaFileDownload } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import toast from "react-hot-toast";
 
 export const KeyPasswordCopyMModel = ({ data, onClose }) => {
   const downloadJSON = () => {
@@ -25,40 +24,42 @@ export const KeyPasswordCopyMModel = ({ data, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-      <div sx={{ width: "600px", p: 3, bgcolor: "white", borderRadius: 2, divShadow: 3 }}>
-        <p variant="h5" fontWeight="bold" mb={2}>
-          Key Details
-        </p>
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+        <h2 className="text-xl font-bold mb-4">Key Details</h2>
 
-        <Alert severity="warning" sx={{ mb: 3 }}>
-          These details are only shown once for security reasons. Save them securely to use the key.
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Warning</AlertTitle>
+          <AlertDescription>
+            These details are only shown once for security reasons. Save them securely to use the key.
+          </AlertDescription>
         </Alert>
 
-        <Paper variant="outlined" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", p: 2, mb: 2 }}>
-          <p fontWeight="bold">Key ID</p>
-          <div sx={{ display: "flex", alignItems: "center" }}>
-            <p sx={{ mr: 1 }}>{data.keyId}</p>
-            <Button onClick={() => copyToClipboard(data.keyId, "Key ID Copied")}>
-              <MdContentCopy fontSize="small" />
+        <div className="border rounded p-4 mb-3 flex justify-between items-center">
+          <p className="font-semibold">Key ID</p>
+          <div className="flex items-center gap-2">
+            <p>{data.keyId}</p>
+            <Button size="sm" onClick={() => copyToClipboard(data.keyId, "Key ID Copied")}>
+              <MdContentCopy className="text-lg" />
             </Button>
           </div>
-        </Paper>
+        </div>
 
-        <Paper variant="outlined" sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", p: 2 }}>
-          <p fontWeight="bold">Key Password</p>
-          <div sx={{ display: "flex", alignItems: "center" }}>
-            <p sx={{ mr: 1 }}>{data.keyPassword}</p>
-            <Button onClick={() => copyToClipboard(data.keyPassword, "Key Password Copied")}>
-              <MdContentCopy fontSize="small" />
+        <div className="border rounded p-4 mb-3 flex justify-between items-center">
+          <p className="font-semibold">Key Password</p>
+          <div className="flex items-center gap-2">
+            <p>{data.keyPassword}</p>
+            <Button size="sm" onClick={() => copyToClipboard(data.keyPassword, "Key Password Copied")}>
+              <MdContentCopy className="text-lg" />
             </Button>
           </div>
-        </Paper>
+        </div>
 
-        <div sx={{ display: "flex", justifyContent: "flex-start", gap: 2, mt: 3 }}>
-          <Button variant="contained" color="primary" startIcon={<FaFileDownload />} onClick={downloadJSON}>
+        <div className="flex justify-start gap-3 mt-4">
+          <Button variant="default" className="flex items-center gap-2" onClick={downloadJSON}>
+            <FaFileDownload className="text-base" />
             Download Key
           </Button>
-          <Button variant="contained" color="secondary" onClick={onClose}>
+          <Button variant="outline" onClick={onClose}>
             Close
           </Button>
         </div>
