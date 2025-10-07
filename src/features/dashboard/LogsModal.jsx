@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { fetchDayAnalysis } from "./api/device";
 import ControlLogs from "./ControlLogs";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -26,32 +27,31 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
     }
   }, [open]);
 
-  useEffect(() => {
-    if (open) {
-      handleViewLogs(date);
-    }
-  }, [open, date]);
-
-  const handleViewLogs = async (selectedDate) => {
+  const handleViewLogs = async () => {
     if (!deviceId) {
       toast.error("Device id missing");
       return;
     }
 
     setLoading(true);
-    const resp = await fetchDayAnalysis({
-      deviceId,
-      day: moment(selectedDate).startOf("day").valueOf(),
-    });
-    setLoading(false);
+    try {
+      const resp = await fetchDayAnalysis({
+        deviceId,
+        day: moment(date).startOf("day").valueOf(),
+      });
 
-    if (!resp || !resp.success) {
-      toast.error(resp?.message || "Failed to fetch logs");
-      return;
+      if (!resp || !resp.success) {
+        toast.error(resp?.message || "Failed to fetch logs");
+        setLoading(false);
+        return;
+      }
+
+      setAnalysisData(resp.data);
+    } catch (err) {
+      toast.error("Error fetching logs");
+    } finally {
+      setLoading(false);
     }
-
-    const data = resp.data;
-    setAnalysisData(data);
   };
 
   return (
@@ -73,21 +73,33 @@ export default function LogsModal({ open, onClose, deviceId, switchId, appliance
               type="date"
               value={date}
               max={moment().format("YYYY-MM-DD")}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => {
+                setDate(e.target.value)
+                setAnalysisData(null)
+              }}
+
               disabled={loading}
               className="mt-2"
             />
           </div>
+
+          <Button
+            onClick={handleViewLogs}
+            disabled={loading}
+            className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Loading...
+              </span>
+            ) : (
+              "View Logs"
+            )}
+          </Button>
         </div>
 
-        {loading && (
-          <div className="flex justify-center items-center py-6 text-gray-600">
-            <span className="h-5 w-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin mr-2"></span>
-            Loading logs...
-          </div>
-        )}
-
-        {!loading && analysisData && (
+        {analysisData && (
           <div className="max-h-[500px] overflow-y-auto border rounded-lg p-4 bg-gray-50">
             <ControlLogs
               selectedDate={new Date(date)}
