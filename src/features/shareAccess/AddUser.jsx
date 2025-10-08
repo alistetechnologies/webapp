@@ -282,7 +282,7 @@ const AddUser = ({
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="p-6 bg-white rounded-lg shadow-lg space-y-4 max-w-lg w-full py-10">
+        <DialogContent className="p-6 bg-white rounded-lg shadow-lg space-y-4 min-w-[1000px] py-10 max-h-[800px] min-h-[600px] overflow-y-scroll">
           <DialogHeader>
             <DialogTitle>
               <p className="text-2xl">
