@@ -19,6 +19,7 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
             const logTimestamp = log?.originalTimestamp || log?.timestamp;
 
             if (!logTimestamp || !selectedDate) return false;
+            if (log?.controllerId === "disconnect" || log?.controllerId === "conn") return false;
             const logDate = new Date(logTimestamp);
             const selected = new Date(new Date(selectedDate).setHours(0, 0, 0, 0));
             if (isNaN(logDate.getTime()) || isNaN(selected.getTime())) return false;
