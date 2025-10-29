@@ -18,6 +18,7 @@ import { useUser } from "../api/userStore";
 import { Spinner } from "@/components/ui/spinner";
 import CountdownTimer from "@/components/ui/common/CountdownTimer";
 import { getBrowserDetails, getDeviceIdentifier } from "@/utils/browser";
+import { fetchUserHouses } from "@/features/dashboard/api/house";
 
 export function OtpInput() {
   const [value, setValue] = useState("");
@@ -99,6 +100,9 @@ export function OtpInput() {
         });
 
         const user = await fetchUser();
+
+        fetchUserHouses(user?.email);
+
         if (Object.keys(user).length > 0) {
           useUser.getState().updateUser(user);
 

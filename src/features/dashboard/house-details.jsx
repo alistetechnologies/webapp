@@ -62,7 +62,7 @@ export function HouseDetails() {
 
     getConnectedDevices();
   }, [selectedHouse?.value, house]);
-  console.debug(house, "house");
+
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <Filter

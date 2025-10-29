@@ -3,6 +3,7 @@ import { useAuth } from "@/features/auth/api/authStore";
 
 import { api } from "@/lib/apiClient";
 import useHouseStore from "../houseStore";
+import useUserHousesStore from "../housesStore";
 
 export const fetchHouse = async (houseId) => {
   const userNumber = useAuth.getState().auth.number;
@@ -78,6 +79,19 @@ export const fetchUserHouses = async (email) => {
     const response = await api.get(
       `${serverUrl.sub}/api/fetch/keys/${email}?user=${email}`
     );
+    const data = response.data;
+
+    const masterOf = data?.masterOf?.map((h) => ({
+      label: h?.houseName,
+      value: h?.houseAccessCode,
+    }));
+    let memberof = data?.memberOf?.map((h) => ({
+      label: h?.houseName,
+      value: h?.houseAccessCode,
+    }));
+    const allHouses = [...masterOf, ...memberof];
+
+    useUserHousesStore.getState().updateHouses(allHouses);
 
     return response.data;
   } catch (error) {

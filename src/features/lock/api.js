@@ -20,7 +20,6 @@ export const adminPasswordApi = async (url, data, token) => {
 
     return response.data;
   } catch (err) {
-    console.log("error in fetchAdminPassword", err.message);
     return "";
   }
 };
