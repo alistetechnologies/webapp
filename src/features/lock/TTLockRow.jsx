@@ -26,6 +26,7 @@ function TTLockRow({
   hubConneted,
   lockHubId,
   updateHouse,
+  setEkeyDetails,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -105,18 +106,17 @@ function TTLockRow({
       <TableCell className=" text-center">
         {hubConneted?.length > 0
           ? battery !== null && (
-              <span
-                className={`${
-                  battery < 20
-                    ? "text-red-600"
-                    : battery < 40
+            <span
+              className={`${battery < 20
+                  ? "text-red-600"
+                  : battery < 40
                     ? " text-orange-300"
                     : ""
                 }`}
-              >
-                {battery}
-              </span>
-            )
+            >
+              {battery}
+            </span>
+          )
           : "---"}
       </TableCell>
       <TableCell className=" text-center" style={{ whiteSpace: "nowrap" }}>
@@ -212,6 +212,20 @@ function TTLockRow({
             ) : (
               "Sync Lock"
             )}
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
+              setEkeyDetails(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            E-Key Details
           </Button>
         </div>
       </TableCell>

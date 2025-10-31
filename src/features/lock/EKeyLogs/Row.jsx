@@ -1,0 +1,35 @@
+import { TableCell, TableRow } from '@/components/ui/table';
+import moment from 'moment';
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
+
+function Row({ data, index }) {
+    const handleCopy = () => {
+        if (data?.keyData) {
+            navigator.clipboard.writeText(data.keyData);
+            toast.success("Lock data copied to clipboard!");
+        } else {
+            toast.error("No lock data found!");
+        }
+    };
+
+    return (
+        <TableRow key={index}>
+            <TableCell>{data?._id}</TableCell>
+            <TableCell>{`${data?.userId?.first_name || ""} ${data?.userId?.last_name || ""}`.trim()}</TableCell>
+            <TableCell>{data?.type}</TableCell>
+            <TableCell>{moment(data?.startTime).format('LT')}</TableCell>
+            <TableCell>{moment(data?.endTime).format('LT')}</TableCell>
+            <TableCell>{data?.active ? "True" : "False"}</TableCell>
+            <TableCell>{moment(data?.startTime).format('DD MMM YYYY')}</TableCell>
+            <TableCell>
+                <Button variant="default" size="sm" onClick={handleCopy}>
+                    Copy Lock Data
+                </Button>
+            </TableCell>
+        </TableRow>
+    );
+}
+
+export default Row;
