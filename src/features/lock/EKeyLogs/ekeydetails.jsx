@@ -29,52 +29,13 @@ function EkeyDetails({ open, setOpen, roomId }) {
         if (filter === "type") setSelectedType(value);
     };
 
-    const getEkeyDetails = async () => {
-        const toastId = toast.loading("Fetching eKey Details...");
-        try {
-            const response = await axios.post(
-                `${serverUrl.lockservice}/fetch/ekeyLogs`,
-                {
-                    roomId,
-                    startDate: startDate,
-                    endDate: endDate,
-                },
-                {
-                    headers: {
-                        Authorization:
-                            "Basic NFJkbVdDWnA6ZlR0bnI4RjRkWkZJVG9xZmtETW5oT1JrWVg3cUhpYW0=",
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            console.log(response);
-            const data = response?.data?.data?.ekeys || [];
-            const finalData = filters(data);
-
-            setRecord(data);
-            setFilteredRecord(finalData);
-
-            if (finalData.length === 0) {
-                toast.error("No records found for selected filters");
-            } else {
-                toast.success("Data fetched successfully");
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Something went wrong while fetching Details");
-            setRecord([]);
-            setFilteredRecord([]);
-        } finally {
-            toast.dismiss(toastId);
-        }
-    };
     const filters = (data) => {
         let filtered = [...data];
 
         if (selectedUser) {
             filtered = filtered.filter(
                 (item) =>
-                    item.user?.toLowerCase() === selectedUser.toLowerCase()
+                    item.userName?.toLowerCase() === selectedUser.toLowerCase()
             );
         }
 
@@ -92,12 +53,61 @@ function EkeyDetails({ open, setOpen, roomId }) {
 
         return filtered;
     };
-    useEffect(() => {
-        if (record.length > 0) {
-            const filtered = filters(record);
-            setFilteredRecord(filtered);
+
+    const getEkeyDetails = async () => {
+        const toastId = toast.loading("Fetching eKey Details...");
+        try {
+            const response = await axios.post(
+                `${serverUrl.lockservice}/fetch/ekeyLogs`,
+                {
+                    roomId,
+                    startDate,
+                    endDate,
+                },
+                {
+                    headers: {
+                        Authorization:
+                            "Basic NFJkbVdDWnA6ZlR0bnI4RjRkWkZJVG9xZmtETW5oT1JrWVg3cUhpYW0=",
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            const data = response?.data?.data?.ekeys || [];
+            const withUserNames = data.map((item) => ({
+                ...item,
+                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""}`.trim(),
+            }));
+
+            const uniqueUsers = [
+                ...new Set(
+                    withUserNames
+                        .map((i) => i.userName)
+                        .filter((name) => name && name.length > 0)
+                ),
+            ];
+            setUserList(uniqueUsers);
+
+            const finalData = filters(withUserNames);
+
+            setRecord(withUserNames);
+            setFilteredRecord(finalData);
+
+            if (finalData.length === 0) {
+                toast.error("No records found for selected filters");
+            } else {
+                toast.success("Data fetched successfully");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong while fetching Details");
+            setRecord([]);
+            setFilteredRecord([]);
+            setUserList([]);
+        } finally {
+            toast.dismiss(toastId);
         }
-    }, [selectedUser, selectedActive, selectedType]);
+    };
 
     useEffect(() => {
         if (open && roomId) {
@@ -110,12 +120,14 @@ function EkeyDetails({ open, setOpen, roomId }) {
             setSelectedUser("");
             setSelectedActive("All");
             setSelectedType("All");
+            setUserList([]);
         }
     }, [open, roomId]);
 
     const handleClose = () => {
         setRecord([]);
         setFilteredRecord([]);
+        setUserList([]);
         setOpen(false);
     };
 
@@ -150,7 +162,6 @@ function EkeyDetails({ open, setOpen, roomId }) {
                 </DialogHeader>
 
                 <div className="flex flex-wrap items-end gap-4 mt-4 mb-4">
-
                     <div className="flex flex-col">
                         <label className="text-sm font-medium mb-1">Start Date</label>
                         <input
