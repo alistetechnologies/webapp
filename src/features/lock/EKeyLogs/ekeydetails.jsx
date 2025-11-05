@@ -109,20 +109,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
         }
     };
 
-    useEffect(() => {
-        if (open && roomId) {
-            getEkeyDetails();
-        } else {
-            setRecord([]);
-            setFilteredRecord([]);
-            setStartDate("");
-            setEndDate("");
-            setSelectedUser("");
-            setSelectedActive("All");
-            setSelectedType("All");
-            setUserList([]);
-        }
-    }, [open, roomId]);
+    }, [open, roomId, startDate, endDate, selectedUser, selectedActive, selectedType]);
 
     const handleClose = () => {
         setRecord([]);
