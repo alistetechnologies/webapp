@@ -7,7 +7,7 @@ function Row({ lock, index, lockRoomName, hubConneted }) {
   let [roomName, setRoomName] = useState("")
   useEffect(() => {
     if (Object.keys(lockRoomName).length > 0 && hubConneted.length > 0) {
-      let name = hubConneted.filter(e => e.hubId == lock.gatewayId).reduce((p, c) => {
+      let name = hubConneted.filter(e => e.hubId === lock.gatewayId).reduce((p, c) => {
         if (lockRoomName[c.lockId] !== undefined) {
           return `${p === "" ? "" : `${p},`}${lockRoomName[c.lockId]}`
         } else {
