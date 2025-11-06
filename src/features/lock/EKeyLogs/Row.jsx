@@ -4,7 +4,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 
-function Row({ data, index }) {
+function Row({ data }) {
     const handleCopy = () => {
         if (data?.keyData) {
             navigator.clipboard.writeText(data.keyData).catch((err) => {
@@ -18,7 +18,7 @@ function Row({ data, index }) {
     };
 
     return (
-        <TableRow key={index}>
+        <TableRow>
             <TableCell>{data?._id}</TableCell>
             <TableCell>{`${data?.userId?.first_name || ""} ${data?.userId?.last_name || ""}`.trim()}</TableCell>
             <TableCell>{data?.type}</TableCell>

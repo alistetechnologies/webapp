@@ -263,7 +263,7 @@ export function LockDetails() {
                         key={lock?.lockId}
                         updateHouse={getUserHouse}
                         setEkeyDetails={setEkeyDetails}
-                        setRoomid={setRoomId} />
+                        setRoomId={setRoomId} />
                     );
                   })}
             </TableBody>

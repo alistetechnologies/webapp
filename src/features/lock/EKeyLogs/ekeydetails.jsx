@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import axios from "axios";
-import { serverUrl } from "@/constants/config";
+import { serverUrl, token } from "@/constants/config";
 import toast from "react-hot-toast";
 import Row from "./Row";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
     const [selectedActive, setSelectedActive] = useState("All");
     const [selectedType, setSelectedType] = useState("All");
     const [userList, setUserList] = useState([]);
+
     const handleFilterChange = (filter, value) => {
         if (filter === "user") setSelectedUser(value);
         if (filter === "active") setSelectedActive(value);
@@ -66,9 +67,8 @@ function EkeyDetails({ open, setOpen, roomId }) {
                 },
                 {
                     headers: {
-                        Authorization:
-                            "Basic NFJkbVdDWnA6ZlR0bnI4RjRkWkZJVG9xZmtETW5oT1JrWVg3cUhpYW0=",
                         "Content-Type": "application/json",
+                        Authorization: token,
                     },
                 }
             );
@@ -76,7 +76,8 @@ function EkeyDetails({ open, setOpen, roomId }) {
             const data = response?.data?.data?.ekeys || [];
             const withUserNames = data.map((item) => ({
                 ...item,
-                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""}`.trim(),
+                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""
+                    }`.trim(),
             }));
 
             const uniqueUsers = [
@@ -109,7 +110,20 @@ function EkeyDetails({ open, setOpen, roomId }) {
         }
     };
 
-    }, [open, roomId, startDate, endDate, selectedUser, selectedActive, selectedType]);
+    useEffect(() => {
+        if (open && roomId) {
+            getEkeyDetails();
+        } else {
+            setRecord([]);
+            setFilteredRecord([]);
+            setStartDate("");
+            setEndDate("");
+            setSelectedUser("");
+            setSelectedActive("All");
+            setSelectedType("All");
+            setUserList([]);
+        }
+    }, [open, roomId]);
 
     const handleClose = () => {
         setRecord([]);
@@ -150,7 +164,9 @@ function EkeyDetails({ open, setOpen, roomId }) {
 
                 <div className="flex flex-wrap items-end gap-4 mt-4 mb-4">
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">Start Date</label>
+                        <label className="text-sm font-medium mb-1">
+                            Start Date
+                        </label>
                         <input
                             type="date"
                             value={startDate}
@@ -176,12 +192,14 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">User</label>
                         <select
                             value={selectedUser}
-                            onChange={(e) => handleFilterChange("user", e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange("user", e.target.value)
+                            }
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-52"
                         >
                             <option value="">All Users</option>
                             {userList.map((user, i) => (
-                                <option key={i} value={user}>
+                                <option key={user} value={user}>
                                     {user}
                                 </option>
                             ))}
@@ -192,7 +210,9 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">Active</label>
                         <select
                             value={selectedActive}
-                            onChange={(e) => handleFilterChange("active", e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange("active", e.target.value)
+                            }
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-40"
                         >
                             <option value="All">All</option>
@@ -205,7 +225,9 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">Type</label>
                         <select
                             value={selectedType}
-                            onChange={(e) => handleFilterChange("type", e.target.value)}
+                            onChange={(e) =>
+                                handleFilterChange("type", e.target.value)
+                            }
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-52"
                         >
                             <option value="All">All</option>
@@ -230,7 +252,10 @@ function EkeyDetails({ open, setOpen, roomId }) {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="8" className="text-center text-gray-500 py-4">
+                                <td
+                                    colSpan="8"
+                                    className="text-center text-gray-500 py-4"
+                                >
                                     No records found.
                                 </td>
                             </tr>
