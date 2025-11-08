@@ -97,7 +97,7 @@ const URLS = {
 };
 
 export const serverUrl = URLS[ENV_MODE] || URLS["STAGE"];
-let test = true;
+let test = false;
 export const octiotUrl = test?"https://logochange.d3ur38zaztu1ky.amplifyapp.com/":"https://luxe.octiotenergy.com" 
 
 export const token =
