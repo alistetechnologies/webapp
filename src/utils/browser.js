@@ -25,14 +25,16 @@ export let isOctiot = document.URL.includes(octiotUrl)
 export const faviconUpdate = async () => {
       //grab favicon element by ID
       const favicon = window.document.getElementById("favicon");
-    
+      const title = window.document.getElementById("web-title")
       //check count value, if below 0 we change href property to our red circle image path
       if (isOctiot) {
         favicon.href = `/OCTIOT.ico`;
         document.title = "Energy Savings"
+        title.innerText="OCTIOT"
       }
       //if above 0, we set back to green
       else {
         favicon.href = `/favicon.ico`;
+        title.innerText="Aliste Technologies"
       }
 };
