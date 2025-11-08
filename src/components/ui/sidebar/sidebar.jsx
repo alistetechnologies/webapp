@@ -11,12 +11,15 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { isOctiot } from "@/utils/browser";
+import { faviconUpdate, isOctiot } from "@/utils/browser";
 import { images } from "@/constants/images";
+import { useEffect } from "react";
 
 export default function Sidebar() {
   const location = useLocation();
-
+ useEffect(()=>{
+    faviconUpdate()
+  },[])
   const routes = [
     {
       label: "Home",

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '@/features/auth/component/login-form';
 import { OtpInput } from '@/features/auth/component/otp-input';
 import { useAuth } from '@/features/auth/api/authStore';
-import { isOctiot } from '@/utils/browser';
+import { faviconUpdate, isOctiot } from '@/utils/browser';
 import { images } from '@/constants/images';
 
 export function LoginRoute() {
@@ -18,7 +18,9 @@ export function LoginRoute() {
       navigate('/', { replace: true });
     }
   }, [isLoggedIn, navigate]);
-
+ useEffect(()=>{
+    faviconUpdate()
+  },[])
   return (
     <div className='flex flex-col md:flex-row h-full'>
       {/* Left side */}
