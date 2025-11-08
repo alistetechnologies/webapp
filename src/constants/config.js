@@ -97,6 +97,8 @@ const URLS = {
 };
 
 export const serverUrl = URLS[ENV_MODE] || URLS["STAGE"];
+let test = false;
+export const octiotUrl = test?"http://localhost:5173":"https://luxe.octiotenergy.com" 
 
 export const token =
   "Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA=";
