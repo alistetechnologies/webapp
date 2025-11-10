@@ -12,7 +12,7 @@ export default function LoginForm({ setOtpSent }) {
   const [number, setNumber] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [passwordLogin, setPasswordLogin] = useState(isOctiot?true:false);
+  const [passwordLogin, setPasswordLogin] = useState(isOctiot ? true : false);
 
   async function requestOtp() {
     if (number.length !== 10) {
