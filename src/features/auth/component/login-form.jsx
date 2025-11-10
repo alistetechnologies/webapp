@@ -50,7 +50,6 @@ export default function LoginForm({ setOtpSent }) {
   function onSubmit(e) {
     e.preventDefault();
   }
-console.log(passwordLogin)
   if (passwordLogin) {
     return (
       <div className="w-[20rem] space-y-4">
