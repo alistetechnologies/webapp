@@ -47,7 +47,7 @@ export default function LoginForm({ setOtpSent }) {
     setOtpSent(true);
   }
 
-  function onSubmit() {
+  function onSubmit(e) {
     e.preventDefault();
   }
 console.log(passwordLogin)
