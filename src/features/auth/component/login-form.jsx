@@ -56,7 +56,7 @@ console.log(passwordLogin)
       <div className="w-[20rem] space-y-4">
         <LoginWithPassword setPasswordLogin={setPasswordLogin} />
         {
-          !isOctiot &&  <p
+          !isOctiot && <p
           className="text-sm hover:underline mt-0 cursor-pointer"
           onClick={() => setPasswordLogin(false)}
         >
