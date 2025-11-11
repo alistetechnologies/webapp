@@ -313,11 +313,33 @@ export function AddAutoTImer() {
                 <Table className="w-full bg-white ">
                   <TableHeader className="sticky top-0 z-10 bg-white">
                     <TableRow className="sticky top-0">
-                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">
-                        Applianc style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}e Name
+                      <TableHead
+                        style={{
+                          ...(isOctiot
+                            ? { fontSize: octiotFont.headerFontSize }
+                            : {}),
+                        }}
+                        className="text-black"
+                      >
+                        Appliance Name
                       </TableHead>
-                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}></TableHead>
-                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">Status</TableHead>
+                      <TableHead
+                        style={{
+                          ...(isOctiot
+                            ? { fontSize: octiotFont.headerFontSize }
+                            : {}),
+                        }}
+                      ></TableHead>
+                      <TableHead
+                        style={{
+                          ...(isOctiot
+                            ? { fontSize: octiotFont.headerFontSize }
+                            : {}),
+                        }}
+                        className="text-black"
+                      >
+                        Status
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">
