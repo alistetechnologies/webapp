@@ -5,7 +5,7 @@ import { isOctiot } from "@/utils/browser";
 export function MainHeader() {
   return (
     <TableRow className="text-black">
-      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>S.No</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize,padding:'25px'} : {})}}>S.No</TableHead>
       <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Room Name</TableHead>
       <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Occupied</TableHead>
       <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Total Devices</TableHead>
