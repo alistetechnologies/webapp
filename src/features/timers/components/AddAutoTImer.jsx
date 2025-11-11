@@ -321,7 +321,7 @@ export function AddAutoTImer() {
                         }}
                         className="text-black"
                       >
-                        Appliance style Name
+                        Appliance Name
                       </TableHead>
                       <TableHead
                         style={{
