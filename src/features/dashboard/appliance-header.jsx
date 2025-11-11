@@ -1,19 +1,21 @@
 import { TableHead, TableRow } from "@/components/ui/table";
+import { octiotFont } from "@/constants/config";
+import { isOctiot } from "@/utils/browser";
 
 export function ApplianceHeader() {
   return (
     <TableRow className="text-[0.85rem]">
-      <TableHead className="text-black">S.NO</TableHead>
-      <TableHead className="text-black">Appliance Name</TableHead>
-      <TableHead className="text-black">Appliance On time</TableHead>
-      <TableHead className="text-black">Appliance Online time</TableHead>
-      <TableHead className="text-black">Total Commands</TableHead>
-      <TableHead className="text-black">Smart Commands</TableHead>
-      <TableHead className="text-black">Switch Commands</TableHead>
-      <TableHead className="text-black">State</TableHead>
-      <TableHead className="text-black">Status</TableHead>
-      <TableHead className="text-black">Offline Since</TableHead>
-      <TableHead className="text-black">Actions</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>S.NO</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Appliance Name</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Appliance On time</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Appliance Online time</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Total Commands</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Smart Commands</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Switch Commands</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>State</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Status</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Offline Since</TableHead>
+      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Actions</TableHead>
     </TableRow>
   );
   return (

@@ -6,6 +6,8 @@ import { ArrowBigLeft, CircleChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import RefreshDataButton from "@/components/ui/common/RefreshData";
 import useUserHousesStore from "./housesStore";
+import { isOctiot } from "@/utils/browser";
+import { octiotFont } from "@/constants/config";
 
 export default function Filter({
   house,
@@ -53,7 +55,7 @@ export default function Filter({
       <div className="space-y-4 flex gap-4 items-center">
         <div className="flex gap-4 items-center flex-1">
           {backBtn && <CircleChevronLeft onClick={() => navigate(backLink)} />}
-          <h2 className="text-2xl hover:underline">House Name:</h2>
+          <h2 className="text-2xl hover:underline"  style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>House Name:</h2>
 
           <Select
             options={options}
@@ -73,7 +75,7 @@ export default function Filter({
             className="flex gap-4 items-center m-0 mt-0 flex-1"
             style={{ marginTop: 0 }}
           >
-            <h2 className=" text-2xl">Date:</h2>
+            <h2 className=" text-2xl"  style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize}:{})}}>Date:</h2>
             <input
               type="date"
               className="border p-2 rounded-md border-[rgb(204,204,204)] hover:border-slate-600 w-52 mt-0"
