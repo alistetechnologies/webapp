@@ -1,4 +1,6 @@
 import { TableCell } from "@/components/ui/table";
+import { octiotFont } from "@/constants/config";
+import { isOctiot } from "@/utils/browser";
 import React, { useEffect, useState } from "react";
 
 export default function Commands({ analysisData }) {
@@ -48,9 +50,9 @@ export default function Commands({ analysisData }) {
   }, [analysisData]);
   return (
     <>
-      <TableCell>{smartCommands + switchCommands}</TableCell>
-      <TableCell>{smartCommands}</TableCell>
-      <TableCell>{switchCommands}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{smartCommands + switchCommands}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{smartCommands}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{switchCommands}</TableCell>
     </>
   );
   return (

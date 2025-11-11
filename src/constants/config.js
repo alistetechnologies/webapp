@@ -95,10 +95,13 @@ const URLS = {
       "https://v3kglrcssj.execute-api.ap-south-1.amazonaws.com/default",
   },
 };
-
+export const octiotFont = {
+  subHeaderFontSize:'14px',
+  headerFontSize:'18px'
+}
 export const serverUrl = URLS[ENV_MODE] || URLS["STAGE"];
 let test = false;
-export const octiotUrl = test?"http://localhost:5176":"https://luxe.octiotenergy.com" 
+export const octiotUrl = test?"http://localhost:5173":"https://luxe.octiotenergy.com" 
 
 export const token =
   "Basic N0padjUwWG46RFFFWTdsdjUzcVg0bnFhVkxVd25TMmxuczlhUERPRzA=";

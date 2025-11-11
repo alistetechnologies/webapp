@@ -3,6 +3,8 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import React from 'react'
 import { useNavigate, useNavigation } from 'react-router-dom'
 import { useUser } from '../auth/api/userStore'
+import { isOctiot } from '@/utils/browser'
+import { octiotFont } from '@/constants/config'
 
 
 export default function House({house,index}) {
@@ -11,8 +13,8 @@ export default function House({house,index}) {
   
   return (
     <TableRow className='text-lg'>
-        <TableCell>{index+1}</TableCell>
-        <TableCell>{house?.label}</TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{index+1}</TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{house?.label}</TableCell>
         <TableCell>
           <Button
             onClick={() => {

@@ -16,7 +16,7 @@ import useHouseStore from "@/features/dashboard/houseStore";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DeviceTypeMap } from "@/constants/config";
+import { DeviceTypeMap, octiotFont } from "@/constants/config";
 import { setAutoTimers } from "../api/AutoTimers";
 import toast from "react-hot-toast";
 import {
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { AutoTimersSelectAppliances } from "./AutoTimersSelectAppliaces";
 import { Separator } from "@/components/ui/separator";
+import { isOctiot } from "@/utils/browser";
 
 export function UpdateAutoTimer({ data, deviceId }) {
   const houseData = useHouseStore((state) => state.house);
@@ -352,8 +353,8 @@ export function UpdateAutoTimer({ data, deviceId }) {
                 <Table className="w-full bg-white ">
                   <TableHeader className="sticky top-0 z-10 bg-white">
                     <TableRow className="sticky top-0">
-                      <TableHead className="text-black">Appliance</TableHead>
-                      <TableHead className="text-black">Select</TableHead>
+                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">Appliance</TableHead>
+                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">Select</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">

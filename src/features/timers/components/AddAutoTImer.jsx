@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DeviceTypeMap } from "@/constants/config";
+import { DeviceTypeMap, octiotFont } from "@/constants/config";
 import useHouseStore from "@/features/dashboard/houseStore";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
+import { isOctiot } from "@/utils/browser";
 
 export function AddAutoTImer() {
   const houseData = useHouseStore((state) => state.house);
@@ -312,11 +313,11 @@ export function AddAutoTImer() {
                 <Table className="w-full bg-white ">
                   <TableHeader className="sticky top-0 z-10 bg-white">
                     <TableRow className="sticky top-0">
-                      <TableHead className="text-black">
-                        Appliance Name
+                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">
+                        Applianc style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}e Name
                       </TableHead>
-                      <TableHead></TableHead>
-                      <TableHead className="text-black">Status</TableHead>
+                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}></TableHead>
+                      <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}} className="text-black">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">

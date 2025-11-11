@@ -1,6 +1,8 @@
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { octiotFont } from "@/constants/config";
 import { cn } from "@/lib/utils";
+import { isOctiot } from "@/utils/browser";
 import React, { useEffect, useState } from "react";
 
 export function AutoTimersSelectAppliances({ data, state, updateState }) {
@@ -52,12 +54,13 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
           "w-auto",
           disabled && "text-muted-foreground text-opacity-50"
         )}
+        style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
       >
         {data.switchName}
       </TableCell>
 
       <TableCell>
-        <span className="text-muted-foreground">
+        <span className="text-muted-foreground" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
           {data?.autoTurnOff
             ? "AutoCut Enabled"
             : data?.autoTimers?.turnOnAfter || data?.autoTimers?.turnOffAfter
@@ -67,7 +70,7 @@ export function AutoTimersSelectAppliances({ data, state, updateState }) {
       </TableCell>
       {/* Checkbox */}
       <TableCell className="w-auto">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
           <input
             type="checkbox"
             checked={isDataInState !== undefined}

@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DeviceTypeMap } from "@/constants/config";
+import { DeviceTypeMap, octiotFont } from "@/constants/config";
 import useHouseStore from "@/features/dashboard/houseStore";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -30,6 +30,7 @@ import {
 import { setAutoCut } from "../api/autocut";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
+import { isOctiot } from "@/utils/browser";
 
 function convertToHMS(seconds) {
   const hours = Math.floor(seconds / 3600);
@@ -255,11 +256,11 @@ export function AddAutoCut({ update = false, data }) {
                 <Table className="w-full bg-white p-2">
                   <TableHeader className="sticky top-0 z-10 bg-white">
                     <TableRow className="sticky top-0">
-                      <TableHead className="text-black">
+                      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>
                         Appliance Name
                       </TableHead>
                       <TableHead></TableHead>
-                      <TableHead className="text-black">Status</TableHead>
+                      <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="max-h-64 overflow-y-scroll">

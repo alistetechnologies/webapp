@@ -7,6 +7,8 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import NovaContainer from "./nova/NovaContainer";
 import { Dot } from "lucide-react";
 import RoomDialog from "./EditRoom";
+import { isOctiot } from "@/utils/browser";
+import { octiotFont } from "@/constants/config";
 
 export function DeviceDetails({
   room,
@@ -115,15 +117,15 @@ export function DeviceDetails({
   return (
     <>
       <TableRow className="text-lg text-center">
-        <TableCell>{String(sno).padStart(2, "0")}</TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{String(sno).padStart(2, "0")}</TableCell>
         <TableCell className="flex items-center gap-x-2 text-left">
           <div className="flex justify-end w-full">
             <div className="flex justify-between w-full">
-              <span>{room?.roomName}</span>
+              <span style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{room?.roomName}</span>
             </div>
           </div>
         </TableCell>
-        <TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
           {room?.occupied === null ? (
             "---"
           ) : room?.occupied ? (
@@ -132,19 +134,19 @@ export function DeviceDetails({
             <span className="text-red-400">No</span>
           )}
         </TableCell>
-        <TableCell>{totalAppliances}</TableCell>
-        <TableCell>{onAppliances}</TableCell>
-        <TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{totalAppliances}</TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{onAppliances}</TableCell>
+        <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
           {totalAppliances === 0 ? (
-            <span className="text-red-600">0 %</span>
+            <span className="text-red-600" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>0 %</span>
           ) : connectivityStatus === "100" ? (
-            <span className="text-green-400">{connectivityStatus} %</span>
+            <span className="text-green-400" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{connectivityStatus} %</span>
           ) : (
-            <span className="text-red-400">{connectivityStatus} %</span>
+            <span className="text-red-400" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{connectivityStatus} %</span>
           )}
         </TableCell>
         <Commands analysisData={appliancesAnalysisData} />
-        <TableCell className="flex justify-between gap-2">
+        <TableCell className="flex justify-between gap-2" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
           <RoomDialog
             roomId={room?._id}
             roomName={room?.roomName}

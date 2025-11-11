@@ -14,12 +14,14 @@ import { Separator } from "@/components/ui/separator";
 import { faviconUpdate, isOctiot } from "@/utils/browser";
 import { images } from "@/constants/images";
 import { useEffect } from "react";
+import { octiotFont } from "@/constants/config";
 
 export default function Sidebar() {
   const location = useLocation();
  useEffect(()=>{
     faviconUpdate()
   },[])
+
   const routes = [
     {
       label: "Home",
@@ -99,7 +101,7 @@ export default function Sidebar() {
                     : "text-[#292929]"
                 )}
               >
-                <div className="flex items-center flex-1">
+                <div className="flex items-center flex-1" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize} : {})}}>
                   <route.icon className={cn("h-6 w-6 mr-3", route.color)} />
                   {route.label}
                 </div>
@@ -153,7 +155,7 @@ export default function Sidebar() {
                   key={route.href}
                   className="text-sm font-medium flex p-3 w-full justify-start cursor-pointer hover:bg-slate-200 rounded-lg transition"
                 >
-                  <div className="flex items-center flex-1">
+                  <div className="flex items-center flex-1" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize} : {})}}>
                     <route.icon className={cn("h-5 w-5 mr-5", route.color)} />
                     {route.label}
                   </div>
