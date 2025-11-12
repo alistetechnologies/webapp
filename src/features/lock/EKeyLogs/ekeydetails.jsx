@@ -56,6 +56,11 @@ function EkeyDetails({ open, setOpen, roomId }) {
     };
 
     const getEkeyDetails = async () => {
+        if (!roomId) {
+            toast.error("Room ID is missing");
+            return;
+        }
+
         const toastId = toast.loading("Fetching eKey Details...");
         try {
             const response = await axios.post(
@@ -76,8 +81,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
             const data = response?.data?.data?.ekeys || [];
             const withUserNames = data.map((item) => ({
                 ...item,
-                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""
-                    }`.trim(),
+                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""}`.trim(),
             }));
 
             const uniqueUsers = [
@@ -90,7 +94,6 @@ function EkeyDetails({ open, setOpen, roomId }) {
             setUserList(uniqueUsers);
 
             const finalData = filters(withUserNames);
-
             setRecord(withUserNames);
             setFilteredRecord(finalData);
 
@@ -111,8 +114,15 @@ function EkeyDetails({ open, setOpen, roomId }) {
     };
 
     useEffect(() => {
-        if (open && roomId) {
-            getEkeyDetails();
+        if (open) {
+            const today = new Date();
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+
+            const formatDate = (d) => d.toISOString().split("T")[0];
+
+            setEndDate(formatDate(today));
+            setStartDate(formatDate(oneMonthAgo));
         } else {
             setRecord([]);
             setFilteredRecord([]);
@@ -123,12 +133,9 @@ function EkeyDetails({ open, setOpen, roomId }) {
             setSelectedType("All");
             setUserList([]);
         }
-    }, [open, roomId]);
+    }, [open]);
 
     const handleClose = () => {
-        setRecord([]);
-        setFilteredRecord([]);
-        setUserList([]);
         setOpen(false);
     };
 
@@ -164,9 +171,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
 
                 <div className="flex flex-wrap items-end gap-4 mt-4 mb-4">
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">
-                            Start Date
-                        </label>
+                        <label className="text-sm font-medium mb-1">Start Date</label>
                         <input
                             type="date"
                             value={startDate}
@@ -192,13 +197,11 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">User</label>
                         <select
                             value={selectedUser}
-                            onChange={(e) =>
-                                handleFilterChange("user", e.target.value)
-                            }
+                            onChange={(e) => handleFilterChange("user", e.target.value)}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-52"
                         >
                             <option value="">All Users</option>
-                            {userList.map((user, i) => (
+                            {userList.map((user) => (
                                 <option key={user} value={user}>
                                     {user}
                                 </option>
@@ -210,9 +213,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">Active</label>
                         <select
                             value={selectedActive}
-                            onChange={(e) =>
-                                handleFilterChange("active", e.target.value)
-                            }
+                            onChange={(e) => handleFilterChange("active", e.target.value)}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-40"
                         >
                             <option value="All">All</option>
@@ -225,9 +226,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
                         <label className="text-sm font-medium mb-1">Type</label>
                         <select
                             value={selectedType}
-                            onChange={(e) =>
-                                handleFilterChange("type", e.target.value)
-                            }
+                            onChange={(e) => handleFilterChange("type", e.target.value)}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600 w-52"
                         >
                             <option value="All">All</option>
@@ -252,10 +251,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan="8"
-                                    className="text-center text-gray-500 py-4"
-                                >
+                                <td colSpan="8" className="text-center text-gray-500 py-4">
                                     No records found.
                                 </td>
                             </tr>
