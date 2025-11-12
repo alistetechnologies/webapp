@@ -1,5 +1,7 @@
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { octiotFont } from "@/constants/config";
+import { isOctiot } from "@/utils/browser";
 
 import { useState, useEffect } from "react";
 
@@ -88,10 +90,10 @@ export function SelectAppliance({ data, state, updateState }) {
           />
         </div>
       </TableCell>
-      <TableCell className="w-auto">{data.switchName}</TableCell>
+      <TableCell className="w-auto" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{data.switchName}</TableCell>
 
       {/* Switch */}
-      <TableCell className="w-auto">
+      <TableCell className="w-auto" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         <div className="flex items-center space-x-2">
           <label className="text-sm"> {isOn ? "On" : "Off"}</label>
           <Switch

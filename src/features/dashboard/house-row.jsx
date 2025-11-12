@@ -4,6 +4,8 @@ import React from "react";
 import { useNavigate, useNavigation } from "react-router-dom";
 import { useUser } from "../auth/api/userStore";
 import EditProperty from "./EditHouse";
+import { isOctiot } from "@/utils/browser";
+import { octiotFont } from "@/constants/config";
 
 function HouseRow({ house, index, refreshUserHouses }) {
   const navigate = useNavigate();
@@ -11,8 +13,8 @@ function HouseRow({ house, index, refreshUserHouses }) {
 
   return (
     <TableRow className="text-lg">
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{house?.label}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{index + 1}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{house?.label}</TableCell>
       <TableCell>
         <div className="flex gap-4">
           <EditProperty house={house} refreshUserHouses={refreshUserHouses} />

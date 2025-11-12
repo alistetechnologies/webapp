@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createOtp } from '../api/otp';
 import { useAuth } from '../api/authStore';
 import toast from 'react-hot-toast';
-import { getBrowserDetails, getDeviceIdentifier } from '@/utils/browser';
+import { getBrowserDetails, getDeviceIdentifier, isOctiot } from '@/utils/browser';
 import { Spinner } from '@/components/ui/spinner';
 import { LoginWithPassword } from './login-with-password';
 
@@ -12,7 +12,7 @@ export default function LoginForm({ setOtpSent }) {
   const [number, setNumber] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [passwordLogin, setPasswordLogin] = useState(false);
+  const [passwordLogin, setPasswordLogin] = useState(isOctiot ? true : false);
 
   async function requestOtp() {
     if (number.length !== 10) {
@@ -47,20 +47,22 @@ export default function LoginForm({ setOtpSent }) {
     setOtpSent(true);
   }
 
-  function onSubmit() {
+  function onSubmit(e) {
     e.preventDefault();
   }
-
   if (passwordLogin) {
     return (
       <div className="w-[20rem] space-y-4">
         <LoginWithPassword setPasswordLogin={setPasswordLogin} />
-        <p
+        {
+          !isOctiot && <p
           className="text-sm hover:underline mt-0 cursor-pointer"
           onClick={() => setPasswordLogin(false)}
         >
           Use OTP
         </p>
+        }
+       
       </div>
     );
   }

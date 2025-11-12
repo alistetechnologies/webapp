@@ -10,6 +10,8 @@ import useHouseStore from "./houseStore";
 import { format } from "crypto-js";
 import { daysSince, timeSince } from "@/utils/date";
 import LogsModal from "./LogsModal";
+import { isOctiot } from "@/utils/browser";
+import { octiotFont } from "@/constants/config";
 
 export function ApplianceDetails({
   appliances,
@@ -72,40 +74,42 @@ export function ApplianceDetails({
 
   return (
     <TableRow className="">
-      <TableCell>{sno}</TableCell>
+      <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{sno}</TableCell>
       <TableCell
         className="text-lg text-black hover:underline"
+        style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
         title={appliance.deviceId + "-" + appliance.switchId}
       >
         {appliance?.switchName}
       </TableCell>
-      <TableCell className="text-lg text-center">
+      <TableCell className="text-lg text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {onTime?.hours && onTime?.seconds && onTime?.minutes
           ? `${String(onTime?.hours).padStart(2, "0")} hr ${String(
             onTime?.minutes
           ).padStart(2, "0")} min`
           : "--"}
       </TableCell>
-      <TableCell className="text-lg text-center">
+      <TableCell className="text-lg text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {onTime?.hours && onTime?.seconds && onTime?.minutes
           ? `${String(onlineTime?.hours).padStart(2, "0")} hr ${String(
             onlineTime?.minutes
           ).padStart(2, "0")} min`
           : "--"}
       </TableCell>
-      <TableCell className="text-lg text-center">
+      <TableCell className="text-lg text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {analysisData?.controlLogs?.length || "-"}
       </TableCell>
-      <TableCell className="text-lg text-center">
+      <TableCell className="text-lg text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {smartCommands || "-"}
       </TableCell>
-      <TableCell className="font-bold text-center">
+      <TableCell className="font-bold text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {switchCommands || "-"}
       </TableCell>
-      <TableCell className="cursor-pointer text-lg">
+      <TableCell className="cursor-pointer text-lg" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
         {appliance?.switchState === "0" ? (
           <div
             className="p-1 bg-red-500/10 flex items-center justify-center rounded-md px-4 text-red-500 w-20"
+            style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
             onClick={() => {
               toggleApplianceState(deviceConnected);
             }}
@@ -121,6 +125,7 @@ export function ApplianceDetails({
         ) : (
           <div
             className="p-1 bg-green-500/10 flex items-center justify-center rounded-md text-green-500 w-20"
+            style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
             onClick={() => {
               toggleApplianceState(deviceConnected);
             }}
@@ -138,11 +143,13 @@ export function ApplianceDetails({
 
       <TableCell className="cursor-pointer text-lg font-semibold">
         {deviceConnected ? (
-          <div className=" flex items-center justify-center rounded-md px-4 text-green-500">
+          <div className=" flex items-center justify-center rounded-md px-4 text-green-500"
+          style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
+          >
             Online
           </div>
         ) : (
-          <div className="p-2 flex items-center justify-center rounded-md px-4 text-red-500">
+          <div className="p-2 flex items-center justify-center rounded-md px-4 text-red-500" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
             Offline
           </div>
         )}
@@ -151,9 +158,9 @@ export function ApplianceDetails({
       {/* Offline Since */}
       <TableCell>
         {deviceConnected ? (
-          <div className="text-green-500">-</div>
+          <div className="text-green-500" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>-</div>
         ) : (
-          <div className="text-red-500">
+          <div className="text-red-500" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
             <OfflineSinceText deviceId={appliance.deviceId} />
           </div>
         )}

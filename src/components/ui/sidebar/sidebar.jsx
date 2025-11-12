@@ -11,9 +11,16 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import { faviconUpdate, isOctiot } from "@/utils/browser";
+import { images } from "@/constants/images";
+import { useEffect } from "react";
+import { octiotFont } from "@/constants/config";
 
 export default function Sidebar() {
   const location = useLocation();
+ useEffect(()=>{
+    faviconUpdate()
+  },[])
 
   const routes = [
     {
@@ -74,7 +81,7 @@ export default function Sidebar() {
           <Link to="/app" className="cursor-pointer">
             <div className="w-32 h-auto mb-6">
               <img
-                src="/aliste-logo.png"
+                src={isOctiot?images.octiotLogo:'/aliste-logo.png'}
                 style={{ width: "100%", height: "auto" }}
               />
             </div>
@@ -94,7 +101,7 @@ export default function Sidebar() {
                     : "text-[#292929]"
                 )}
               >
-                <div className="flex items-center flex-1">
+                <div className="flex items-center flex-1" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize} : {})}}>
                   <route.icon className={cn("h-6 w-6 mr-3", route.color)} />
                   {route.label}
                 </div>
@@ -102,6 +109,8 @@ export default function Sidebar() {
             ))}
           </div>
         </div>
+        {
+          !isOctiot &&
         <div className="text-center flex flex-col items-center space-y-1">
           <Link to="https://alistetechnologies.com" className="">
             <div className="w-32 h-auto">
@@ -116,6 +125,7 @@ export default function Sidebar() {
             Designed and developed by Aliste
           </p>
         </div>
+        }
       </div>
     </div>
   );
@@ -145,7 +155,7 @@ export default function Sidebar() {
                   key={route.href}
                   className="text-sm font-medium flex p-3 w-full justify-start cursor-pointer hover:bg-slate-200 rounded-lg transition"
                 >
-                  <div className="flex items-center flex-1">
+                  <div className="flex items-center flex-1" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize} : {})}}>
                     <route.icon className={cn("h-5 w-5 mr-5", route.color)} />
                     {route.label}
                   </div>

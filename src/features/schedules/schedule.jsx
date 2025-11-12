@@ -13,6 +13,8 @@ import moment from "moment";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useScheduleStore from "./scheduleStore";
+import { isOctiot } from "@/utils/browser";
+import { octiotFont } from "@/constants/config";
 
 export default function Schedule() {
   const schedules = useScheduleStore((state) => state.schedules);
@@ -84,9 +86,9 @@ export default function Schedule() {
           {schedules.length > 0 &&
             schedules.map((sch, i) => (
               <TableRow key={sch._id}>
-                <TableCell>{i + 1}</TableCell>
-                <TableCell>{sch.name}</TableCell>
-                <TableCell>
+                <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{i + 1}</TableCell>
+                <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{sch.name}</TableCell>
+                <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
                   {sch.type === "at"
                     ? moment(sch.expression).format("hh:mm A")
                     : convertCronTo12HourFormat(sch.expression).time}
@@ -94,11 +96,11 @@ export default function Schedule() {
                 <TableCell>
                   {sch.type === "at" ? (
                     <div>
-                      <div>Once - {moment(sch.expression).format("DD/MM/YYYY")}</div>
+                      <div style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>Once - {moment(sch.expression).format("DD/MM/YYYY")}</div>
                     </div>
                   ) : (
                     <div>
-                      <div>
+                      <div style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>
                         Every -{" "}
                         {convertCronTo12HourFormat(
                           sch.expression
@@ -107,15 +109,16 @@ export default function Schedule() {
                     </div>
                   )}
                 </TableCell>
-                <TableCell>{sch?.actions?.length || "-"}</TableCell>
+                <TableCell style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{sch?.actions?.length || "-"}</TableCell>
                 <TableCell
                   className="cursor-pointer"
                   onClick={() => toggleScheduleStatus(sch._id, !sch.enabled)}
+                  style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
                 >
                   {sch.enabled ? (
-                    <span className="text-green-600 font-bold">Enabled</span>
+                    <span className="text-green-600 font-bold" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>Enabled</span>
                   ) : (
-                    <span className="text-red-400">Disabled</span>
+                    <span className="text-red-400" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>Disabled</span>
                   )}
                 </TableCell>
                 <TableCell>

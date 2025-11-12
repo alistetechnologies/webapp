@@ -1,12 +1,14 @@
 import { TableHead, TableRow } from '@/components/ui/table'
+import { octiotFont } from '@/constants/config'
+import { isOctiot } from '@/utils/browser'
 import React from 'react'
 
 function Header() {
   return (
     <TableRow>
-        <TableHead>S. No.</TableHead>
-        <TableHead>Time Stamp</TableHead>
-        <TableHead>Hub Id</TableHead>
+        <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>S. No.</TableHead>
+        <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Time Stamp</TableHead>
+        <TableHead style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Hub Id</TableHead>
     </TableRow>
   )
 }

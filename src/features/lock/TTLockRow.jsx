@@ -11,10 +11,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { adminPasswordApi, syncLock } from "./api";
-import { token } from "@/constants/config";
+import { octiotFont, token } from "@/constants/config";
 import ViewAndUpdateAdminPass from "./ViewAndUpdateAdminPass";
 import toast from "react-hot-toast";
 import { Spinner } from "react-bootstrap";
+import { isOctiot } from "@/utils/browser";
 
 function TTLockRow({
   lock,
@@ -79,9 +80,9 @@ function TTLockRow({
 
   return (
     <TableRow className="text-lg" key={lock?.lockId}>
-      <TableCell className=" text-center">{index + 1}</TableCell>
-      <TableCell className=" text-center">{lock?.lockId}</TableCell>
-      <TableCell className=" text-center">{lock?.roomName}</TableCell>
+      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{index + 1}</TableCell>
+      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{lock?.lockId}</TableCell>
+      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{lock?.roomName}</TableCell>
 
       <TableCell className=" text-center">
         <TooltipProvider>
@@ -114,13 +115,14 @@ function TTLockRow({
                   ? " text-orange-300"
                   : ""
                 }`}
-            >
-              {battery}
-            </span>
-          )
+                style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
+              >
+                {battery}
+              </span>
+            )
           : "---"}
       </TableCell>
-      <TableCell className=" text-center" style={{ whiteSpace: "nowrap" }}>
+      <TableCell className=" text-center" style={{ whiteSpace: "nowrap" ,...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}} >
         {updatedLockData
           ? moment(updatedLockData?.updateDate).format("DD MMMM YYYY LT")
           : moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
@@ -134,6 +136,7 @@ function TTLockRow({
             width: "100%", // Full width
             maxWidth: "600px", // Set a maximum width for the buttons container
             whiteSpace: "nowrap", // Prevent buttons from breaking into new lines
+            
           }}
         >
           <Button

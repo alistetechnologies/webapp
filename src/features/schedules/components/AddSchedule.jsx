@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DeviceTypeMap } from "@/constants/config";
+import { DeviceTypeMap, octiotFont } from "@/constants/config";
 import useHouseStore from "@/features/dashboard/houseStore";
 import { Pencil, Plus } from "lucide-react";
 import moment from "moment";
@@ -28,6 +28,7 @@ import toast from "react-hot-toast";
 import { createSchedule, updateSchedule } from "../api/schedules";
 import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
+import { isOctiot } from "@/utils/browser";
 
 export function AddSchedule({ update = false, data }) {
   const house = useHouseStore((state) => state.house);
@@ -498,9 +499,9 @@ export function AddSchedule({ update = false, data }) {
               <Table className="w-full bg-white">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-black">Appliance Name</TableHead>
-                    <TableHead className="text-black">On/Off State</TableHead>
-                    <TableHead className="text-black">Status</TableHead>
+                    <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Appliance Name</TableHead>
+                    <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>On/Off State</TableHead>
+                    <TableHead className="text-black" style={{...(isOctiot ? {fontSize:octiotFont.headerFontSize} : {})}}>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="max-h-64 overflow-y-scroll">
