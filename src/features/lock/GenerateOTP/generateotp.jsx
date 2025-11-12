@@ -90,14 +90,14 @@ function GenerateOtp({ open, setOpen, roomId }) {
             const data = response?.data?.data || null;
             setRecord(data);
 
-            if (data.length === 0) {
+            if (!data) {
                 toast.error("No records found for selected filters");
             } else {
                 toast.success("Data fetched successfully");
             }
         } catch (error) {
             toast.error("Something went wrong while fetching OTP Details");
-            setRecord([]);
+            setRecord(null);
         } finally {
             toast.dismiss(toastId);
         }
@@ -134,12 +134,14 @@ function GenerateOtp({ open, setOpen, roomId }) {
                         <div className="text-xl font-semibold">
                             Generate OTP Details
                         </div>
-                        <div
+                        <button
+                            type="button"
+                            aria-label="Close"
                             className="shadow-sm justify-center items-center flex cursor-pointer border leading-none rounded-full w-7 h-7 text-center"
                             onClick={handleClose}
                         >
                             ✕
-                        </div>
+                        </button>
                     </DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
@@ -226,7 +228,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                         ) : (
                             <tr>
                                 <td
-                                    colSpan="8"
+                                    colSpan="2"
                                     className="text-center text-gray-500 py-4"
                                 >
                                     No records found.

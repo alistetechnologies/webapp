@@ -159,12 +159,14 @@ function EkeyDetails({ open, setOpen, roomId }) {
                 <DialogHeader>
                     <DialogTitle className="flex justify-between items-center">
                         <div className="text-xl font-semibold">E-Key Details</div>
-                        <div
+                        <button
+                            type="button"
+                            aria-label="Close"
                             className="shadow-sm justify-center items-center flex cursor-pointer border leading-none rounded-full w-7 h-7 text-center"
                             onClick={handleClose}
                         >
                             ✕
-                        </div>
+                        </button>
                     </DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>

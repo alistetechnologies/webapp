@@ -6,10 +6,11 @@ import toast from 'react-hot-toast';
 function Row({ data }) {
     const handleCopy = () => {
         if (data?.keyboardPwd) {
-            navigator.clipboard.writeText(data.keyboardPwd).catch((err) => {
+            navigator.clipboard.writeText(data.keyboardPwd).then(() => {
+                toast.success("Lock data copied to clipboard!");
+            }).catch((err) => {
                 toast.error("Failed to copy lock data to clipboard!");
             });
-            toast.success("Lock data copied to clipboard!");
         } else {
             toast.error("No lock data found!");
         }

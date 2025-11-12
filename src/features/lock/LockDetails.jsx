@@ -25,7 +25,6 @@ export function LockDetails() {
   const user = useUser.getState().user;
   const [house, setHouse] = useState({});
   const [loading, setLoading] = useState(false);
-  const [roomId, setRoomId] = useState("");
   let [unlockingHistory, setUnlockingHistory] = useState(false);
   let [otpHistory, setOtpHistory] = useState(false);
   let [timeSyncHistory, setTimeSyncHistory] = useState(false);
@@ -266,8 +265,7 @@ export function LockDetails() {
                         key={lock?.lockId}
                         updateHouse={getUserHouse}
                         setEkeyDetails={setEkeyDetails}
-                        setGenerateOtp={setGenerateOtp}
-                        setRoomId={setRoomId} />
+                        setGenerateOtp={setGenerateOtp} />
                     );
                   })}
             </TableBody>
