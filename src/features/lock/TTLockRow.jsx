@@ -27,6 +27,7 @@ function TTLockRow({
   lockHubId,
   updateHouse,
   setEkeyDetails,
+  setgenerateOtp,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -108,10 +109,10 @@ function TTLockRow({
           ? battery !== null && (
             <span
               className={`${battery < 20
-                  ? "text-red-600"
-                  : battery < 40
-                    ? " text-orange-300"
-                    : ""
+                ? "text-red-600"
+                : battery < 40
+                  ? " text-orange-300"
+                  : ""
                 }`}
             >
               {battery}
@@ -153,6 +154,20 @@ function TTLockRow({
           <Button
             onClick={() => {
               setLockDetails(lock);
+              setEkeyDetails(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            Generate OTP
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
               setOtpHistory(true);
             }}
             style={{
@@ -164,7 +179,6 @@ function TTLockRow({
           >
             OTP History
           </Button>
-
           <Button
             onClick={() => {
               setTimeSyncHistory(true);

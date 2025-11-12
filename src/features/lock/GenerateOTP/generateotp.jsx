@@ -39,10 +39,6 @@ function GenerateOtp({ open, setOpen, roomId }) {
             );
             console.log(response)
             const data = response?.data?.data;
-            const withUserNames = data.map((item) => ({
-                ...item,
-                userName: `${item?.userId?.first_name || ""} ${item?.userId?.last_name || ""}`.trim(),
-            }));
 
             setRecord(withUserNames);
 
