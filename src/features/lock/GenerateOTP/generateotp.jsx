@@ -15,20 +15,69 @@ import Row from "./Row";
 import { Button } from "@/components/ui/button";
 
 function GenerateOtp({ open, setOpen, roomId }) {
-    const [record, setRecord] = useState([]);
+    const [record, setRecord] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [startTime, setStartTime] = useState("00:00");
+    const [endTime, setEndTime] = useState("23:59");
+    const [passwordType, setPasswordType] = useState("1");
+
+    const passwordTypeOptions = [
+        { value: "1", label: "One-time" },
+        { value: "2", label: "Permanent" },
+        { value: "3", label: "Period" },
+        { value: "4", label: "Delete" },
+        { value: "5", label: "Weekend Cyclic" },
+        { value: "6", label: "Daily Cyclic" },
+        { value: "7", label: "Workday Cyclic" },
+        { value: "8", label: "Monday Cyclic" },
+        { value: "9", label: "Tuesday Cyclic" },
+        { value: "10", label: "Wednesday Cyclic" },
+        { value: "11", label: "Thursday Cyclic" },
+        { value: "12", label: "Friday Cyclic" },
+        { value: "13", label: "Saturday Cyclic" },
+        { value: "14", label: "Sunday Cyclic" },
+    ];
+
+    useEffect(() => {
+        const now = new Date();
+
+        const formattedDate = now.toISOString().split("T")[0];
+        const formattedTime = now
+            .toTimeString()
+            .split(" ")[0]
+            .slice(0, 5);
+
+        setStartDate(formattedDate);
+        setEndDate(formattedDate);
+        setStartTime(formattedTime);
+        setEndTime(formattedTime);
+    }, []);
+
 
     const getOtpDetails = async () => {
+        if (!roomId) {
+            toast.error("Room ID is missing!");
+            return;
+        }
+
+        if (!startDate || !endDate) {
+            toast.error("Please select both start and end dates!");
+            return;
+        }
+
         const toastId = toast.loading("Fetching OTP Details...");
         try {
+            const startMillis = new Date(`${startDate}T${startTime}`).getTime();
+            const endMillis = new Date(`${endDate}T${endTime}`).getTime();
+
             const response = await axios.post(
                 `${serverUrl.lockservice}/getpasscodewithroomId`,
                 {
                     roomId,
-                    keyboardPwdType,
-                    startDate,
-                    endDate,
+                    keyboardPwdType: passwordType,
+                    startDate: startMillis,
+                    endDate: endMillis,
                 },
                 {
                     headers: {
@@ -37,18 +86,16 @@ function GenerateOtp({ open, setOpen, roomId }) {
                     },
                 }
             );
-            console.log(response)
-            const data = response?.data?.data;
 
-            setRecord(withUserNames);
+            const data = response?.data?.data || null;
+            setRecord(data);
 
-            if (withUserNames.length === 0) {
+            if (data.length === 0) {
                 toast.error("No records found for selected filters");
             } else {
                 toast.success("Data fetched successfully");
             }
         } catch (error) {
-            console.error(error);
             toast.error("Something went wrong while fetching OTP Details");
             setRecord([]);
         } finally {
@@ -56,20 +103,12 @@ function GenerateOtp({ open, setOpen, roomId }) {
         }
     };
 
-    useEffect(() => {
-        if (open && roomId) {
-            getOtpDetails();
-        } else {
-            setRecord([]);
-            setStartDate("");
-            setEndDate("");
-        }
-    }, [open, roomId]);
-
     const handleClose = () => {
-        setRecord([]);
+        setRecord(null);
         setStartDate("");
         setEndDate("");
+        setStartTime("00:00");
+        setEndTime("23:59");
         setOpen(false);
     };
 
@@ -80,7 +119,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                     zIndex: "1234532",
                     position: "fixed",
                     maxHeight: "80vh",
-                    width: "90vw",
+                    width: "60vw",
                     overflow: "scroll",
                     top: "50%",
                     left: "50%",
@@ -92,7 +131,9 @@ function GenerateOtp({ open, setOpen, roomId }) {
             >
                 <DialogHeader>
                     <DialogTitle className="flex justify-between items-center">
-                        <div className="text-xl font-semibold">Generate OTP Details</div>
+                        <div className="text-xl font-semibold">
+                            Generate OTP Details
+                        </div>
                         <div
                             className="shadow-sm justify-center items-center flex cursor-pointer border leading-none rounded-full w-7 h-7 text-center"
                             onClick={handleClose}
@@ -103,29 +144,71 @@ function GenerateOtp({ open, setOpen, roomId }) {
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
 
-                {/* --- Filters Section --- */}
                 <div className="flex flex-wrap items-end gap-4 mt-4 mb-4">
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">Start Date</label>
+                        <label className="text-sm font-medium mb-1">
+                            Start Date
+                        </label>
                         <input
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            max={endDate || new Date().toISOString().split("T")[0]}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
                         />
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">End Date</label>
+                        <label className="text-sm font-medium mb-1">
+                            Start Time
+                        </label>
+                        <input
+                            type="time"
+                            value={startTime}
+                            onChange={(e) => setStartTime(e.target.value)}
+                            className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
+                        />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium mb-1">
+                            End Date
+                        </label>
                         <input
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                             min={startDate}
-                            max={new Date().toISOString().split("T")[0]}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
                         />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium mb-1">
+                            End Time
+                        </label>
+                        <input
+                            type="time"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                            className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
+                        />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium mb-1">
+                            Password Type
+                        </label>
+                        <select
+                            value={passwordType}
+                            onChange={(e) => setPasswordType(e.target.value)}
+                            className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
+                        >
+                            {passwordTypeOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <Button onClick={getOtpDetails} variant="default">
@@ -133,16 +216,13 @@ function GenerateOtp({ open, setOpen, roomId }) {
                     </Button>
                 </div>
 
-                {/* --- Table Section --- */}
                 <Table className="w-full bg-white mt-5">
                     <TableHeader>
                         <Header />
                     </TableHeader>
                     <TableBody>
-                        {record.length > 0 ? (
-                            record.map((rec, index) => (
-                                <Row data={rec} index={index} key={index} />
-                            ))
+                        {record ? (
+                            <Row data={record} />
                         ) : (
                             <tr>
                                 <td

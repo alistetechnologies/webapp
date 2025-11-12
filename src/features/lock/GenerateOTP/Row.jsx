@@ -1,14 +1,12 @@
 import { TableCell, TableRow } from '@/components/ui/table';
-import moment from 'moment';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 
 function Row({ data }) {
     const handleCopy = () => {
-        if (data?.keyData) {
-            navigator.clipboard.writeText(data.keyData).catch((err) => {
-                console.error('Failed to copy to clipboard:', err);
+        if (data?.keyboardPwd) {
+            navigator.clipboard.writeText(data.keyboardPwd).catch((err) => {
                 toast.error("Failed to copy lock data to clipboard!");
             });
             toast.success("Lock data copied to clipboard!");
@@ -19,16 +17,10 @@ function Row({ data }) {
 
     return (
         <TableRow>
-            <TableCell>{data?._id}</TableCell>
-            <TableCell>{`${data?.userId?.first_name || ""} ${data?.userId?.last_name || ""}`.trim()}</TableCell>
-            <TableCell>{data?.type}</TableCell>
-            <TableCell>{moment(data?.startTime).format('LT')}</TableCell>
-            <TableCell>{moment(data?.endTime).format('LT')}</TableCell>
-            <TableCell>{data?.active ? "True" : "False"}</TableCell>
-            <TableCell>{moment(data?.startTime).format('DD MMM YYYY')}</TableCell>
+            <TableCell>{data?.keyboardPwd}</TableCell>
             <TableCell>
                 <Button variant="default" size="sm" onClick={handleCopy}>
-                    Copy Lock Data
+                    Copy OTP
                 </Button>
             </TableCell>
         </TableRow>

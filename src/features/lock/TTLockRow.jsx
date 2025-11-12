@@ -27,7 +27,7 @@ function TTLockRow({
   lockHubId,
   updateHouse,
   setEkeyDetails,
-  setgenerateOtp,
+  setGenerateOtp,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -154,7 +154,7 @@ function TTLockRow({
           <Button
             onClick={() => {
               setLockDetails(lock);
-              setEkeyDetails(true);
+              setGenerateOtp(true);
             }}
             style={{
               flexShrink: 0,
