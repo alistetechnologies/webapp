@@ -41,19 +41,13 @@ function GenerateOtp({ open, setOpen, roomId }) {
 
     useEffect(() => {
         const now = new Date();
-
         const formattedDate = now.toISOString().split("T")[0];
-        const formattedTime = now
-            .toTimeString()
-            .split(" ")[0]
-            .slice(0, 5);
-
+        const formattedTime = now.toTimeString().split(" ")[0].slice(0, 5);
         setStartDate(formattedDate);
         setEndDate(formattedDate);
         setStartTime(formattedTime);
         setEndTime(formattedTime);
     }, []);
-
 
     const getOtpDetails = async () => {
         if (!roomId) {
@@ -66,11 +60,17 @@ function GenerateOtp({ open, setOpen, roomId }) {
             return;
         }
 
+        const startMillis = new Date(`${startDate}T${startTime}`).getTime();
+        const endMillis = new Date(`${endDate}T${endTime}`).getTime();
+        const nowMillis = Date.now();
+
+        if (startMillis < nowMillis || endMillis < nowMillis) {
+            toast.error("This timestamp cannot be in the past.");
+            return;
+        }
+
         const toastId = toast.loading("Fetching OTP Details...");
         try {
-            const startMillis = new Date(`${startDate}T${startTime}`).getTime();
-            const endMillis = new Date(`${endDate}T${endTime}`).getTime();
-
             const response = await axios.post(
                 `${serverUrl.lockservice}/getpasscodewithroomId`,
                 {
@@ -111,6 +111,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
         setEndTime("23:59");
         setOpen(false);
     };
+    const today = new Date().toISOString().split("T")[0];
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -156,6 +157,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
+                            min={today}
                         />
                     </div>
 
@@ -179,7 +181,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
-                            min={startDate}
+                            min={startDate || today}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
                         />
                     </div>
@@ -224,7 +226,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                     </TableHeader>
                     <TableBody>
                         {record ? (
-                            <Row data={record} />
+                            <Row data={record} hideCopy={!record?.keyboardPwd} />
                         ) : (
                             <tr>
                                 <td
