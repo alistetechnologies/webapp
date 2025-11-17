@@ -93,12 +93,11 @@ function EkeyDetails({ open, setOpen, roomId }) {
             ];
             setUserList(uniqueUsers);
 
-            const finalData = filters(withUserNames);
             setRecord(withUserNames);
-            setFilteredRecord(finalData);
+            setFilteredRecord(filters(withUserNames));
 
-            if (finalData.length === 0) {
-                toast.error("No records found for selected filters");
+            if (withUserNames.length === 0) {
+                toast.error("No records found");
             } else {
                 toast.success("Data fetched successfully");
             }
@@ -112,6 +111,10 @@ function EkeyDetails({ open, setOpen, roomId }) {
             toast.dismiss(toastId);
         }
     };
+    useEffect(() => {
+        const updated = filters(record);
+        setFilteredRecord(updated);
+    }, [selectedUser, selectedActive, selectedType, record]);
 
     useEffect(() => {
         if (open) {

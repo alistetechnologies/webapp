@@ -50,10 +50,6 @@ function GenerateOtp({ open, setOpen, roomId }) {
     }, []);
 
     const getOtpDetails = async () => {
-        if (!roomId) {
-            toast.error("Room ID is missing!");
-            return;
-        }
 
         if (!startDate || !endDate) {
             toast.error("Please select both start and end dates!");
@@ -87,13 +83,14 @@ function GenerateOtp({ open, setOpen, roomId }) {
                 }
             );
 
-            const data = response?.data?.data || null;
-            setRecord(data);
+            const data = response?.data?.data;
 
             if (!data) {
                 toast.error("No records found for selected filters");
+                setRecord(null);
             } else {
                 toast.success("Data fetched successfully");
+                setRecord(data);
             }
         } catch (error) {
             toast.error("Something went wrong while fetching OTP Details");
