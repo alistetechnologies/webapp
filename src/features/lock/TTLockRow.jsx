@@ -29,6 +29,7 @@ function TTLockRow({
   updateHouse,
   setEkeyDetails,
   setGenerateOtp,
+  setGenerateEKey,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -80,9 +81,9 @@ function TTLockRow({
 
   return (
     <TableRow className="text-lg" key={lock?.lockId}>
-      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{index + 1}</TableCell>
-      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{lock?.lockId}</TableCell>
-      <TableCell className=" text-center" style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}>{lock?.roomName}</TableCell>
+      <TableCell className=" text-center" style={{ ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}) }}>{index + 1}</TableCell>
+      <TableCell className=" text-center" style={{ ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}) }}>{lock?.lockId}</TableCell>
+      <TableCell className=" text-center" style={{ ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}) }}>{lock?.roomName}</TableCell>
 
       <TableCell className=" text-center">
         <TooltipProvider>
@@ -115,14 +116,14 @@ function TTLockRow({
                   ? " text-orange-300"
                   : ""
                 }`}
-                style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
-              >
-                {battery}
-              </span>
-            )
+              style={{ ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}) }}
+            >
+              {battery}
+            </span>
+          )
           : "---"}
       </TableCell>
-      <TableCell className=" text-center" style={{ whiteSpace: "nowrap" ,...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}} >
+      <TableCell className=" text-center" style={{ whiteSpace: "nowrap", ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}) }} >
         {updatedLockData
           ? moment(updatedLockData?.updateDate).format("DD MMMM YYYY LT")
           : moment(lock.lastUpdatedTime).format("DD MMMM YYYY, LT")}
@@ -136,7 +137,7 @@ function TTLockRow({
             width: "100%", // Full width
             maxWidth: "600px", // Set a maximum width for the buttons container
             whiteSpace: "nowrap", // Prevent buttons from breaking into new lines
-            
+
           }}
         >
           <Button
@@ -181,6 +182,34 @@ function TTLockRow({
             }}
           >
             OTP History
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
+              setGenerateEKey(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            Generate E-Key
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
+              setEkeyDetails(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            E-Key Details
           </Button>
           <Button
             onClick={() => {
@@ -229,20 +258,6 @@ function TTLockRow({
             ) : (
               "Sync Lock"
             )}
-          </Button>
-          <Button
-            onClick={() => {
-              setLockDetails(lock);
-              setEkeyDetails(true);
-            }}
-            style={{
-              flexShrink: 0,
-              minWidth: "150px",
-              width: "auto",
-              whiteSpace: "normal",
-            }}
-          >
-            E-Key Details
           </Button>
         </div>
       </TableCell>

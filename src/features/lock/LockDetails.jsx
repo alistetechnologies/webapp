@@ -20,6 +20,7 @@ import moment from "moment";
 import { CSVLink } from "react-csv";
 import EkeyDetails from "./EKeyLogs/ekeydetails";
 import GenerateOtp from "./GenerateOTP/generateotp";
+import GenerateEKey from "./GenerateEkey/Ekey";
 
 export function LockDetails() {
   const user = useUser.getState().user;
@@ -34,6 +35,7 @@ export function LockDetails() {
   let [lockHubId, setLockHubId] = useState({});
   let [ekeyDetails, setEkeyDetails] = useState(false);
   let [generateOtp, setGenerateOtp] = useState(false);
+  let [generateEkey, setGenerateEkey] = useState(false);
   const [csvData, setCsvData] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
@@ -200,6 +202,7 @@ export function LockDetails() {
       <OtpLog lock={lockDetails} open={otpHistory} setOpen={setOtpHistory} />
       <EkeyDetails roomId={lockDetails?.roomId} open={ekeyDetails} setOpen={setEkeyDetails} />
       <GenerateOtp roomId={lockDetails?.roomId} open={generateOtp} setOpen={setGenerateOtp} />
+      <GenerateEKey roomId={lockDetails?.roomId} open={generateEkey} setOpen={setGenerateEkey} />
       <TimeSync
         lock={lockDetails}
         open={timeSyncHistory}
@@ -265,7 +268,8 @@ export function LockDetails() {
                         key={lock?.lockId}
                         updateHouse={getUserHouse}
                         setEkeyDetails={setEkeyDetails}
-                        setGenerateOtp={setGenerateOtp} />
+                        setGenerateOtp={setGenerateOtp}
+                        setGenerateEKey={setGenerateEkey} />
                     );
                   })}
             </TableBody>
