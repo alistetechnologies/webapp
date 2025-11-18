@@ -42,14 +42,11 @@ export default function LogsModal({
 
     setLoading(true);
     try {
-      const resp = await fetchDayAnalysis(
-        {
-          deviceId,
-          day: moment(date).startOf("day").valueOf(),
-          remake: remake,
-        },
-        remake
-      );
+      const resp = await fetchDayAnalysis({
+        deviceId,
+        day: moment(date).startOf("day").valueOf(),
+        remake: remake,
+      });
 
       if (!resp || !resp.success) {
         toast.error(resp?.message || "Failed to fetch logs");
@@ -110,7 +107,7 @@ export default function LogsModal({
                 Loading
               </span>
             ) : (
-View Logs
+              <span>View Logs</span>
             )}
           </Button>
           <Button

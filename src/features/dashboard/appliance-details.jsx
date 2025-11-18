@@ -32,7 +32,7 @@ export function ApplianceDetails({
     (appliance) => String(appliance.switchId) === String(analysisData?.switchId)
   );
   if (appliance?.deviceType === 7 || !appliance) return;
-  const controlLogs = analysisData?.controlLogs.filter((log) => {
+  const controlLogs = (analysisData?.controlLogs || []).filter((log) => {
     const timestamp = log.originalTimestamp || log.timestamp;
     const logDateTimestamp = new Date(logsDate).setHours(0, 0, 0, 0);
 
@@ -269,9 +269,9 @@ const OfflineSinceText = ({ deviceId }) => {
 
       if (!resp.success || !resp?.data?.device?.disconnectedAt) {
         setDate("");
+      } else {
+        setDate(resp.data.device.disconnectedAt);
       }
-
-      setDate(resp.data.device.disconnectedAt);
     };
     getOfflineSince();
   }, [deviceId]);

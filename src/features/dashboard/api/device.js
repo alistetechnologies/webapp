@@ -43,7 +43,7 @@ export const controlDevice = async (data) => {
 
 export const fetchDeviceDetails = async (data) => {
   try {
-    const response = await api.post(url, data);
+    const response = await api.post(`${serverUrl.deviceService}/details`, data);
 
     if (!response.data?.success) {
       //TODO
@@ -58,12 +58,10 @@ export const fetchDeviceDetails = async (data) => {
   }
 };
 
-export const fetchDayAnalysis = async (data, remake) => {
+export const fetchDayAnalysis = async (data) => {
   try {
     const response = await apiClient.post(
-      `https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default/analyse/day${
-        remake ? "?remake=true" : ""
-      }`,
+      `${serverUrl.deviceApi}/analyse/day`,
       data
     );
     return response.data;
