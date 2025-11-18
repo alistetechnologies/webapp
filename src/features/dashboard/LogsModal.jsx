@@ -117,6 +117,7 @@ View Logs
             onClick={() => handleViewLogs(true)}
             disabled={loading}
             className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
+            title="Refresh logs"
           >
             <RefreshCw />
           </Button>
