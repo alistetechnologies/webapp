@@ -110,7 +110,7 @@ export default function LogsModal({
                 Loading
               </span>
             ) : (
-              " Logs"
+View Logs
             )}
           </Button>
           <Button
