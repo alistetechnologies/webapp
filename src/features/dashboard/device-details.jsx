@@ -18,7 +18,6 @@ export function DeviceDetails({
   reload,
   houseId,
 }) {
-  console.debug("date", date);
   const [showAppliances, setShowAppliances] = useState(false);
   const [totalAppliances, setTotalAppliances] = useState(0);
   const [connectedAppliances, setConnectedAppliances] = useState(0);

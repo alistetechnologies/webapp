@@ -58,16 +58,12 @@ export const fetchDeviceDetails = async (data) => {
   }
 };
 
-export const fetchDayAnalysis = async (data, queryParams) => {
+export const fetchDayAnalysis = async (data, remake) => {
   try {
-    const queryString = new URLSearchParams(queryParams);
-
-    const url = `${serverUrl.deviceService}/details${
-      queryString ? "?" + queryString : ""
-    }`;
-
     const response = await apiClient.post(
-      `https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default/analyse/day`,
+      `https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default/analyse/day${
+        remake ? "?remake=true" : ""
+      }`,
       data
     );
     return response.data;

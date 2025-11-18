@@ -46,8 +46,9 @@ export default function LogsModal({
         {
           deviceId,
           day: moment(date).startOf("day").valueOf(),
+          remake: remake,
         },
-        { remake }
+        remake
       );
 
       if (!resp || !resp.success) {
@@ -99,7 +100,7 @@ export default function LogsModal({
           </div>
 
           <Button
-            onClick={handleViewLogs}
+            onClick={() => handleViewLogs()}
             disabled={loading}
             className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
           >
@@ -113,7 +114,7 @@ export default function LogsModal({
             )}
           </Button>
           <Button
-            onClick={() => handleViewLogs(false)}
+            onClick={() => handleViewLogs(true)}
             disabled={loading}
             className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
           >

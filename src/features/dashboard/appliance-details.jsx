@@ -35,7 +35,6 @@ export function ApplianceDetails({
   const controlLogs = analysisData?.controlLogs.filter((log) => {
     const timestamp = log.originalTimestamp || log.timestamp;
     const logDateTimestamp = new Date(logsDate).setHours(0, 0, 0, 0);
-    console.log("Logs", timestamp, logsDate, log);
 
     if (isNaN(timestamp) || isNaN(logDateTimestamp)) return false;
     return timestamp >= logDateTimestamp;
@@ -261,13 +260,13 @@ export function ApplianceDetails({
 const OfflineSinceText = ({ deviceId }) => {
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log("here", deviceId);
+
   useEffect(() => {
     const getOfflineSince = async () => {
       setLoading(true);
       const resp = await fetchDeviceDetails({ deviceId });
       setLoading(false);
-      console.log("response", resp);
+
       if (!resp.success || !resp?.data?.device?.disconnectedAt) {
         setDate("");
       }

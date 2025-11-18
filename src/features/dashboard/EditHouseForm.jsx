@@ -46,7 +46,7 @@ export default function EditPropertyForm({
 }) {
   const [countryName, setCountryName] = useState("India");
   const [stateName, setStateName] = useState("");
-  console.debug("house", house);
+
   let form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

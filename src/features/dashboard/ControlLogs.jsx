@@ -13,7 +13,7 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
       data?.snapshot?.appliances?.[appliance?.split("_")[1]]?.controlLogs || [];
     setApplianceAnalysis(applianceData);
   }, [data, appliance]);
-  console.log("Selected", selectedDate);
+
   const filteredLogs = (applianceAnalysis || [])
     ?.filter((log) => {
       const logTimestamp = log?.originalTimestamp || log?.timestamp;
@@ -31,13 +31,7 @@ const ControlLogs = ({ data = [], appliance, selectedDate }) => {
         new Date(b.originalTimestamp || b.timestamp) -
         new Date(a.originalTimestamp || a.timestamp)
     );
-  console.log(
-    "filteredLogs",
-    filteredLogs,
-    filteredLogs.length,
-    applianceAnalysis,
-    applianceAnalysis.length
-  );
+
   return (
     <div className="mt-4">
       {filteredLogs.length === 0 ? (
