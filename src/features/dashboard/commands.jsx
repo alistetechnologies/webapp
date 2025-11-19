@@ -71,10 +71,7 @@ export default function Commands({ analysisData, logsDate }) {
       >
         {switchCommands}
       </TableCell>
-    </>
-  );
-}
-    <>
+
       <div className="col-span-2 p-4 flex items-center justify-center">
         <span className="text-xl font-bold">{smartCommands}/</span>
         <span className="text-sm">{smartCommands + switchCommands}</span>
