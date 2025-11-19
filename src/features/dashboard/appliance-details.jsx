@@ -21,7 +21,7 @@ export function ApplianceDetails({
   logsDate,
 }) {
   const user = useUser((state) => state.user);
-  const house = useHouseStore((state) => state.house);
+
   const updateState = useHouseStore((state) => state.updateState);
   const [logsOpen, setLogsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,11 @@ export function ApplianceDetails({
   const controlLogs = (analysisData?.controlLogs || []).filter((log) => {
     const timestamp = log.originalTimestamp || log.timestamp;
     const logDateTimestamp = new Date(logsDate).setHours(0, 0, 0, 0);
-
+    if (
+      log.controllerId === "disconnect" ||
+      log.controllerType === "disconnect"
+    )
+      return false;
     if (isNaN(timestamp) || isNaN(logDateTimestamp)) return false;
     return timestamp >= logDateTimestamp;
   });
