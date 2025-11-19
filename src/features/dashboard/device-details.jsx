@@ -200,7 +200,7 @@ export function DeviceDetails({
             </span>
           )}
         </TableCell>
-        <Commands analysisData={appliancesAnalysisData} />
+        <Commands analysisData={appliancesAnalysisData} logsDate={date} />
         <TableCell
           className="flex justify-between gap-2"
           style={{
