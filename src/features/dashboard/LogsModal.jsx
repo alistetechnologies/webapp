@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { RefreshCw } from "lucide-react";
 
 export default function LogsModal({
   open,
@@ -33,7 +34,7 @@ export default function LogsModal({
     }
   }, [open]);
 
-  const handleViewLogs = async () => {
+  const handleViewLogs = async (remake = false) => {
     if (!deviceId) {
       toast.error("Device id missing");
       return;
@@ -44,6 +45,7 @@ export default function LogsModal({
       const resp = await fetchDayAnalysis({
         deviceId,
         day: moment(date).startOf("day").valueOf(),
+        remake: remake,
       });
 
       if (!resp || !resp.success) {
@@ -64,9 +66,11 @@ export default function LogsModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-4xl p-6 rounded-2xl shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-xl">
-            View Logs For -{" "}
-            <strong>{applianceName || `${deviceId}_${switchId}`}</strong>
+          <DialogTitle className="text-2xl text-center">
+            <strong title={`${deviceId}_${switchId}`}>
+              {applianceName || `${deviceId}_${switchId}`}
+            </strong>{" "}
+            Activity Logs
           </DialogTitle>
         </DialogHeader>
 
@@ -93,7 +97,7 @@ export default function LogsModal({
           </div>
 
           <Button
-            onClick={handleViewLogs}
+            onClick={() => handleViewLogs()}
             disabled={loading}
             className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
           >
@@ -103,8 +107,16 @@ export default function LogsModal({
                 Loading
               </span>
             ) : (
-              "View Logs"
+              <span>View Logs</span>
             )}
+          </Button>
+          <Button
+            onClick={() => handleViewLogs(true)}
+            disabled={loading}
+            className="w-full sm:w-auto bg-gray-900 text-white hover:bg-gray-800"
+            title="Refresh logs"
+          >
+            <RefreshCw />
           </Button>
         </div>
 

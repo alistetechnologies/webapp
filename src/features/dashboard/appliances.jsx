@@ -8,10 +8,15 @@ import {
 import { ApplianceDetails } from "./appliance-details";
 import { ApplianceHeader } from "./appliance-header";
 
-export function Appliances({ appliances, analysisData, connectedDevices }) {
+export function Appliances({
+  appliances,
+  analysisData,
+  connectedDevices,
+  logsDate,
+}) {
   return (
     <TableRow className=" w-full p-0">
-      <TableCell colspan="12" className="p-0 w-full">
+      <TableCell colSpan="12" className="p-0 w-full">
         <Table className="bg-slate-100/50 rounded w-full">
           <TableHeader>
             <ApplianceHeader />
@@ -36,6 +41,7 @@ export function Appliances({ appliances, analysisData, connectedDevices }) {
                       analysisData={device}
                       sno={sno + 1}
                       connectedDevices={connectedDevices}
+                      logsDate={logsDate}
                     />
                   );
                 })}

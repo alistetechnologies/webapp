@@ -1,6 +1,6 @@
 import { serverUrl } from "@/constants/config";
 import { api } from "@/lib/apiClient";
-import apiClient from '@/lib/apiClient';
+import apiClient from "@/lib/apiClient";
 
 export const fetchDayAnalytics = async (data) => {
   try {
@@ -58,19 +58,19 @@ export const fetchDeviceDetails = async (data) => {
   }
 };
 
-export const fetchDayAnalysis = async data => {
+export const fetchDayAnalysis = async (data) => {
   try {
     const response = await apiClient.post(
-      `https://keiozfbox5.execute-api.ap-south-1.amazonaws.com/default/analyse/day`,
-      data,
+      `${serverUrl.deviceApi}/analyse/day`,
+      data
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching daily analysis:', error);
+    console.error("Error fetching daily analysis:", error);
     return {
       success: false,
       message:
-        error?.response?.data?.message || 'Failed to fetch daily analysis',
+        error?.response?.data?.message || "Failed to fetch daily analysis",
       data: null,
     };
   }
