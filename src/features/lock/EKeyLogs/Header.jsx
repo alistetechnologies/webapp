@@ -6,7 +6,7 @@ function Header() {
         <TableRow>
             <TableHead>E Key ID</TableHead>
             <TableHead>User Name</TableHead>
-            <TableHead>Type Of</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Start Time</TableHead>
             <TableHead>End Time</TableHead>
             <TableHead>Active</TableHead>

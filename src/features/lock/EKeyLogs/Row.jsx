@@ -10,6 +10,7 @@ function Row({ data }) {
             navigator.clipboard.writeText(data.keyData).then(() => {
                 toast.success("Lock data copied to clipboard!");
             }).catch((err) => {
+                console.error("Clipboard copy failed:", err);
                 toast.error("Failed to copy lock data to clipboard!");
             });
         } else {

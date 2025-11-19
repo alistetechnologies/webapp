@@ -93,6 +93,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
                 setRecord(data);
             }
         } catch (error) {
+            console.error("Error fetching OTP details:", error);
             toast.error("Something went wrong while fetching OTP Details");
             setRecord(null);
         } finally {
@@ -114,7 +115,7 @@ function GenerateOtp({ open, setOpen, roomId }) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent
                 style={{
-                    zIndex: "1234532",
+                    zIndex: 1234532,
                     position: "fixed",
                     maxHeight: "80vh",
                     width: "60vw",

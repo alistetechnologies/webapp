@@ -80,6 +80,7 @@ function GenerateEKey({ roomId, open, setOpen }) {
             if (data) setResponseData(data);
         } catch (error) {
             console.error("Error generating E-Key:", error);
+            toast.error("Failed to generate E-Key. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -87,7 +88,14 @@ function GenerateEKey({ roomId, open, setOpen }) {
 
     const handleCopy = () => {
         if (responseData?.keyData) {
-            navigator.clipboard.writeText(responseData.keyData);
+            navigator.clipboard.writeText(responseData.keyData).then(() => {
+                toast.success("Key data copied to clipboard!");
+            }).catch((err) => {
+                console.error("Clipboard copy failed:", err);
+                toast.error("Failed to copy key data to clipboard!");
+            });
+        } else {
+            toast.error("No key data found!");
         }
     };
 

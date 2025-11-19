@@ -146,7 +146,7 @@ function EkeyDetails({ open, setOpen, roomId }) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent
                 style={{
-                    zIndex: "1234532",
+                    zIndex: 1234532,
                     position: "fixed",
                     maxHeight: "80vh",
                     width: "90vw",
