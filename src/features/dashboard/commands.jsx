@@ -73,7 +73,7 @@ export default function Commands({ analysisData, logsDate }) {
       </TableCell>
     </>
   );
-  return (
+}
     <>
       <div className="col-span-2 p-4 flex items-center justify-center">
         <span className="text-xl font-bold">{smartCommands}/</span>
