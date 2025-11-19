@@ -25,6 +25,12 @@ export function ApplianceDetails({
   const updateState = useHouseStore((state) => state.updateState);
   const [logsOpen, setLogsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  console.log(
+    "analysis data",
+    analysisData.totalOnTime,
+    analysisData.onlineTime,
+    analysisData
+  );
   const onTime = convertMilliseconds(analysisData?.totalOnTime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
 
@@ -37,6 +43,7 @@ export function ApplianceDetails({
     const logDateTimestamp = new Date(logsDate).setHours(0, 0, 0, 0);
     if (
       log.controllerId === "disconnect" ||
+      log.controllerId === "conn" ||
       log.controllerType === "disconnect"
     )
       return false;
@@ -109,11 +116,13 @@ export function ApplianceDetails({
           ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}),
         }}
       >
-        {onTime?.hours && onTime?.seconds && onTime?.minutes
-          ? `${String(onTime?.hours).padStart(2, "0")} hr ${String(
-              onTime?.minutes
-            ).padStart(2, "0")} min`
-          : "--"}
+        {onTime?.hours
+          ? `${String(onTime?.hours).padStart(2, "0")} hour${
+              onTime?.hours > 1 ? "s" : ""
+            }, ${String(onTime?.minutes).padStart(2, "0")} min`
+          : onTime?.minutes
+          ? `${String(onTime?.minutes).padStart(2, "0")} min`
+          : "-"}
       </TableCell>
       <TableCell
         className="text-lg text-center"
@@ -121,11 +130,13 @@ export function ApplianceDetails({
           ...(isOctiot ? { fontSize: octiotFont.subHeaderFontSize } : {}),
         }}
       >
-        {onTime?.hours && onTime?.seconds && onTime?.minutes
+        {onlineTime?.hours
           ? `${String(onlineTime?.hours).padStart(2, "0")} hr ${String(
               onlineTime?.minutes
             ).padStart(2, "0")} min`
-          : "--"}
+          : onlineTime?.minutes
+          ? `${String(onlineTime?.minutes).padStart(2, "0")} min`
+          : "-"}
       </TableCell>
       <TableCell
         className="text-lg text-center"
