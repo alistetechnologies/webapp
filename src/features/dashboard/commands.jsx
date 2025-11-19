@@ -47,7 +47,7 @@ export default function Commands({ analysisData, logsDate }) {
       setSwitchCommands(totalSwitchCommands);
     }
     calculateCommands();
-  }, [analysisData]);
+  }, [analysisData, logsDate]);
   return (
     <>
       <TableCell
