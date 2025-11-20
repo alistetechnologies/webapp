@@ -45,7 +45,7 @@ export default function Commands({ analysisData, logsDate }) {
       setSwitchCommands(totalSwitchCommands);
     }
     calculateCommands();
-  }, [analysisData]);
+  }, [analysisData, logsDate]);
   return (
     <>
       <TableCell
@@ -69,19 +69,6 @@ export default function Commands({ analysisData, logsDate }) {
       >
         {switchCommands}
       </TableCell>
-    </>
-  );
-  return (
-    <>
-      <div className="col-span-2 p-4 flex items-center justify-center">
-        <span className="text-xl font-bold">{smartCommands}/</span>
-        <span className="text-sm">{smartCommands + switchCommands}</span>
-      </div>
-
-      <div className="col-span-2 p-4 flex items-center justify-center">
-        <span className="text-xl font-bold">{switchCommands}/</span>
-        <span className="text-sm">{smartCommands + switchCommands}</span>
-      </div>
     </>
   );
 }
