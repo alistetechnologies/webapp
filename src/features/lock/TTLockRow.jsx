@@ -27,6 +27,8 @@ function TTLockRow({
   hubConneted,
   lockHubId,
   updateHouse,
+  setEkeyDetails,
+  setGenerateOtp,
 }) {
   const [modal, setModal] = useState(false);
   const [password, setPassword] = useState("");
@@ -106,13 +108,12 @@ function TTLockRow({
       <TableCell className=" text-center">
         {hubConneted?.length > 0
           ? battery !== null && (
-              <span
-                className={`${
-                  battery < 20
-                    ? "text-red-600"
-                    : battery < 40
-                    ? " text-orange-300"
-                    : ""
+            <span
+              className={`${battery < 20
+                ? "text-red-600"
+                : battery < 40
+                  ? " text-orange-300"
+                  : ""
                 }`}
                 style={{...(isOctiot ? {fontSize:octiotFont.subHeaderFontSize}:{})}}
               >
@@ -156,6 +157,20 @@ function TTLockRow({
           <Button
             onClick={() => {
               setLockDetails(lock);
+              setGenerateOtp(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            Generate OTP
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
               setOtpHistory(true);
             }}
             style={{
@@ -167,7 +182,6 @@ function TTLockRow({
           >
             OTP History
           </Button>
-
           <Button
             onClick={() => {
               setTimeSyncHistory(true);
@@ -215,6 +229,20 @@ function TTLockRow({
             ) : (
               "Sync Lock"
             )}
+          </Button>
+          <Button
+            onClick={() => {
+              setLockDetails(lock);
+              setEkeyDetails(true);
+            }}
+            style={{
+              flexShrink: 0,
+              minWidth: "150px",
+              width: "auto",
+              whiteSpace: "normal",
+            }}
+          >
+            E-Key Details
           </Button>
         </div>
       </TableCell>

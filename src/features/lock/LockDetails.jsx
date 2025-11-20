@@ -18,6 +18,8 @@ import toast from "react-hot-toast";
 import { Download } from "lucide-react";
 import moment from "moment";
 import { CSVLink } from "react-csv";
+import EkeyDetails from "./EKeyLogs/ekeydetails";
+import GenerateOtp from "./GenerateOTP/generateotp";
 
 export function LockDetails() {
   const user = useUser.getState().user;
@@ -30,6 +32,8 @@ export function LockDetails() {
   let [hubConneted, setHubConcted] = useState([]);
   let [lockRoomName, setLockRoomName] = useState({});
   let [lockHubId, setLockHubId] = useState({});
+  let [ekeyDetails, setEkeyDetails] = useState(false);
+  let [generateOtp, setGenerateOtp] = useState(false);
   const [csvData, setCsvData] = useState([]);
   const [selectedHouse, setSelectedHouse] = useState({
     value: user?.selectedHouse || "",
@@ -82,11 +86,11 @@ export function LockDetails() {
             let dataAarray =
               typeof res?.data === "object"
                 ? Object.keys(res?.data).reduce((p, c) => {
-                    let mapHubID = res?.data[c].map((e) => {
-                      return { ...e, hubId: c };
-                    });
-                    return [...p, ...mapHubID];
-                  }, [])
+                  let mapHubID = res?.data[c].map((e) => {
+                    return { ...e, hubId: c };
+                  });
+                  return [...p, ...mapHubID];
+                }, [])
                 : res?.data;
             setHubConcted(dataAarray || []);
             hubConnetedData = dataAarray || [];
@@ -186,7 +190,6 @@ export function LockDetails() {
       fontWeight: "bolder",
     },
   };
-
   return (
     <div className="w-full h-full bg-[#EAEBF0] p-8 pt-0 overflow-y-scroll">
       <UnlockRecored
@@ -195,6 +198,8 @@ export function LockDetails() {
         setOpen={setUnlockingHistory}
       />
       <OtpLog lock={lockDetails} open={otpHistory} setOpen={setOtpHistory} />
+      <EkeyDetails roomId={lockDetails?.roomId} open={ekeyDetails} setOpen={setEkeyDetails} />
+      <GenerateOtp roomId={lockDetails?.roomId} open={generateOtp} setOpen={setGenerateOtp} />
       <TimeSync
         lock={lockDetails}
         open={timeSyncHistory}
@@ -241,7 +246,7 @@ export function LockDetails() {
                     return [
                       ...p,
                       ...c.ttlocks.map((l) => {
-                        return { ...l, roomName: c.roomName };
+                        return { ...l, roomName: c.roomName, roomId: c._id };
                       }),
                     ];
                   }, [])
@@ -259,7 +264,8 @@ export function LockDetails() {
                         lockHubId={lockHubId}
                         key={lock?.lockId}
                         updateHouse={getUserHouse}
-                      />
+                        setEkeyDetails={setEkeyDetails}
+                        setGenerateOtp={setGenerateOtp} />
                     );
                   })}
             </TableBody>
@@ -281,7 +287,7 @@ export function LockDetails() {
                     return [
                       ...p,
                       ...c.ttgateways.map((l) => {
-                        return { ...l, roomName: c.roomName };
+                        return { ...l, roomName: c.roomName, room: c };
                       }),
                     ];
                   }, [])
