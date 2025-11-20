@@ -25,12 +25,7 @@ export function ApplianceDetails({
   const updateState = useHouseStore((state) => state.updateState);
   const [logsOpen, setLogsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(
-    "analysis data",
-    analysisData.totalOnTime,
-    analysisData.onlineTime,
-    analysisData
-  );
+
   const onTime = convertMilliseconds(analysisData?.totalOnTime);
   const onlineTime = convertMilliseconds(analysisData?.onlineTime);
 
