@@ -159,7 +159,7 @@ function GenerateEKey({ roomId, open, setOpen }) {
                         >
                             <option value="" disabled hidden></option>
                             <option value="recurring">Recurring</option>
-                            <option value="one-time">One Time</option>
+                            <option value="oneTime">One Time</option>
                         </select>
 
                         <label className={labelStyle}>Key Type</label>

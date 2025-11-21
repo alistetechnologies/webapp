@@ -181,7 +181,6 @@ function EkeyDetails({ open, setOpen, roomId }) {
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
-                            max={endDate || new Date().toISOString().split("T")[0]}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
                         />
                     </div>
@@ -193,7 +192,6 @@ function EkeyDetails({ open, setOpen, roomId }) {
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                             min={startDate}
-                            max={new Date().toISOString().split("T")[0]}
                             className="border p-2 rounded-md border-gray-300 hover:border-slate-600"
                         />
                     </div>
